@@ -124,17 +124,17 @@ function SetupSpentFields() {
   }
  
   var sumrow = row - 1;
-  var sum = Spent.getRange("F3:Z3").getFormulasR1C1();
+  var sum = Spent.getRange("F3:Y3").getFormulasR1C1();
   while (sumrow >= 4 && sumrow > daterow) {
-    Spent.getRange("F" + sumrow + ":Z" + sumrow).setFormulasR1C1(sum);
+    Spent.getRange("F" + sumrow + ":Y" + sumrow).setFormulasR1C1(sum);
     sumrow--;
   }
 
   Spent.getRange("B3:C" + (row - 1)).setNumberFormat("00");
-  Spent.getRange("F4:Z" + (row - 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-  Spent.getRange("A2:Z2").gray();
+  Spent.getRange("F4:Y" + (row - 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
+  Spent.getRange("A2:Y2").gray();
   Plan.getRange("A2:I" + Plan.getMaxRows()).setNumberFormat("00");
-  Plan.getRange("J2:J" + Plan.getMaxRows()).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
+  //Plan.getRange("J2:J" + Plan.getMaxRows()).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
 
   return row;
 }
