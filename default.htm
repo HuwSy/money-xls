@@ -765,15 +765,19 @@ async function fileLoaded (e) {
 
   var wb = XLSX.write(workbook, {bookType:'xlsx',cellStyles:true,compression:true,type:'binary'});
   var buf = s2ab(wb);
-  var blob = new Blob([buf],{type:"application/octet-stream"});
+  var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
   
   var aElement = document.createElement('a');
   aElement.innerHTML = name;
   aElement.download = name;
+  aElement.setAttribute('download', name);
   aElement.href = window.URL.createObjectURL(blob);
   aElement.target = "_blank";
   document.body.appendChild(aElement);
   aElement.click();
+
+  aElement.remove();
+  document.getElementById('File').value = null;
 }
 
 document.getElementById('File').onchange = function () {
@@ -788,7 +792,7 @@ document.getElementById('File').onchange = function () {
     reader.onerror = function () {
         alert("File reading error " + f.name);
     };
-    reader.onload = fileLoaded;
+    reader.onload = fileLoaded
     reader.readAsBinaryString(f);
 }
 
