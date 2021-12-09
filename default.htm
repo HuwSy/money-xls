@@ -17,6 +17,7 @@
   <div id="output"></div>
 
 <script type="text/javascript">
+var aElement = null;
 var today = new Date();
 var year = today.getFullYear() + (today.getMonth()+1 >= 4 ? 1 : 0);
 var Spent,Future,Over,Plan;
@@ -767,23 +768,21 @@ async function fileLoaded (e) {
   var buf = s2ab(wb);
   var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
   
-  var aElement = document.createElement('a');
+  aElement = document.createElement('a');
   aElement.innerHTML = name;
   aElement.download = name;
   aElement.setAttribute('download', name);
   aElement.href = window.URL.createObjectURL(blob);
   aElement.target = "_blank";
   document.body.appendChild(aElement);
-  aElement.click();
-
-  aElement.remove();
-  document.getElementById('File').value = null;
 }
 
 document.getElementById('File').onchange = function () {
     if (this.files.length != 1)
         return;
     
+    if (aElement && aElement.remove)
+        aElement.remove();
     document.getElementById('output').innerHTML = ('Loading...<br>');
     var f = this.files[0];
     window.name = f.name;
@@ -797,6 +796,7 @@ document.getElementById('File').onchange = function () {
 }
 
 document.getElementById('Upload').onclick = function () {
+    document.getElementById('File').value = null;
     document.getElementById('File').click();
 };
 </script>
