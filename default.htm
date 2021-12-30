@@ -769,15 +769,15 @@ async function fileLoaded (e) {
       return buf;
   }
 
-  var wb = XLSX.write(workbook, {bookType:'xlsx',cellStyles:true,compression:true,type:'base64'});
-  //var buf = s2ab(wb);
-  //var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
+  var wb = XLSX.write(workbook, {bookType:'xlsx',cellStyles:true,compression:true,type:'binary'});//base64
+  var buf = s2ab(wb);
+  var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
   
   aElement = document.createElement('a');
   aElement.innerHTML = name;
   aElement.download = name;
   aElement.setAttribute('download', name);
-  aElement.href = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${wb}`;//window.URL.createObjectURL(blob);
+  aElement.href = window.URL.createObjectURL(blob);//`data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${wb}`;
   aElement.target = "_blank";
   document.body.appendChild(aElement);
   aElement.click();
