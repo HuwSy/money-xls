@@ -687,6 +687,11 @@ async function fileLoaded (e) {
     },
     'NOT': function (a) {
       return !a;
+    },
+    'TODAY': function () {
+      var t = new Date();
+      t.setHours(0,0,0,0);
+      return t;
     }
   }, {override: true});
 
