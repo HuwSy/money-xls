@@ -125,7 +125,7 @@ function SetupLimited(priority) {
   ensureVariables();
   Future.getRange("D1:D1").setValue("SetupLimited");
  
-  futureYear(0, priority);
+  futureYear(1, priority);
 }
 
 function SetupAllYears() {
@@ -137,7 +137,7 @@ function SetupAllYears() {
 }
 
 function futureYear(len, priority) {
-  var EndDate = new Date(year + len, 4-1, priority != null ? 24 : 1);
+  var EndDate = new Date(year + len, 4-1, priority != null ? 28 : 1);
   var NotBefore = null;
   if (len <= 0)
     NotBefore = new Date(year - 1, 4-1, 1);
