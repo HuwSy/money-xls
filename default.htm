@@ -702,6 +702,24 @@ async function fileLoaded (e) {
        
   XLSX_CALC(workbook);
 
+  document.getElementById('output').innerHTML += ('F1-5<br>');
+  await timeout()
+
+  for (var priority = 1; priority <= 5; priority++) {
+    ensureVariables(priority);
+    if (typeof Future == "undefined" || Future == null)
+      continue;
+
+    SetupLimited(priority);
+    await timeout();
+
+    NowData(priority);
+    await timeout();
+  }
+
+  Future = workbook.Sheets['Future'];
+  XLSX_CALC(workbook);
+
   document.getElementById('output').innerHTML += ('Years<br>');
   await timeout()
   SetupAllYears();
@@ -724,21 +742,6 @@ async function fileLoaded (e) {
   Plan.getRange('M1:N' + Plan.getMaxRows()).recalc();
         
   XLSX_CALC(workbook);
-
-  document.getElementById('output').innerHTML += ('F1-5<br>');
-  await timeout()
-
-  for (var priority = 1; priority <= 5; priority++) {
-    ensureVariables(priority);
-    if (typeof Future == "undefined" || Future == null)
-      continue;
-
-    SetupLimited(priority);
-    await timeout();
-
-    NowData(priority);
-    await timeout();
-  }
 
   document.getElementById('output').innerHTML += ('Saving ');
   await timeout();
