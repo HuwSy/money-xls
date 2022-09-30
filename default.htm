@@ -14,6 +14,7 @@
   <input type="date" onchange="dateChange(this.value)">
   <input id="Upload" type="button" value="Start">
   <a href="/m/Template.xlsx">Template File</a>
+  <a href="#" onclick="JavaScript:document.location.reload(true)">Refresh</a>
   <input type="file" style="display:none;" id="File">
 
   <div id="output"></div>
@@ -398,13 +399,13 @@ function NowData(priority) {
  
   var minim = [], mincr = cur, minyr = year, first = !(priority != null && priority == 1);
   //today.setHours(0, 0, 0, 0);
-  nfuture[nfuture.length] = [today.getFullYear(),today.getMonth() + 1,today.getDate(),'','',cur,today];
+  nfuture[nfuture.length] = [today.getFullYear(),today.getMonth() + 1,today.getDate(),'','',today,cur];
  
   // find all future balance based off current
   for (var p = f; p < future.length && future[p][0] != ""; p++) {
     var n = nfuture.length;
     nfuture[n] = future[p];
-    nfuture[n][6] = new Date(nfuture[n][0], nfuture[n][1]-1, nfuture[n][2]);
+    nfuture[n][5] = new Date(nfuture[n][0], nfuture[n][1]-1, nfuture[n][2]);
     if (nfuture[n][3] == "" && nfuture[n][4] == "") {
       if (!first)
         first = true;
@@ -412,7 +413,7 @@ function NowData(priority) {
         cur = 0.0;
     } else
       cur += parseFloat(nfuture[n][3] || 0);
-    nfuture[n][5] = cur;
+    nfuture[n][6] = cur;
     if (nfuture[n][0] < minyr || (nfuture[n][1] < 4 && nfuture[n][0] == minyr)) {
       if (cur < mincr)
         mincr = cur;
@@ -444,8 +445,8 @@ function NowData(priority) {
  
   Future.getRange("A2:C" + (nfuture.length + 1)).setNumberFormat("00");
   Future.getRange("D2:D" + (nfuture.length + 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-  Future.getRange("F2:F" + (nfuture.length + 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-  Future.getRange("G2:G" + (nfuture.length + 1)).setNumberFormat("yyyy-mm-dd");
+  Future.getRange("G2:G" + (nfuture.length + 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
+  Future.getRange("F2:F" + (nfuture.length + 1)).setNumberFormat("yyyy-mm-dd");
   
   if (f - x -10 >= 2)
     Future.hideRows(2, f - x - 10);
