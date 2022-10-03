@@ -382,14 +382,21 @@ function NowData(priority) {
     nfuture[nfuture.length] = future[p];
   }
  
-  var cur = Spent.getRange("D1:D1").getValue() + Spent.getRange("D2:D2").getValue() - Spent.getRange("D3:D3").getValue();
- 
-  var blanks = 4;
-  while (Spent.getRange("A" + blanks + ":A" + blanks).getValue() == "") {
-    cur -= parseFloat(Spent.getRange("D" + blanks + ":D" + blanks).getValue() || 0);
-    blanks++;
+  var cur = 0.0, blanks = 4;
+  if (priority == null) {
+    cur = Spent.getRange("D1:D1").getValue() + Spent.getRange("D2:D2").getValue() - Spent.getRange("D3:D3").getValue();
+    while (Spent.getRange("A" + blanks + ":A" + blanks).getValue() == "") {
+      cur -= parseFloat(Spent.getRange("D" + blanks + ":D" + blanks).getValue() || 0);
+      blanks++;
+    }
+  } else {
+    blanks = nfuture.length - 1;
+    while (blanks >= 0 && nfuture[blanks][4] != "") {
+      cur += parseFloat(nfuture[blanks][3] || 0);
+      blanks--;
+    }
   }
- 
+
   var minim = [], mincr = cur, minyr = year;
   //today.setHours(0, 0, 0, 0);
   nfuture[nfuture.length] = [today.getFullYear(),today.getMonth() + 1,today.getDate(),'','',today,cur];
@@ -399,7 +406,7 @@ function NowData(priority) {
     var n = nfuture.length;
     nfuture[n] = future[p];
     nfuture[n][5] = new Date(nfuture[n][0], nfuture[n][1]-1, nfuture[n][2]);
-    if (nfuture[n][3] == "" && nfuture[n][4] == "") {
+    if (nfuture[n][4] == "") {
       if (priority != null) {
         cur = 0.0;
         nfuture[n][5] = "";
