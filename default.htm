@@ -13,17 +13,16 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx-calc@0.6.7/xlsx-calc.min.js" type="text/javascript"></script>
   <input type="date" onchange="dateChange(this.value)">
   <input id="Upload" type="button" value="Start">
-  <a href="/m/Template.xlsx">Template File</a>
+  <a href="/m/Template.xlsx">Template</a>
   <a href="#" onclick="JavaScript:document.location.reload(true)">Refresh</a>
   <input type="file" style="display:none;" id="File">
 
   <div id="output"></div>
 
 <script type="text/javascript">
-var aElement = null;
+var aElement = null, workbook = null;
 var Spent,Future,Over,Plan;
 var pound = decodeURIComponent("%C2%A3");
-
 var today = new Date();
 var year = today.getFullYear() + (today.getMonth()+1 >= 4 ? 1 : 0);
 
@@ -34,14 +33,7 @@ function dateChange(ths) {
   year = today.getFullYear() + (today.getMonth()+1 >= 4 ? 1 : 0);
 }
 
-function ensureVariables(priority) {
-  if (priority == null)
-    return;
-  Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
-}
-
 function SetupPlanSort() {
-  ensureVariables();
   Future.getRange("D1:D1").setValue("SetupPlanSort");
  
   Plan.getRange("A1:N1").gray();
@@ -50,7 +42,8 @@ function SetupPlanSort() {
 }
 
 function SetupSpentFields() {
-  ensureVariables();
+  if (typeof Future == "undefined" || Future == null) return;
+  
   Future.getRange("D1:D1").setValue("SetupSpentFields");
  
   var row = 4;
@@ -108,7 +101,8 @@ function SetupSpentFields() {
 }
 
 function ClearYear() {
-  ensureVariables();
+  if (typeof Future == "undefined" || Future == null) return;
+
   Future.getRange("D1:D1").setValue("ClearYear");
  
   var r = ((year - 2012)*12) + 2;
@@ -116,49 +110,56 @@ function ClearYear() {
 }
 
 function SetupOneYear() {
-  ensureVariables();
   Future.getRange("D1:D1").setValue("SetupOneYear");
  
   futureYear(0, null);
 }
 
-function SetupLimited(priority) {
-  ensureVariables();
-  Future.getRange("D1:D1").setValue("SetupLimited");
- 
-  futureYear(1, priority);
+function SetupLimited() {
+  for (var priority = 1; priority <= 5; priority++) {
+    Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
+    if (typeof Future == "undefined" || Future == null)
+      continue;
+    
+    Future.getRange("D1:D1").setValue("SetupLimited");
+  
+    futureYear(1, priority);
+
+    NowData(priority);
+  }
+  Future = workbook.Sheets['Future'];
 }
 
 function SetupAllYears() {
-  ensureVariables();
   Future.getRange("D1:D1").setValue("SetupAllYears");
  
   var len = Spent.getRange("G1:G1").getValue();
+
   futureYear(len);
 }
 
 function futureYear(len, priority) {
-  var EndDate = new Date(year + len, 4-1, priority != null ? 28 : 1);
+  var EndDate = new Date(year + len, 4-1, 1);
   var NotBefore = null;
   if (len <= 0)
     NotBefore = new Date(year - 1, 4-1, 1);
 
   var future = [];
   var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
+
   // loop all planned items
   for (p = 0; p < plan.length; p++) {
     // if limited skip lower priority
-    if ((priority == null && plan[p][11] != "" && plan[p][11] < 0)
-        || (priority != null && plan[p][11] > priority)
-        || (priority != null && plan[p][11] != "" && plan[p][11] < 0 && plan[p][11] != -priority))
+    if ((priority == null && plan[p][11] == "0")
+        || (priority != null && plan[p][11] > priority))
       continue;
     
     // if there is start date and details
     if (plan[p][6] != "" && plan[p][7] != "" && plan[p][8] != "" && plan[p][10] != "") {
       var t = new Date(plan[p][6], plan[p][7]-1, plan[p][8]);
       if (t >= EndDate) continue;
-      var c = plan[p][11] != "" && plan[p][11] < 0 ? "" : plan[p][9];
-      var n = plan[p][11] != "" && plan[p][11] < 0 ? "" : plan[p][10];
+      var c = plan[p][11] == "0" ? "" : plan[p][9];
+      var n = plan[p][11] == "0" ? "" : plan[p][10];
       
       var ay = plan[p][0];
       if (ay == '') ay = 0;
@@ -240,8 +241,7 @@ function futureYear(len, priority) {
 }
 
 function OverSpent() {
-  ensureVariables();
-  if (Future.getRange("D1:D1").getValue() != "OverSpent") return;
+  if (typeof Future == "undefined" || Future == null || Future.getRange("D1:D1").getValue() != "OverSpent") return;
  
   var spent = Spent.getRange("A4:F" + Spent.getMaxRows()).getValues();
   var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues();
@@ -297,8 +297,7 @@ function OverSpent() {
 }
 
 function OverYearly() {
-  ensureVariables();
-  if (Future.getRange("D1:D1").getValue() != "OverYearly") return;
+  if (typeof Future == "undefined" || Future == null || Future.getRange("D1:D1").getValue() != "OverYearly") return;
  
   var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues();
   var over = [];
@@ -362,8 +361,7 @@ function OverYearly() {
 }
 
 function NowData(priority) {
-  ensureVariables();
-  if (Future.getRange("D1:D1").getValue() != "NowData") return;
+  if (typeof Future == "undefined" || Future == null || Future.getRange("D1:D1").getValue() != "NowData") return;
  
   var future = Future.getRange("A2:G" +  + Future.getMaxRows()).getValues();
  
@@ -384,7 +382,7 @@ function NowData(priority) {
     nfuture[nfuture.length] = future[p];
   }
  
-  var cur = Spent.getRange("D1:D1").getValue() + Spent.getRange("D2:D2").getValue() - Spent.getRange((priority != null ? "E3:E3" : "D3:D3")).getValue();
+  var cur = Spent.getRange("D1:D1").getValue() + Spent.getRange("D2:D2").getValue() - Spent.getRange("D3:D3").getValue();
  
   var blanks = 4;
   while (Spent.getRange("A" + blanks + ":A" + blanks).getValue() == "") {
@@ -392,12 +390,7 @@ function NowData(priority) {
     blanks++;
   }
  
-  if (priority != null && priority == 2)
-    cur = Spent.getRange("E3:E3").getValue() - Spent.getRange("D3:D3").getValue();
-  if (priority != null && priority > 2)
-    cur = 0.0;
- 
-  var minim = [], mincr = cur, minyr = year, first = !(priority != null && priority == 1);
+  var minim = [], mincr = cur, minyr = year;
   //today.setHours(0, 0, 0, 0);
   nfuture[nfuture.length] = [today.getFullYear(),today.getMonth() + 1,today.getDate(),'','',today,cur];
  
@@ -407,10 +400,10 @@ function NowData(priority) {
     nfuture[n] = future[p];
     nfuture[n][5] = new Date(nfuture[n][0], nfuture[n][1]-1, nfuture[n][2]);
     if (nfuture[n][3] == "" && nfuture[n][4] == "") {
-      if (!first)
-        first = true;
-      else
+      if (priority != null) {
         cur = 0.0;
+        nfuture[n][5] = "";
+      }
     } else
       cur += parseFloat(nfuture[n][3] || 0);
     nfuture[n][6] = cur;
@@ -458,295 +451,178 @@ function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms || 10));
 }
 
-async function fileLoaded (e) {
-  window.workbook = XLSX.read(e.target.result, {type: 'binary',cellStyles:true});
-  document.getElementById('output').innerHTML += ('Loaded ' + workbook.SheetNames.length + ' sheets<br>');
-  await timeout()
+function sheetConfig(sheetName) {
+  var s = workbook.Sheets[sheetName];
 
-  workbook.SheetNames.forEach(function(sheetName) {
-    var s = workbook.Sheets[sheetName];
-
-    s.getMaxRows = function() {
-      try {
-        return parseInt(s['!ref'].match(/[0-9]*$/)[0]);
-      } catch (e) {
-        return 64000;
-      }
+  s.getMaxRows = function() {
+    try {
+      return parseInt(s['!ref'].match(/[0-9]*$/)[0]);
+    } catch (e) {
+      return 64000;
     }
-
-    s.getRange = function (r) {
-      r = r.match(/([A-Z]+)([0-9]+):*([A-Z]*)([0-9]*)/);
-      r = [r[1],parseInt(r[2]),r[3] || r[1],parseInt(r[4] || r[2])];
-      var r0 = r[0];
-
-      function nextChar(c) {
-        return XLSX.utils.encode_col(XLSX.utils.decode_col(c) + 1);
-      }
-
-      function data (field) {
-        var ret = [];
-        while (r[3] >= r[1]) {
-          var p =[];
-          while(r[2] >= r[0]) {
-            var o = s[r[0]+r[1]] || {};
-            if (o.t == 'e')
-              p.push(null);
-            else if (o[field])
-              p.push(o[field]);
-            else
-              p.push(field == 'f' ? null : o.t == 'n' ? 0.0 : o.t == 'd' ? null : '');
-            r[0] = nextChar(r[0]);
-          }
-          ret.push(p);
-          r[1]++;
-          r[0]=r0;
-        }
-        return ret;
-      }
-
-      function setter(field,v) {
-        if (s.getMaxRows() < r[3])
-          s['!ref'] = s['!ref'].replace(/[0-9]*$/, r[3]);
-
-        var a=0,b,formula_ref = {},cells = [];
-        while (r[3] >= r[1]) {
-          b = 0;
-          while(r[2] >= r[0]) {
-            var o = r[0]+r[1]
-            if (!s[o])
-              s[o] = {};
-
-            if (field == 'c') {
-              var formula = formula_ref[sheetName + '!' + o] = {
-                formula_ref: formula_ref,
-                wb: workbook,
-                sheet: s,
-                sheet_name: sheetName,
-                cell: s[o],
-                name: o,
-                status: 'new',
-                exec_formula: (v||{}).exec_formula
-              };
-              cells.push(formula);
-            } else if (field == 'w') {
-              s[o].z = v;
-              if (s[o].v && v == '00')
-                s[o].w = (s[o].v < 10 ? '0' : '') + s[o].v;
-              else if (s[o].v && v == 'yyyy-mm-dd')
-                s[o].w = (new Date(s[o].v)).toJSON().substring(0,10);
-              else if (s[o].v && v.indexOf(pound) >= 0)
-                s[o].w = (s[o].v < 0 ? "-" : "") + pound + parseFloat(s[o].v || 0).toFixed(2);
-              else
-                s[o].w = XLSX.SSF.format(v,s[o].v)
-            } else if (field == null || !v[a] || !v[a][b]) {
-              delete s[o].v;
-              delete s[o].f;
-              delete s[o].w;
-            } else if (field == 'v') {
-              s[o].v = v[a][b];
-              s[o].w = v[a][b].toString();
-              s[o].t = typeof v[a][b] == 'number' ? 'n' : typeof v[a][b] == 'object' ? 'd' : 't'
-            } else if (field == 'f') {
-              // TODO: this is a dirty hack for what is needed specifically not actual fix
-              s[o].f = v[a][b] ? v[a][b].replace('$E3','$E' + r[1]).replace('$D3','$D' + r[1]).replace(/^=/,'') : null;
-              s[o].t = v[a][b] ? 's' : 't';
-              s[o].v = '';
-              s[o].w = '';
-            }
-            r[0] = nextChar(r[0]);
-            b++;
-          }
-          r[1]++;
-          r[0]=r0;
-          a++;
-        }
-        return cells;
-      }
-
-      return {
-        getValue: function(){
-          return data('v')[0][0];
-        },
-        setValue: function(v) {
-          setter('v',[[v]]);
-        },
-        getValues: function() {
-          return data('v');
-        },
-        setValues: function(v) {
-          setter('v',v);
-        },
-        clear: function () {
-          setter(null,null);
-        },
-        getFormula: function(){
-          return data('f')[0][0];
-        },
-        setFormula: function(v) {
-          setter('f',[[v]]);
-        },
-        getFormulasR1C1: function() {
-          return data('f');
-        },
-        setFormulasR1C1: function(v) {
-          setter('f',v);
-        },
-        setNumberFormat: function(f) {
-          setter('w',f.replace(pound,'"' + pound + '"').replace(pound,'"' + pound + '"'));
-        },
-        mergeVertically: function() {
-          // TODO: not needed as clear doesnt unmerge but will be needed for new years
-        },
-        sort: function(p) {
-          // TODO: not done as little benefit for large complication
-        },
-        recalc: function () {
-          //var c = XLSX_CALC.calculator(workbook);
-          //var cells = setter('c',c);
-          //for (var i in cells)
-          //  c.exec_formula(cells[i]);
-          //c.execute();
-        },
-        gray: function(p) {
-          // TODO: setup background colours
-          //var cells = setter('c',null);
-          //for (var i in cells)
-          //  cells[i].cell.s = {fill: {bgColor: 'ffeeeeee'}};
-        }
-      }
-    }
-
-    function showHide(b,e,v) {
-      s['!rows'] = s['!rows'] || {};
-      b--;
-      while (b <= e) {
-        s['!rows'][b] = s['!rows'][b] || {};
-        s['!rows'][b].hidden = v;
-        b++;
-      }
-    }
-
-    s.hideRows = function(b,e) {
-      showHide(b,e,true);
-    }
-    s.showRows = function(b,e) {
-      showHide(b,e,false);
-    }
-  });
-
-  Spent = workbook.Sheets['Spent'];
-  Future = workbook.Sheets['Future'];
-  Over = workbook.Sheets['Over'];
-  Plan = workbook.Sheets['Plan'];
-
-  XLSX_CALC.import_functions({
-    'FIND': function (a,b,c) {
-      return (b || '').toString().indexOf((a || '').toString(), parseInt(c || 0));
-    },
-    'LOWER': function (a) {
-      return (a || '').toString().toLowerCase();
-    },
-    'ISERROR': function (a) {
-      return a == -1;
-    },
-    'DATE': function (y,m,d) {
-      return new Date(parseInt(y),parseInt(m)-1,parseInt(d),0,0,0,0);
-    },
-    'NOT': function (a) {
-      return !a;
-    },
-    'TODAY': function () {
-      var t = new Date();
-      t.setHours(0,0,0,0);
-      return t;
-    }
-  }, {override: true});
-
-  document.getElementById('output').innerHTML += ('Sorting<br>');
-  await timeout()
-  SetupPlanSort();
-  document.getElementById('output').innerHTML += ('Blanks<br>');
-  await timeout()
-  var row = SetupSpentFields();
-  ClearYear();
-
-  document.getElementById('output').innerHTML += ('Calc<br>');
-  await timeout()
-
-  Spent.getRange('F4:F' + row).recalc();
-  Spent.getRange('H4:M' + row).recalc();
-  Spent.getRange('O4:S' + row).recalc();
-  Spent.getRange('H2:M2').recalc();
-  Spent.getRange('O2:S2').recalc();
-  Over.getRange('L1:L' + Over.getMaxRows()).recalc();
-  Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
-        
-  XLSX_CALC(workbook);
-
-  document.getElementById('output').innerHTML += ('Years<br>');
-  await timeout()
-  SetupOneYear();
-  document.getElementById('output').innerHTML += ('Overs<br>');
-  await timeout()
-  OverSpent();
-  document.getElementById('output').innerHTML += ('Grouping<br>');
-  await timeout()
-  OverYearly();
-        
-  document.getElementById('output').innerHTML += ('Calc<br>');
-  await timeout()
-
-  Over.getRange('H1:H' + Over.getMaxRows()).recalc();
-  Over.getRange('K1:K' + Over.getMaxRows()).recalc();
-  Over.getRange('L1:L' + Over.getMaxRows()).recalc();
-  Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
-       
-  XLSX_CALC(workbook);
-
-  document.getElementById('output').innerHTML += ('F1-5<br>');
-  await timeout()
-
-  for (var priority = 1; priority <= 5; priority++) {
-    ensureVariables(priority);
-    if (typeof Future == "undefined" || Future == null)
-      continue;
-
-    SetupLimited(priority);
-    await timeout();
-
-    NowData(priority);
-    await timeout();
   }
 
-  Future = workbook.Sheets['Future'];
-  XLSX_CALC(workbook);
+  s.getRange = function (r) {
+    r = r.match(/([A-Z]+)([0-9]+):*([A-Z]*)([0-9]*)/);
+    r = [r[1],parseInt(r[2]),r[3] || r[1],parseInt(r[4] || r[2])];
+    var r0 = r[0];
 
-  document.getElementById('output').innerHTML += ('Years<br>');
-  await timeout()
-  SetupAllYears();
-  document.getElementById('output').innerHTML += ('Overs<br>');
-  await timeout()
-  OverSpent();
-  document.getElementById('output').innerHTML += ('Grouping<br>');
-  await timeout()
-  OverYearly();
-  document.getElementById('output').innerHTML += ('Now<br>');
-  await timeout()
-  NowData();
+    function nextChar(c) {
+      return XLSX.utils.encode_col(XLSX.utils.decode_col(c) + 1);
+    }
 
-  document.getElementById('output').innerHTML += ('Calc<br>');
-  await timeout()
+    function getter(field) {
+      var ret = [];
+      while (r[3] >= r[1]) {
+        var p =[];
+        while(r[2] >= r[0]) {
+          var o = s[r[0]+r[1]] || {};
+          if (o.t == 'e')
+            p.push(null);
+          else if (o[field])
+            p.push(o[field]);
+          else
+            p.push(field == 'f' ? null : o.t == 'n' ? 0.0 : o.t == 'd' ? null : '');
+          r[0] = nextChar(r[0]);
+        }
+        ret.push(p);
+        r[1]++;
+        r[0]=r0;
+      }
+      return ret;
+    }
 
-  Over.getRange('H1:H' + Over.getMaxRows()).recalc();
-  Over.getRange('L1:L' + Over.getMaxRows()).recalc();
-  Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
-  Plan.getRange('M1:N' + Plan.getMaxRows()).recalc();
-        
-  XLSX_CALC(workbook);
+    function setter(field,v) {
+      if (s.getMaxRows() < r[3])
+        s['!ref'] = s['!ref'].replace(/[0-9]*$/, r[3]);
 
-  document.getElementById('output').innerHTML += ('Saving ');
-  await timeout();
-      
+      var a=0,b,formula_ref = {},cells = [];
+      while (r[3] >= r[1]) {
+        b = 0;
+        while(r[2] >= r[0]) {
+          var o = r[0]+r[1]
+          if (!s[o])
+            s[o] = {};
+
+          if (field == 'c') {
+            var formula = formula_ref[sheetName + '!' + o] = {
+              formula_ref: formula_ref,
+              wb: workbook,
+              sheet: s,
+              sheet_name: sheetName,
+              cell: s[o],
+              name: o,
+              status: 'new',
+              exec_formula: (v||{}).exec_formula
+            };
+            cells.push(formula);
+          } else if (field == 'w') {
+            s[o].z = v;
+            if (s[o].v && v == '00')
+              s[o].w = (s[o].v < 10 ? '0' : '') + s[o].v;
+            else if (s[o].v && v == 'yyyy-mm-dd')
+              s[o].w = (new Date(s[o].v)).toJSON().substring(0,10);
+            else if (s[o].v && v.indexOf(pound) >= 0)
+              s[o].w = (s[o].v < 0 ? "-" : "") + pound + parseFloat(s[o].v || 0).toFixed(2);
+            else
+              s[o].w = XLSX.SSF.format(v,s[o].v)
+          } else if (field == null || !v[a] || !v[a][b]) {
+            delete s[o].v;
+            delete s[o].f;
+            delete s[o].w;
+          } else if (field == 'v') {
+            s[o].v = v[a][b];
+            s[o].w = v[a][b].toString();
+            s[o].t = typeof v[a][b] == 'number' ? 'n' : typeof v[a][b] == 'object' ? 'd' : 't'
+          } else if (field == 'f') {
+            // TODO: this is a dirty hack for what is needed specifically not actual fix
+            s[o].f = v[a][b] ? v[a][b].replace('$E3','$E' + r[1]).replace('$D3','$D' + r[1]).replace(/^=/,'') : null;
+            s[o].t = v[a][b] ? 's' : 't';
+            s[o].v = '';
+            s[o].w = '';
+          }
+          r[0] = nextChar(r[0]);
+          b++;
+        }
+        r[1]++;
+        r[0]=r0;
+        a++;
+      }
+      return cells;
+    }
+
+    return {
+      getValue: function(){
+        return getter('v')[0][0];
+      },
+      setValue: function(v) {
+        setter('v',[[v]]);
+      },
+      getValues: function() {
+        return getter('v');
+      },
+      setValues: function(v) {
+        setter('v',v);
+      },
+      clear: function () {
+        setter(null,null);
+      },
+      getFormula: function(){
+        return getter('f')[0][0];
+      },
+      setFormula: function(v) {
+        setter('f',[[v]]);
+      },
+      getFormulasR1C1: function() {
+        return getter('f');
+      },
+      setFormulasR1C1: function(v) {
+        setter('f',v);
+      },
+      setNumberFormat: function(f) {
+        setter('w',f.replace(pound,'"' + pound + '"').replace(pound,'"' + pound + '"'));
+      },
+      mergeVertically: function() {
+        // TODO: not needed as clear doesnt unmerge but will be needed for new years
+      },
+      sort: function(p) {
+        // TODO: not done as little benefit for large complication
+      },
+      recalc: function () {
+        //var c = XLSX_CALC.calculator(workbook);
+        //var cells = setter('c',c);
+        //for (var i in cells)
+        //  c.exec_formula(cells[i]);
+        //c.execute();
+      },
+      gray: function(p) {
+        // TODO: setup background colours
+        //var cells = setter('c',null);
+        //for (var i in cells)
+        //  cells[i].cell.s = {fill: {bgColor: 'ffeeeeee'}};
+      }
+    }
+  }
+
+  function showHide(b,e,v) {
+    s['!rows'] = s['!rows'] || {};
+    b--;
+    while (b <= e) {
+      s['!rows'][b] = s['!rows'][b] || {};
+      s['!rows'][b].hidden = v;
+      b++;
+    }
+  }
+
+  s.hideRows = function(b,e) {
+    showHide(b,e,true);
+  }
+  s.showRows = function(b,e) {
+    showHide(b,e,false);
+  }
+}
+
+function saving() {
   function s2ab(s) {
     var buf = new ArrayBuffer(s.length);
     var view = new Uint8Array(buf);
@@ -766,6 +642,99 @@ async function fileLoaded (e) {
   aElement.target = "_blank";
   document.body.appendChild(aElement);
   aElement.click();
+}
+
+function calc() {
+  XLSX_CALC(workbook);
+}
+
+async function fileLoaded (e) {
+  workbook = null, Spent = null, Future = null, Over = null, Plan = null;
+
+  workbook = XLSX.read(e.target.result, {type: 'binary',cellStyles:true});
+  document.getElementById('output').innerHTML += ('Loaded ' + workbook.SheetNames.length + ' sheets<br>');
+  await timeout()
+
+  workbook.SheetNames.forEach(sheetConfig);
+  Spent = workbook.Sheets['Spent'];
+  Future = workbook.Sheets['Future'];
+  Over = workbook.Sheets['Over'];
+  Plan = workbook.Sheets['Plan'];
+
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:SetupPlanSort()>Sorting</a><br>');
+  await timeout()
+  SetupPlanSort();
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:SetupSpentFields()>Blanks</a><br>');
+  await timeout()
+  var row = SetupSpentFields();
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:ClearYear()>Cleardown</a><br>');
+  await timeout()
+  ClearYear();
+
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:calc()>Calc</a><br>');
+  await timeout()
+
+  Spent.getRange('F4:F' + row).recalc();
+  Spent.getRange('H4:M' + row).recalc();
+  Spent.getRange('O4:S' + row).recalc();
+  Spent.getRange('H2:M2').recalc();
+  Spent.getRange('O2:S2').recalc();
+  Over.getRange('L1:L' + Over.getMaxRows()).recalc();
+  Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
+
+  XLSX_CALC(workbook);
+
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:SetupOneYear()>Year</a><br>');
+  await timeout()
+  SetupOneYear();
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:OverSpent()>Over</a><br>');
+  await timeout()
+  OverSpent();
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:OverYearly()>Grouping</a><br>');
+  await timeout()
+  OverYearly();
+
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:calc()>Calc</a><br>');
+  await timeout()
+
+  Over.getRange('H1:H' + Over.getMaxRows()).recalc();
+  Over.getRange('K1:K' + Over.getMaxRows()).recalc();
+  Over.getRange('L1:L' + Over.getMaxRows()).recalc();
+  Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
+
+  XLSX_CALC(workbook);
+
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:>F1-5</a><br>');
+  await timeout()
+  SetupLimited();
+
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:SetupAllYears()>Years</a><br>');
+  await timeout()
+  SetupAllYears();
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:OverSpent()>Overs</a><br>');
+  await timeout()
+  OverSpent();
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:OverYearly()>Grouping</a><br>');
+  await timeout()
+  OverYearly();
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:NowData()>Now</a><br>');
+  await timeout()
+  NowData();
+
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:calc()>Calc</a><br>');
+  await timeout()
+
+  Over.getRange('H1:H' + Over.getMaxRows()).recalc();
+  Over.getRange('L1:L' + Over.getMaxRows()).recalc();
+  Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
+  Plan.getRange('M1:N' + Plan.getMaxRows()).recalc();
+
+  XLSX_CALC(workbook);
+
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:saving()>Saving</a><br>');
+  await timeout();
+
+  saving();
 }
 
 document.getElementById('File').onchange = function () {
@@ -792,7 +761,30 @@ document.getElementById('Upload').onclick = function () {
 };
     
 setTimeout(function () {
-    document.getElementById('Upload').click();
+  XLSX_CALC.import_functions({
+    'FIND': function (a,b,c) {
+      return (b || '').toString().indexOf((a || '').toString(), parseInt(c || 0));
+    },
+    'LOWER': function (a) {
+      return (a || '').toString().toLowerCase();
+    },
+    'ISERROR': function (a) {
+      return a == -1;
+    },
+    'DATE': function (y,m,d) {
+      return new Date(parseInt(y),parseInt(m)-1,parseInt(d),0,0,0,0);
+    },
+    'NOT': function (a) {
+      return !a;
+    },
+    'TODAY': function () {
+      var t = new Date();
+      t.setHours(0,0,0,0);
+      return t;
+    }
+  }, {override: true});
+
+  document.getElementById('Upload').click();
 },250);
 </script>
 </body>
