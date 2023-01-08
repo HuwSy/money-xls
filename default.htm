@@ -476,7 +476,7 @@ function sheetConfig(sheetName) {
       var ret = [];
       while (r[3] >= r[1]) {
         var p =[];
-        while(r[2] >= r[0]) {
+        while(('0000'+r[2]).slice(-5) >= ('0000'+r[0]).slice(-5)) {
           var o = s[r[0]+r[1]] || {};
           if (o.t == 'e')
             p.push(null);
@@ -500,7 +500,7 @@ function sheetConfig(sheetName) {
       var a=0,b,formula_ref = {},cells = [];
       while (r[3] >= r[1]) {
         b = 0;
-        while(r[2] >= r[0]) {
+        while(('0000'+r[2]).slice(-5) >= ('0000'+r[0]).slice(-5)) {
           var o = r[0]+r[1]
           if (!s[o])
             s[o] = {};
