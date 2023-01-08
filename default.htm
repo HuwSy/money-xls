@@ -85,9 +85,9 @@ function SetupSpentFields() {
   }
  
   var sumrow = row - 1;
-  var sum = Spent.getRange("F3:Y3").getFormulasR1C1();
+  var sum = Spent.getRange("F3:Z3").getFormulasR1C1();
   while (sumrow >= 4 && sumrow > daterow) {
-    Spent.getRange("F" + sumrow + ":Y" + sumrow).setFormulasR1C1(sum);
+    Spent.getRange("F" + sumrow + ":Z" + sumrow).setFormulasR1C1(sum);
     sumrow--;
   }
 
@@ -661,7 +661,7 @@ async function fileLoaded (e) {
   Over = workbook.Sheets['Over'];
   Plan = workbook.Sheets['Plan'];
 
-  Spent['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 75/7},{width: 75/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7}];
+  Spent['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 75/7},{width: 75/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7}];
   for (var priority = 5; priority >= 0; priority--) {
     Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
     if (typeof Future == "undefined" || Future == null)
@@ -753,10 +753,10 @@ async function fileLoaded (e) {
       Spent.getRange("D" + m + ":D" + m).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
     } catch (e) {}
     try {
-      Spent.getRange("F" + m + ":Y" + m).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
+      Spent.getRange("F" + m + ":Z" + m).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
     } catch (e) {}
   }
-  Spent.getRange("A2:Y2").gray();
+  Spent.getRange("A2:Z2").gray();
 
   Plan.getRange("A2:I" + Plan.getMaxRows()).setNumberFormat("00");
   mRows = Plan.getMaxRows();
