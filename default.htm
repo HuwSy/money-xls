@@ -110,7 +110,7 @@ function SetupOneYear() {
 }
 
 function SetupLimited() {
-  for (var priority = 1; priority <= 5; priority++) {
+  for (var priority = 1; priority <= 9; priority++) {
     Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
     if (typeof Future == "undefined" || Future == null)
       continue;
@@ -714,7 +714,7 @@ async function fileLoaded (e) {
 
   XLSX_CALC(workbook);
 
-  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:>F1-5</a><br>');
+  document.getElementById('output').innerHTML += ('<a onclick=JavaScript:>F1-9</a><br>');
   await timeout()
   SetupLimited();
 
