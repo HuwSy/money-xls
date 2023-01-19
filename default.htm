@@ -110,7 +110,7 @@ function SetupOneYear() {
 }
 
 function SetupLimited() {
-  for (var priority = 1; priority <= 9; priority++) {
+  for (var priority = 0; priority <= 9; priority++) {
     Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
     if (typeof Future == "undefined" || Future == null)
       continue;
@@ -477,6 +477,7 @@ function sheetConfig(sheetName) {
       while (r[3] >= r[1]) {
         var p =[];
         while(('0000'+r[2]).slice(-5) >= ('0000'+r[0]).slice(-5)) {
+         try {
           var o = s[r[0]+r[1]] || {};
           if (o.t == 'e')
             p.push(null);
@@ -484,7 +485,10 @@ function sheetConfig(sheetName) {
             p.push(o[field]);
           else
             p.push(field == 'f' ? null : o.t == 'n' ? 0.0 : o.t == 'd' ? null : '');
-          r[0] = nextChar(r[0]);
+         } catch (e) {
+          p.push(null);
+         }
+         r[0] = nextChar(r[0]);
         }
         ret.push(p);
         r[1]++;
@@ -501,7 +505,8 @@ function sheetConfig(sheetName) {
       while (r[3] >= r[1]) {
         b = 0;
         while(('0000'+r[2]).slice(-5) >= ('0000'+r[0]).slice(-5)) {
-          var o = r[0]+r[1]
+         var o = r[0]+r[1]
+         try {
           if (!s[o])
             s[o] = {};
 
@@ -537,13 +542,14 @@ function sheetConfig(sheetName) {
             s[o].t = typeof v[a][b] == 'number' ? 'n' : typeof v[a][b] == 'object' ? 'd' : 't'
           } else if (field == 'f') {
             // TODO: this is a dirty hack for what is needed specifically not actual fix
-            s[o].f = v[a][b] ? v[a][b].replace('$E3','$E' + r[1]).replace('$D3','$D' + r[1]).replace(/^=/,'') : null;
+            s[o].f = v[a][b] ? v[a][b].replace(/\$A3/g,'$A' + r[1]).replace(/\$E3/g,'$E' + r[1]).replace(/\$D3/g,'$D' + r[1]).replace(/\$X3/g,'$X' + r[1]).replace(/\$Y3/g,'$Y' + r[1]).replace(/^=/,'') : null;
             s[o].t = v[a][b] ? 's' : 't';
             s[o].v = '';
             s[o].w = '';
           }
-          r[0] = nextChar(r[0]);
-          b++;
+         } catch (e) {}
+         r[0] = nextChar(r[0]);
+         b++;
         }
         r[1]++;
         r[0]=r0;
@@ -662,7 +668,7 @@ async function fileLoaded (e) {
   Plan = workbook.Sheets['Plan'];
 
   Spent['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 75/7},{width: 75/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7}];
-  for (var priority = 5; priority >= 0; priority--) {
+  for (var priority = 9; priority >= 0; priority--) {
     Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
     if (typeof Future == "undefined" || Future == null)
       continue;
