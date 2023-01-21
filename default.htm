@@ -156,12 +156,13 @@
         futureYear(1, priority);
         nowData(priority);
       }
-      
+      document.getElementById('output').innerHTML += ('<br>');
+
       Future = workbook.Sheets['Future'];
-      document.getElementById('output').innerHTML += ('<br>...calc<br>');
+      document.getElementById('output').innerHTML += ('...calc<br>');
       await timeout()
       calc(3);
-      document.getElementById('output').innerHTML += ('<br>...done<br>');
+      document.getElementById('output').innerHTML += ('...done<br>');
       await timeout()
     }
 
