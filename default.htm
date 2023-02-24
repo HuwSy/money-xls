@@ -198,7 +198,7 @@
           continue;
         Future['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 100/7}];
       }
-      Over['!cols'] = [{width: 45/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 25/7},{width: 60/7},{width: 100/7},{width: 100/7},{width: 60/7},{width: 60/7}];
+      Over['!cols'] = [{width: 45/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 60/7},{width: 60/7}];
       Plan['!cols'] = [{width: 25/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 25/7},{width: 125/7},{width: 125/7},{width: 100/7}];
 
       Spent.getRange("B1:C1").setNumberFormat("00");
@@ -470,7 +470,7 @@
         Over.getRange("I" + s + ":I" + s).setValue(over[i][1]);
         Over.getRange("I" + s + ":I" + s).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
         Over.getRange("K" + s + ":K" + e).mergeVertically();
-        Over.getRange("K" + s + ":K" + s).setFormula("=IF((TODAY()-DATE(A" + s + ",4,1))/7<1,52,(TODAY()-DATE(A" + s + ",4,1))/7)");
+        Over.getRange("K" + s + ":K" + s).setFormula("=IF(TODAY()-DATE(A" + s + ",4,1)<1,52,IF(TODAY()-DATE(A" + s + ",4,1)>366,52,(TODAY()-DATE(A" + s + ",4,1))/7))");
         Over.getRange("K" + s + ":K" + s).setNumberFormat('00');
         Over.getRange("L" + s + ":L" + e).mergeVertically();
         Over.getRange("L" + s + ":L" + s).setFormula("=H" + s + "/K" + s + "");
@@ -691,7 +691,20 @@
                 s[o].t = typeof v[a][b] == 'number' ? 'n' : typeof v[a][b] == 'object' ? 'd' : 't'
               } else if (field == 'f') {
                 // TODO: this is a dirty hack for what is needed specifically not actual fix
-                s[o].f = v[a][b] ? v[a][b].replace(/\$A3/g,'$A' + r[1]).replace(/\$E3/g,'$E' + r[1]).replace(/\$D3/g,'$D' + r[1]).replace(/\$X3/g,'$X' + r[1]).replace(/\$Y3/g,'$Y' + r[1]).replace(/^=/,'') : null;
+                s[o].f = v[a][b] ? v[a][b]
+                  .replace(/\$A3/g,'$A' + r[1])
+                  .replace(/\$B3/g,'$B' + r[1])
+                  .replace(/\$C3/g,'$C' + r[1])
+                  .replace(/\$D3/g,'$D' + r[1])
+                  .replace(/\$E3/g,'$E' + r[1])
+                  .replace(/\$F3/g,'$F' + r[1])
+                  .replace(/\$G3/g,'$G' + r[1])
+                  .replace(/\$H3/g,'$H' + r[1])
+                  .replace(/\$X3/g,'$X' + r[1])
+                  .replace(/\$Y3/g,'$Y' + r[1])
+                  .replace(/\$Z3/g,'$Z' + r[1])
+                  .replace(/^=/,'')
+                : null;
                 s[o].t = v[a][b] ? 's' : 't';
                 s[o].v = '';
                 s[o].w = '';
