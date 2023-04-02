@@ -13,17 +13,29 @@
     var workbook = null;
     var Spent,Future,Over,Plan;
     var pound = decodeURIComponent("%C2%A3");
+    
+    var begining = new Date(2011, 3, 1);
     var today = new Date();
-    var year = today.getFullYear() + (today.getMonth()+1 >= 4 ? 1 : 0);
+    var year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
+    
+    function StartChange(ths) {
+      if (ths == null || ths == "")
+        begining = new Date(2011, 3, 1);
+      else {
+        var val = typeof ths == "string" ? ths : ths.toISOString();
+        begining = new Date(val.substring(0,4),parseInt(val.substring(5,7))-1,val.substring(8,10),0,0,0);
+      }
+      year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
+    }
 
-    function DateChange(ths) {
+    function TodayChange(ths) {
       if (ths == null || ths == "")
         today = new Date();
       else {
         var val = typeof ths == "string" ? ths : ths.toISOString();
         today = new Date(val.substring(0,4),parseInt(val.substring(5,7))-1,val.substring(8,10),12,0,0);
       }
-      year = today.getFullYear() + (today.getMonth()+1 >= 4 ? 1 : 0);
+      year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
     }
     
     function Upload () {
@@ -278,10 +290,10 @@
     }
 
     function futureYear(len, priority) {
-      var EndDate = new Date(year + len, 4-1, 1);
+      var EndDate = new Date(year + len, begining.getMonth() + 1-1, 1);
       var NotBefore = null;
       if (len <= 0)
-        NotBefore = new Date(year - 1, 4-1, 1);
+        NotBefore = new Date(year - 1, begining.getMonth() + 1-1, 1);
 
       var future = [];
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
@@ -415,7 +427,7 @@
      
       Over.getRange("A2:F" + Over.getMaxRows()).clear();
      
-      var start = (((over[0][0] - 2011) * 12) + 2);
+      var start = (((over[0][0] - begining.getFullYear()) * 12) + 2);
       Over.getRange("A" + start + ":F" + (start + over.length - 1)).setValues(over);
      
       Over.getRange("A" + start + ":B" + (start + over.length - 1)).setNumberFormat("00");
@@ -470,7 +482,7 @@
         Over.getRange("I" + s + ":I" + s).setValue(over[i][1]);
         Over.getRange("I" + s + ":I" + s).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
         Over.getRange("K" + s + ":K" + e).mergeVertically();
-        Over.getRange("K" + s + ":K" + s).setFormula("=IF(TODAY()-DATE(A" + s + ",4,1)<1,52,IF(TODAY()-DATE(A" + s + ",4,1)>366,52,(TODAY()-DATE(A" + s + ",4,1))/7))");
+        Over.getRange("K" + s + ":K" + s).setFormula("=IF(TODAY()-DATE(A" + s + ","+(begining.getMonth() + 1)+",1)<1,52,IF(TODAY()-DATE(A" + s + ","+(begining.getMonth() + 1)+",1)>366,52,(TODAY()-DATE(A" + s + ","+(begining.getMonth() + 1)+",1))/7))");
         Over.getRange("K" + s + ":K" + s).setNumberFormat('00');
         Over.getRange("L" + s + ":L" + e).mergeVertically();
         Over.getRange("L" + s + ":L" + s).setFormula("=H" + s + "/K" + s + "");
@@ -813,8 +825,12 @@
   </script>
 </head>
 <body>
-  <input type="date" onchange="DateChange(this.value)" placeholder="Override todays date">
-  <input id="Upload" onclick="Upload()" type="button" value="Start">
+  <input id="Upload" onclick="Upload()" type="button" value="Upload">
+  Start:
+  <input type="date" onchange="StartChange(this.value)" placeholder="Override start date">
+  Today:
+  <input type="date" onchange="TodayChange(this.value)" placeholder="Override todays date">
+  
   <a href="Template.xlsx">Template</a>
   <a href="#" onclick="document.location.reload(true)">Refresh</a>
   <input type="file" style="display:none;" id="File" onchange="FileChange(this)">
