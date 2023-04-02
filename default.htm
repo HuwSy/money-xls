@@ -127,7 +127,7 @@
       document.getElementById('output').innerHTML += ('...clearing<br>');
       await timeout()
       
-      var r = ((year - 2012)*12) + 2;
+      var r = ((year - begining.getFullYear()+1)*12) + 2;
       Over.getRange("H" + r + ":L" + (r + 11)).setFormula("=0");
 
       document.getElementById('output').innerHTML += ('...calc<br>');
@@ -459,8 +459,8 @@
         // loop back to next year
       }
       
-      if (year > 2012)
-        Over.showRows(2, ((year - 2012)*12) + 1);
+      if (year > begining.getFullYear()+1)
+        Over.showRows(2, ((year - begining.getFullYear()+1)*12) + 1);
 
       //Over.getRange("H2:I" + Over.getMaxRows()).clear();
       Over.getRange("I2:I" + Over.getMaxRows()).clear();
@@ -470,7 +470,7 @@
       for (var i = 0; i < over.length; i++) {
         if (i == over.length - 1 && over[i][1] == 0)
           continue;
-        var s = (((over[i][0] - 2012) * 12) + 2);
+        var s = (((over[i][0] - begining.getFullYear()+1) * 12) + 2);
         var e = s + 11;
 
         Over.getRange("A" + s + ":A" + s).setValue((over[i][0] - 1));
@@ -490,8 +490,8 @@
       }
      
       // hide previous years for now
-      if (year > 2012)
-        Over.hideRows(2, ((year - 2012)*12));
+      if (year > begining.getFullYear()+1)
+        Over.hideRows(2, ((year - begining.getFullYear()+1)*12));
     }
 
     function nowData(priority) {
@@ -560,7 +560,7 @@
       if (priority == null) {
         Over.getRange("J2:J" + Over.getMaxRows()).clear();
         
-        var r = ((year - 2012) * 12) + 2;
+        var r = ((year - begining.getFullYear()+1) * 12) + 2;
         for (var m in minim) {
           Over.getRange("A" + r + ":A" + r).setValue((minim[m][1] - 1));
           Over.getRange("A" + (r + 11) + ":A" + (r + 11)).setValue(minim[m][1]);
@@ -827,7 +827,7 @@
 <body>
   <input id="Upload" onclick="Upload()" type="button" value="Upload">
   Start:
-  <input type="date" onchange="StartChange(this.value)" placeholder="Override start date">
+  <input type="date" onchange="StartChange(this.value)" value="2011-04-01" placeholder="Override start date">
   Today:
   <input type="date" onchange="TodayChange(this.value)" placeholder="Override todays date">
   
