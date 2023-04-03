@@ -473,7 +473,7 @@
       for (var i = 0; i < over.length; i++) {
         if (i == over.length - 1 && over[i][1] == 0)
           continue;
-        var s = (((over[i][0] - begining.getFullYear()+1) * 12) + 2);
+        var s = (((over[i][0] - begining.getFullYear()-1) * 12) + 2);
         var e = s + 11;
 
         Over.getRange("A" + s + ":A" + s).setValue((over[i][0] - 1));
