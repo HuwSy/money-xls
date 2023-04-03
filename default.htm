@@ -460,12 +460,18 @@
      
       Over.getRange("A2:F" + Over.getMaxRows()).clear();
       Over.getRange("I2:I" + Over.getMaxRows()).clear();
-     
-      var start = (((over[0][0] - begining.getFullYear()) * 12) + 2);
-      Over.getRange("A" + start + ":F" + (start + over.length - 1)).setValues(over);
-     
-      Over.getRange("A" + start + ":B" + (start + over.length - 1)).setNumberFormat("00");
-      Over.getRange("C" + start + ":F" + (start + over.length - 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
+      
+      for (var i = 0; i < over.length; i++) {
+        var start = (((over[i][0] - begining.getFullYear()-1) * 12) + 2);
+        
+        if (start < 2)
+          continue;
+        
+        Over.getRange("A" + start + ":F" + start).setValues(over);
+        
+        Over.getRange("A" + start + ":B" + start).setNumberFormat("00");
+        Over.getRange("C" + start + ":F" + start).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
+      }
     }
 
     function overYearly() {
