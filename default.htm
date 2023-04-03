@@ -513,7 +513,7 @@
           continue;
 
         Over.getRange("A" + s + ":A" + s).setValue((over[i][0] - 1));
-        Over.getRange("A" + e + ":A" + e).setValue(over[i][0] - (begining.getMonth() > 0 ? 1 : 0));
+        Over.getRange("A" + e + ":A" + e).setValue(over[i][0] - (begining.getMonth() > 0 ? 0 : 1));
         Over.getRange("H" + s + ":H" + e).mergeVertically();
         Over.getRange("H" + s + ":H" + s).setFormula("=SUM(F" + s + ":F" + e + ")");
         Over.getRange("H" + s + ":H" + s).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
