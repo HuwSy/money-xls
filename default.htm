@@ -429,6 +429,7 @@
       }
      
       Over.getRange("A2:F" + Over.getMaxRows()).clear();
+      Over.getRange("I2:I" + Over.getMaxRows()).clear();
      
       var start = (((over[0][0] - begining.getFullYear()) * 12) + 2);
       Over.getRange("A" + start + ":F" + (start + over.length - 1)).setValues(over);
@@ -464,10 +465,6 @@
       
       if (year > begining.getFullYear()+1)
         Over.showRows(2, ((year - begining.getFullYear()+1)*12) + 1);
-
-      //Over.getRange("H2:I" + Over.getMaxRows()).clear();
-      Over.getRange("I2:I" + Over.getMaxRows()).clear();
-      //Over.getRange("K2:L" + Over.getMaxRows()).clear();
      
       // output merged cells
       for (var i = 0; i < over.length; i++) {
@@ -563,7 +560,7 @@
       if (priority == null) {
         Over.getRange("J2:J" + Over.getMaxRows()).clear();
         
-        var r = ((year - begining.getFullYear()+1) * 12) + 2;
+        var r = ((year - begining.getFullYear()-1) * 12) + 2;
         for (var m in minim) {
           Over.getRange("A" + r + ":A" + r).setValue((minim[m][1] - 1));
           Over.getRange("A" + (r + 11) + ":A" + (r + 11)).setValue(minim[m][1] - (begining.getMonth() > 0 ? 0 : 1));
