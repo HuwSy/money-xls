@@ -462,7 +462,7 @@
       Over.getRange("I2:I" + Over.getMaxRows()).clear();
       
       for (var i = 0; i < over.length; i++) {
-        var start = (((over[i][0] - begining.getFullYear()-1) * 12) + 2);
+        var start = (((over[i][0] - begining.getFullYear()) * 12) + 2);
         
         if (start < 2)
           continue;
