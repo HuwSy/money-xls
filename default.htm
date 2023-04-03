@@ -502,6 +502,9 @@
           continue;
         var s = (((over[i][0] - begining.getFullYear()-1) * 12) + 2);
         var e = s + 11;
+        
+        if (s < 2)
+          continue;
 
         Over.getRange("A" + s + ":A" + s).setValue((over[i][0] - 1));
         Over.getRange("A" + e + ":A" + e).setValue(over[i][0] - (begining.getMonth() > 0 ? 1 : 0));
