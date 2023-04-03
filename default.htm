@@ -452,8 +452,8 @@
           f++;
         }
 
-        // while its before april sum up
-        while (f < future.length && future[f][0] != "" && future[f][1] != "" && future[f][1] < 4 && future[f][0] == over[o][0]) {
+        // while its before month sum up
+        while (f < future.length && future[f][0] != "" && future[f][1] != "" && future[f][1] < begining.getMonth() + 1 && future[f][0] == over[o][0]) {
           over[o][1] += parseFloat(future[f][3] || 0);
           f++;
         }
@@ -476,7 +476,7 @@
         var e = s + 11;
 
         Over.getRange("A" + s + ":A" + s).setValue((over[i][0] - 1));
-        Over.getRange("A" + e + ":A" + e).setValue(over[i][0]);
+        Over.getRange("A" + e + ":A" + e).setValue(over[i][0] - (begining.getMonth() > 0 ? 1 : 0));
         Over.getRange("H" + s + ":H" + e).mergeVertically();
         Over.getRange("H" + s + ":H" + s).setFormula("=SUM(F" + s + ":F" + e + ")");
         Over.getRange("H" + s + ":H" + s).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
@@ -499,11 +499,11 @@
     function nowData(priority) {
       var future = Future.getRange("A2:G" +  + Future.getMaxRows()).getValues();
      
-      // find today and before april 1st this financial year
+      // find today and before begining
       var f = 0, april = 1;
       while (f < future.length && new Date(future[f][0], future[f][1]-1, future[f][2]) <= today) {
         f++;
-        if (f >= future.length || future[f][0] < (year - 1) || (future[f][1] < 4 && future[f][0] == (year - 1)))
+        if (f >= future.length || future[f][0] < (year - 1) || (future[f][1] < begining.getMonth() + 1 && future[f][0] == (year - 1)))
           april++;
       }
      
@@ -548,7 +548,7 @@
         } else
           cur += parseFloat(nfuture[n][3] || 0);
         nfuture[n][6] = cur;
-        if (nfuture[n][0] < minyr || (nfuture[n][1] < 4 && nfuture[n][0] == minyr)) {
+        if (nfuture[n][0] < minyr || (nfuture[n][1] < begining.getMonth() + 1 && nfuture[n][0] == minyr)) {
           if (cur < mincr)
             mincr = cur;
         } else {
@@ -565,7 +565,7 @@
         var r = ((year - begining.getFullYear()+1) * 12) + 2;
         for (var m in minim) {
           Over.getRange("A" + r + ":A" + r).setValue((minim[m][1] - 1));
-          Over.getRange("A" + (r + 11) + ":A" + (r + 11)).setValue(minim[m][1]);
+          Over.getRange("A" + (r + 11) + ":A" + (r + 11)).setValue(minim[m][1] - (begining.getMonth() > 0 ? 0 : 1));
           
           Over.getRange("J" + r + ":J" + (r + 11)).mergeVertically();
           Over.getRange("J" + r + ":J" + r).setValue(minim[m][0]);
