@@ -54,7 +54,7 @@
         begining = new Date(2011, 3, 1);
       else {
         var val = typeof ths == "string" ? ths : ths.toISOString();
-        begining = new Date(val.substring(0,4),parseInt(val.substring(5,7))-1,val.substring(8,10),0,0,0);
+        begining = new Date(val.substring(0,4),parseInt(val.substring(5,7))-1,val.substring(8,10),12,0,0);
       }
       year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
     }
@@ -322,7 +322,7 @@
 
     function futureYear(len, priority) {
       var EndDate = new Date(year + len, begining.getMonth() + 1-1, 1);
-      var NotBefore = begining;
+      var NotBefore = new Date(begining.toUTCString().substring(0,10));
       if (len <= 0)
         NotBefore = new Date(year - 1, begining.getMonth() + 1-1, 1);
       if (NotBefore < begining)
