@@ -467,7 +467,7 @@
         if (start < 2)
           continue;
         
-        Over.getRange("A" + start + ":F" + start).setValues(over);
+        Over.getRange("A" + start + ":F" + start).setValues(over[i]);
         
         Over.getRange("A" + start + ":B" + start).setNumberFormat("00");
         Over.getRange("C" + start + ":F" + start).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
