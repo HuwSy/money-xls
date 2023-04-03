@@ -42,7 +42,6 @@
     begining.setFullYear(begining.getFullYear() - (begining.getMonth() >= 3 ? 1 : 2));
     begining.setMonth(3);
     begining.setDate(1);
-    begining.setHours(0,0,0,0);
     document.getElementById('start').value = begining.toJSON().substring(0,10);
     
     var today = new Date();
