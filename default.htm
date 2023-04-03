@@ -291,9 +291,11 @@
 
     function futureYear(len, priority) {
       var EndDate = new Date(year + len, begining.getMonth() + 1-1, 1);
-      var NotBefore = null;
+      var NotBefore = begining;
       if (len <= 0)
         NotBefore = new Date(year - 1, begining.getMonth() + 1-1, 1);
+      if (NotBefore < begining)
+        NotBefore = begining;
 
       var future = [];
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
