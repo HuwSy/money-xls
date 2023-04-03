@@ -322,7 +322,7 @@
 
     function futureYear(len, priority) {
       var EndDate = new Date(year + len, begining.getMonth() + 1-1, 1);
-      var NotBefore = new Date(begining.toUTCString().substring(0,10));
+      var NotBefore = new Date(begining.toJSON().substring(0,10));
       if (len <= 0)
         NotBefore = new Date(year - 1, begining.getMonth() + 1-1, 1);
       if (NotBefore < begining)
