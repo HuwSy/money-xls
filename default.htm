@@ -39,6 +39,7 @@
     }
     
     function Upload () {
+      document.getElementById('today').value = today.toJSON().substring(0,10);
       document.getElementById('File').value = null;
       document.getElementById('File').click();
     }
@@ -831,7 +832,7 @@
   Start:
   <input type="date" onchange="StartChange(this.value)" value="2011-04-01" placeholder="Override start date">
   Today:
-  <input type="date" onchange="TodayChange(this.value)" placeholder="Override todays date">
+  <input type="date" onchange="TodayChange(this.value)" id="today" placeholder="Override todays date">
   
   <a href="Template.xlsx">Template</a>
   <a href="#" onclick="document.location.reload(true)">Refresh</a>
