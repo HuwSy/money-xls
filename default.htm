@@ -33,22 +33,29 @@
 
   <div id="output" style="margin: 10px 0">
   </div>
+  
   <script type="text/javascript">
     var workbook = null;
     var Spent,Future,Over,Plan;
+    // encode due to xlsx issues
     var pound = decodeURIComponent("%C2%A3");
     
+    // get overrideable min 1 year history based on april start
     var begining = new Date();
     begining.setFullYear(begining.getFullYear() - (begining.getMonth() >= 3 ? 1 : 2));
-    begining.setMonth(3);
+    // if currently april use jan start for more average data/history
+    begining.setMonth(begining.getMonth() == 3 ? 0 : 3);
     begining.setDate(1);
     document.getElementById('start').value = begining.toJSON().substring(0,10);
     
+    // get overrideable today point
     var today = new Date();
     document.getElementById('today').value = today.toJSON().substring(0,10);
     
+    // get year end name
     var year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
     
+    // on start changed
     function StartChange(ths) {
       if (ths == null || ths == "")
         begining = new Date(2011, 3, 1);
@@ -59,6 +66,7 @@
       year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
     }
 
+    // on today changed
     function TodayChange(ths) {
       if (ths == null || ths == "")
         today = new Date();
@@ -69,11 +77,13 @@
       year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
     }
     
+    // on upload clicked
     function Upload () {
       document.getElementById('File').value = null;
       document.getElementById('File').click();
     }
 
+    // on file changed, load binary
     async function FileChange (ths) {
       if (ths.files.length != 1)
         return;
@@ -109,9 +119,16 @@
     }
 
     async function SetupSpentFields() {
+      document.getElementById('output').innerHTML += ('Sorting...<br>');
+      await timeout()
+      
+      // order plan sheet
+      Plan.getRange("A2:O" + Plan.getMaxRows()).sort([{column: 13, ascending: true}, {column: 14, ascending: true}, {column: 7, ascending: true}, {column: 8, ascending: true}, {column: 9, ascending: true}]);
+
       document.getElementById('output').innerHTML += ('Blanks...<br>');
       await timeout()
       
+      // find blank year or calcs in spent to copy top row into
       var row = 4;
       while (Spent.getRange("A" + row + ":A" + row).getValue() == "") {
         row++;
@@ -121,8 +138,10 @@
         row++;
       }
       
+      // get latest date below blanks
       var last = Spent.getRange("A" + row + ":C" + row).getValues();
      
+      // set dates correctlt
       var daterow = row - 1;
       while (daterow >= 4) {
         var y = last[0][0];
@@ -148,6 +167,7 @@
         daterow--;
       }
      
+      // set formulas side
       var sumrow = row - 1;
       var sum = Spent.getRange("F3:Z3").getFormulasR1C1();
       while (sumrow >= 4 && sumrow > daterow) {
@@ -158,6 +178,7 @@
       document.getElementById('output').innerHTML += ('...clearing<br>');
       await timeout()
       
+      // blank over sheet and recalc
       var r = ((year - begining.getFullYear()+1)*12) + 2;
       Over.getRange("H" + r + ":L" + (r + 11)).setFormula("=0");
 
@@ -189,6 +210,8 @@
 
     async function SetupLimited() {
       document.getElementById('output').innerHTML += ('F');
+      
+      // calc any Fn sheets if they exist, ie F3 using plan items with values <= 3
       for (var priority = 1; priority <= 9; priority++) {
         Future = workbook.Sheets["F" + priority];
         if (typeof Future == "undefined" || Future == null)
@@ -234,6 +257,7 @@
       document.getElementById('output').innerHTML += ('Saving...<br>');
       await timeout()
       
+      // formatting
       Spent['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 75/7},{width: 75/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7}];
       for (var priority = 9; priority >= 0; priority--) {
         Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
@@ -275,6 +299,7 @@
       document.getElementById('output').innerHTML += ('...outputting<br>');
       await timeout()
       
+      // saving buffer
       function s2ab(s) {
         var buf = new ArrayBuffer(s.length);
         var view = new Uint8Array(buf);
@@ -282,10 +307,12 @@
           return buf;
       }
 
+      // saving xlsx
       var wb = XLSX.write(workbook, {bookType:'xlsx',cellStyles:true,compression:true,type:'binary'});//base64
       var buf = s2ab(wb);
       var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
       
+      // downloading
       var aElement = document.createElement('a');
       aElement.innerHTML = name;
       aElement.download = name;
@@ -302,18 +329,21 @@
     }
 
     async function fileLoaded (e) {
+      // loading xlsx
       workbook = null, Spent = null, Future = null, Over = null, Plan = null;
       workbook = XLSX.read(e.target.result, {type: 'binary',cellStyles:false});
       document.getElementById('output').innerHTML += ('Loaded ' + workbook.SheetNames.length + ' sheets<br>');
       await timeout()
 
+      // sheet functions to mimic gs
       workbook.SheetNames.forEach(sheetConfig);
+      
+      // sheets
       Spent = workbook.Sheets['Spent'];
       Future = workbook.Sheets['Future'];
       Over = workbook.Sheets['Over'];
       Plan = workbook.Sheets['Plan'];
-      Plan.getRange("A2:O" + Plan.getMaxRows()).sort([{column: 13, ascending: true}, {column: 14, ascending: true}, {column: 7, ascending: true}, {column: 8, ascending: true}, {column: 9, ascending: true}]);
-
+      
       document.getElementById('output').innerHTML += ('Ready...<br>');
       await timeout()
       
@@ -321,6 +351,7 @@
     }
 
     function futureYear(len, priority) {
+      // how much data we will store
       var EndDate = new Date(year + len, begining.getMonth() + 1-1, 1);
       var NotBefore = new Date(begining.toJSON().substring(0,10));
       if (len <= 0)
@@ -369,7 +400,7 @@
             e = EndDate;
           }
      
-          // speed up one year calc
+          // speed up one year calc or shorrter beginning dates
           if (NotBefore != null) {
             if (e < NotBefore || (e.toUTCString() == NotBefore.toUTCString() && ay + am + ad > 0))
               continue;
@@ -461,17 +492,11 @@
       Over.getRange("A2:F" + Over.getMaxRows()).clear();
       Over.getRange("I2:I" + Over.getMaxRows()).clear();
       
-      for (var i = 0; i < over.length; i++) {
-        var start = (((over[i][0] - begining.getFullYear()) * 12) + 2);
-        
-        if (start < 2)
-          continue;
-        
-        Over.getRange("A" + start + ":F" + start).setValues(over[i]);
-        
-        Over.getRange("A" + start + ":B" + start).setNumberFormat("00");
-        Over.getRange("C" + start + ":F" + start).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-      }
+      var start = (((over[0][0] - begining.getFullYear()) * 12) + 2);
+      Over.getRange("A" + start + ":F" + (start + over.length - 1)).setValues(over);
+
+      Over.getRange("A" + start + ":B" + (start + over.length - 1)).setNumberFormat("00");
+      Over.getRange("C" + start + ":F" + (start + over.length - 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
     }
 
     function overYearly() {
@@ -500,18 +525,15 @@
       }
       
       if (year > begining.getFullYear()+1)
-        Over.showRows(2, ((year - begining.getFullYear()-1)*12) + 1);
+        Over.showRows(2, ((year - begining.getFullYear())*12) + 1);
      
-      // output merged cells
+      // output merged cells, formulas etc
       for (var i = 0; i < over.length; i++) {
         if (i == over.length - 1 && over[i][1] == 0)
           continue;
         var s = (((over[i][0] - begining.getFullYear()-1) * 12) + 2);
         var e = s + 11;
         
-        if (s < 2)
-          continue;
-
         Over.getRange("A" + s + ":A" + s).setValue((over[i][0] - 1));
         Over.getRange("A" + e + ":A" + e).setValue(over[i][0] - (begining.getMonth() > 0 ? 0 : 1));
         Over.getRange("H" + s + ":H" + e).mergeVertically();
@@ -553,14 +575,17 @@
         nfuture[nfuture.length] = future[p];
       }
      
+      // current balance
       var cur = 0.0, blanks = 4;
       if (priority == null) {
+        // calc from spent
         cur = Spent.getRange("D1:D1").getValue() + Spent.getRange("D2:D2").getValue() - Spent.getRange("D3:D3").getValue();
         while (Spent.getRange("A" + blanks + ":A" + blanks).getValue() == "") {
           cur -= parseFloat(Spent.getRange("D" + blanks + ":D" + blanks).getValue() || 0);
           blanks++;
         }
       } else {
+        // calc from current month only
         blanks = nfuture.length - 1;
         while (blanks >= 0 && nfuture[blanks][4] != "") {
           cur += parseFloat(nfuture[blanks][3] || 0);
@@ -596,6 +621,7 @@
       }
       minim.push([mincr, minyr]);
      
+      // output low points to over if not in Fn sheet
       if (priority == null) {
         Over.getRange("J2:J" + Over.getMaxRows()).clear();
         
