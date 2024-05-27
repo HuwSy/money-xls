@@ -258,7 +258,17 @@
       await timeout()
       
       // formatting
-      Spent['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 75/7},{width: 75/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 85/7},{width: 85/7},{width: 85/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7}];
+      var currentCols = Spent['!cols'] || [];
+      currentCols[0] = {width: 45/7};
+      currentCols[1] = {width: 25/7};
+      currentCols[2] = {width: 25/7};
+      currentCols[3] = {width: 100/7};
+      currentCols[4] = {width: 175/7};
+      currentCols[5] = {width: 100/7};
+      currentCols[6] = {width: 25/7};
+      Spent['!cols'] = currentCols;
+      Plan['!cols'] = [{width: 25/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 25/7},{width: 125/7},{width: 125/7},{width: 100/7}];
+
       for (var priority = 9; priority >= 0; priority--) {
         Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
         if (typeof Future == "undefined" || Future == null)
@@ -266,8 +276,7 @@
         Future['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 100/7}];
       }
       Over['!cols'] = [{width: 45/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 60/7},{width: 60/7}];
-      Plan['!cols'] = [{width: 25/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 25/7},{width: 125/7},{width: 125/7},{width: 100/7}];
-
+      
       Spent.getRange("B1:C1").setNumberFormat("00");
       Spent.getRange("D1:D1").setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
       Spent.getRange("E3:E3").setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
