@@ -258,7 +258,7 @@
       await timeout()
       
       // formatting
-      var currentCols = Spent['!cols'] || [];
+      var currentCols = [];
       currentCols[0] = {width: 45/7};
       currentCols[1] = {width: 25/7};
       currentCols[2] = {width: 25/7};
@@ -266,6 +266,12 @@
       currentCols[4] = {width: 175/7};
       currentCols[5] = {width: 100/7};
       currentCols[6] = {width: 25/7};
+      var headings = Spent.getRange("H1:X1").getValues();
+      for (var heading = 0; heading < 17; heading++)
+        currentCols.push((headings[0][heading] || '') == '' ? {width: 25/7} : {width: 85/7});
+      currentCols[24] = {width: 100/7};
+      currentCols[25] = {width: 100/7};
+      
       Spent['!cols'] = currentCols;
       Plan['!cols'] = [{width: 25/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 25/7},{width: 125/7},{width: 125/7},{width: 100/7}];
 
