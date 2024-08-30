@@ -35,7 +35,54 @@
   <div id="output" style="margin: 10px 0">
   </div>
   
+  <div id="rows">
+    <div>
+      <input type="checkbox" title="CC expense">
+      <input type="date">
+      <input type="number" step="0.01" size="10">
+      <input type="text" placeholder="Activity">
+      <input type="button" value="New" onclick="this.parentNode.after(this.parentNode.cloneNode(true))">
+      <input type="button" value="Del" onclick="this.parentNode.parentNode.removeChild(this.parentNode)">
+    </div>
+  </div><br>
+  <input type="button" value="Include" onclick="IncludeSpent()">
+
   <script type="text/javascript">
+    function IncludeSpent() {
+      if (!Spent)
+        return;
+      var rows = document.getElementById("rows");
+      if (rows.children.length == 0)
+        return;
+      var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
+      spent.reverse();
+      var cc = Spent.getRange("D3:D3").getFormula().Split("D");
+      var r = 4; a = cc[0];
+      for (let i = 1; i < cc.length; i++)
+        a += "D" + (parseInt(cc[i])+rows.children.length) + cc[i].replace(/^[0-9]+/,'');
+      for (let n = rows.children.length - 1; n >= 0; n--) {
+        let row = rows.children[n];
+        if (row.children[0].checked)
+          a += "-D"+r;
+        r++;
+        let s = row.children[1].value.split('-');
+        s.push(row.children[2].value);
+        s.push(row.children[3].value);
+        spent.push(s);
+        if (n > 0)
+          row.parentNode.removeChild(row);
+        else {
+          row.children[2].value = null;
+          row.children[3].value = null;
+        }
+      }
+      spent.reverse();
+      Spent.getRange("A4:Z" + (3+spent.length)).setValues(spent);
+      Spent.getRange("D3:D3").setFormula(a);
+      for (; r >= 4; r--)
+        Spent.getRange("F" + r + ":F" + r).setFormula("");
+    }
+
     var workbook = null;
     var Spent,Future,Over,Plan;
     // encode due to xlsx issues
@@ -785,17 +832,7 @@
               } else if (field == 'f') {
                 // TODO: this is a dirty hack for what is needed specifically not actual fix
                 s[o].f = v[a][b] ? v[a][b]
-                  .replace(/\$A3/g,'$A' + r[1])
-                  .replace(/\$B3/g,'$B' + r[1])
-                  .replace(/\$C3/g,'$C' + r[1])
-                  .replace(/\$D3/g,'$D' + r[1])
-                  .replace(/\$E3/g,'$E' + r[1])
-                  .replace(/\$F3/g,'$F' + r[1])
-                  .replace(/\$G3/g,'$G' + r[1])
-                  .replace(/\$H3/g,'$H' + r[1])
-                  .replace(/\$X3/g,'$X' + r[1])
-                  .replace(/\$Y3/g,'$Y' + r[1])
-                  .replace(/\$Z3/g,'$Z' + r[1])
+                  .replace(/(\$)([A-Z]+)3/g, '$1$2' + r[1])
                   .replace(/^=/,'')
                 : null;
                 s[o].t = v[a][b] ? 's' : 't';
