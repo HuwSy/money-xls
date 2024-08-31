@@ -77,7 +77,7 @@
       DelRow(rows.children[0]);
     }
 
-    function IncludeSpent() {
+    async function IncludeSpent() {
       var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
       spent.reverse();
       var cc = Spent.getRange("D3:D3").getFormula().split("D");
@@ -104,8 +104,14 @@
       spent.reverse();
       Spent.getRange("A4:Z" + (3+spent.length)).setValues(spent);
       Spent.getRange("D3:D3").setFormula(a);
+
+      await timeout();
+      
       for (; r >= 4; r--)
         Spent.getRange("F" + r + ":F" + r).setFormula("");
+
+      await SetupSpentFields();
+      await timeout();
     }
 
     function populateSpent() {
