@@ -148,8 +148,8 @@
     var begining = new Date();
     begining.setFullYear(begining.getFullYear() - (begining.getMonth() >= 3 ? 1 : 2));
     // if currently april use jan start for more average data/history
-    begining.setMonth(begining.getMonth() == 3 ? 0 : 3);
     begining.setDate(1);
+    begining.setMonth(begining.getMonth() == 3 ? 0 : 3);
     document.getElementById('start').value = begining.toJSON().substring(0,10);
     
     // get overrideable today point
