@@ -78,12 +78,10 @@
     }
 
     async function IncludeSpent() {
+      var r = 4; a = "=";
+
       var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
       spent.reverse();
-      var cc = Spent.getRange("D3:D3").getFormula().split("D");
-      var r = 4; a = "="+cc[0];
-      for (let i = 1; i < cc.length; i++)
-        a += "D" + (parseInt(cc[i])+rows.children.length) + cc[i].replace(/^[0-9]+/,'');
 
       for (let n = rows.children.length - 1; n >= 0; n--) {
         let row = rows.children[n];
@@ -91,27 +89,33 @@
           continue;
         if (row.children[0].checked)
           a += "-D"+r;
-        r++;
-        let v = typeof row.children[1].value == "string" ? row.children[1].value : row.children[1].value.toISOString().substring(0, 10)
-        let s = v.split('-');
-        s.push(row.children[2].value);
-        s.push(row.children[3].value);
-        spent.push(s);
+        let v = (typeof row.children[1].value == "string" ? row.children[1].value : row.children[1].value.toISOString().substring(0, 10)).split('-')
+        spent.push([
+          parseInt(v[0]),
+          parseInt(v[1]),
+          parseInt(v[2]),
+          parseFloat(row.children[2].value),
+          row.children[3].value
+        ]);
         
         DelRow(row);
+        r++;
       }
+
+      var cc = Spent.getRange("D3:D3").getFormula().split("D");
+      a += cc[0];
+      for (let i = 1; i < cc.length; i++)
+        a += "D" + (parseInt(cc[i])+r-4) + cc[i].replace(/^[0-9]+/,'');
 
       spent.reverse();
       Spent.getRange("A4:Z" + (3+spent.length)).setValues(spent);
       Spent.getRange("D3:D3").setFormula(a);
 
+      for (; r > 4; --r)
+        Spent.getRange("F" + r + ":F" + r).setFormula("");
       await timeout();
       
-      for (; r >= 4; r--)
-        Spent.getRange("F" + r + ":F" + r).setFormula("");
-
       await SetupSpentFields();
-      await timeout();
     }
 
     function populateSpent() {
@@ -235,7 +239,7 @@
         row++;
       }
      
-      while (Spent.getRange("F" + row + ":F" + row).getFormula() == "") {
+      while ((Spent.getRange("F" + row + ":F" + row).getFormula() ?? "") == "") {
         row++;
       }
       
