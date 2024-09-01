@@ -110,6 +110,8 @@
       spent.reverse();
       Spent.getRange("A4:Z" + (3+spent.length)).setValues(spent);
       Spent.getRange("D3:D3").setFormula(a);
+      
+      Spent.getRange("D2:D2").setFormula("=SUM(D3:D"+(3+spent.length)+")-D1+E3");
 
       for (; r > 4; --r)
         Spent.getRange("F" + r + ":F" + r).setFormula("");
