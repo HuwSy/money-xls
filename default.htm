@@ -113,6 +113,13 @@
       
       Spent.getRange("D2:D2").setFormula("=SUM(D3:D"+(3+spent.length)+")-D1+E3");
 
+      var top = Spent.getRange("F2:Z2").getFormulasR1C1();
+      for (let i = 0; i < top[0].length; i++) {
+        let m = top[0][i].match(/\:([A-Za-z])([0-9]+)/);
+        top[0][i] = top[0][i].replace(m[0], ":"+m[1]+(parseInt(m[2])+r-4));
+      }
+      Spent.getRange("F2:Z2").setFormulasR1C1(top);
+
       for (; r > 4; --r)
         Spent.getRange("F" + r + ":F" + r).setFormula("");
       await timeout();
