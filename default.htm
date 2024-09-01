@@ -130,6 +130,7 @@
           if (d > today)
             break;
 
+          d.setHours(12);
           rows.children[0].children[1].value = d.toISOString().substring(0, 10);
           rows.children[0].children[2].value = future[f][3] ? future[f][3].toFixed(2) : 0;
           rows.children[0].children[3].value = future[f][4];
@@ -285,7 +286,8 @@
       
       // blank over sheet and recalc
       var r = ((year - begining.getFullYear()-1)*12) + 2;
-      Over.getRange("H" + r + ":L" + (r + 11)).setFormula("=0");
+      Over.getRange("H" + r + ":K" + (r + 11)).setFormula("=0");
+      Over.getRange("L" + r + ":L" + r).setValue(0);
 
       document.getElementById('output').innerHTML += ('...calc<br>');
       await timeout()
