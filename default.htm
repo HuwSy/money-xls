@@ -87,6 +87,7 @@
       //spent.reverse();
 
       for (let n = rows.children.length - 1; n >= 0; n--) {
+        let row = rows.children[n];
         if (!row.children[2].value)
           DelRow(row);
       }
