@@ -88,7 +88,7 @@
         if (!row.children[2].value)
           continue;
         if (row.children[0].checked)
-          a += "-D"+r;
+          a += "-D"+(4+n);
         let v = (typeof row.children[1].value == "string" ? row.children[1].value : row.children[1].value.toISOString().substring(0, 10)).split('-')
         spent.push([
           parseInt(v[0]),
