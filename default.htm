@@ -79,18 +79,27 @@
 
     async function IncludeSpent() {
       var r = 4; a = "=";
+      
+      await SetupSpentFields();
+      await timeout();
 
       var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
-      spent.reverse();
+      //spent.reverse();
 
       for (let n = rows.children.length - 1; n >= 0; n--) {
         let row = rows.children[n];
         if (!row.children[2].value)
           continue;
-        if (row.children[0].checked)
-          a += "-D"+(4+n);
         let v = (typeof row.children[1].value == "string" ? row.children[1].value : row.children[1].value.toISOString().substring(0, 10)).split('-')
-        spent.push([
+
+        for (p = 0; p < spent.length; p++)
+          if (new Date(spent[p][0],spent[p][1],spent[p][0]) < new Date(v[0], v[1], v[2])
+              break;
+              
+        if (row.children[0].checked)
+          a += "-D"+(4+n+p);
+
+        spent.splice(p, 0, [
           parseInt(v[0]),
           parseInt(v[1]),
           parseInt(v[2]),
@@ -107,7 +116,7 @@
       for (let i = 1; i < cc.length; i++)
         a += "D" + (parseInt(cc[i])+r-4) + cc[i].replace(/^[0-9]+/,'');
 
-      spent.reverse();
+      //spent.reverse();
       Spent.getRange("A4:Z" + (3+spent.length)).setValues(spent);
       Spent.getRange("D3:D3").setFormula(a);
       
