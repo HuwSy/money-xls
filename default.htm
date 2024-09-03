@@ -260,7 +260,7 @@
         row++;
       }
      
-      while ((Spent.getRange("F" + row + ":F" + row).getFormula() ?? "") == "") {
+      while ((Spent.getRange("F" + row + ":F" + row).getFormula() ?? "") == "" && Spent.getRange("F" + row + ":F" + row).getValue() == "") {
         row++;
       }
       
