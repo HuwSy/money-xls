@@ -36,6 +36,9 @@
     </div><br>
     <input type="button" value="Include" onclick="IncludeSpent()"><br><br>
 
+    <div id="spent">
+    </div>
+    
     <a href="#" onclick=RunAll()>Run All</a><br><br>
     
     <a href="#" onclick=SetupSpentFields()>Blanks</a><br>
@@ -143,15 +146,23 @@
     }
 
     function populateSpent() {
+      var spent = Spent.getRange("A4:Z14").getValues();
+
+      var s = document.getElementById("spent");
+      for (i in spent)
+        s.innerHTML += spent[i][0]+"-"+spent[i][1]+"-"+spent[i][2]+" &pound;"+spent[i][3]+" - "+spent[i][4]+"<br>";
+      
       var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var foundBlank = false;
+      var next = new Date(today);
+      next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
 
       for (var f = 0; f < future.length; f++) {
         if ((future[f][4] || "") == "")
           foundBlank = true;
         else if (foundBlank) {
           let d = new Date(future[f][0],future[f][1]-1,future[f][2]);
-          if (d > today)
+          if (d > next)
             break;
 
           d.setHours(12);
