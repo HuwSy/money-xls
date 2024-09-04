@@ -78,13 +78,8 @@
     }
 
     async function IncludeSpent() {
-      var r = 4; a = "=";
-      
       await SetupSpentFields();
       await timeout();
-
-      var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
-      //spent.reverse();
 
       for (let n = rows.children.length - 1; n >= 0; n--) {
         let row = rows.children[n];
@@ -92,21 +87,29 @@
           DelRow(row);
       }
 
-      for (let n = rows.children.length - 1; n >= 0; n--) {
+      var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
+      var r = rows.children.length - 1;
+      var m = 0;
+
+      var cc = Spent.getRange("D3:D3").getFormula().split("D");
+      var a = "="+cc[0];
+      for (let i = 1; i < cc.length; i++)
+        a += "D" + (parseInt(cc[i])+r) + cc[i].replace(/^[0-9]+/,'');
+      
+      for (let n = r; n >= 0; n--) {
         let row = rows.children[n];
         let v = (typeof row.children[1].value == "string" ? row.children[1].value : row.children[1].value.toISOString().substring(0, 10)).split('-')
 
-        for (let p = 0; p < spent.length; p++)
+        for (var p = 0; p < spent.length; p++)
           if (new Date(spent[p][0], spent[p][1]-1, spent[p][2]) <= new Date(v[0], v[1]-1, v[2]))
               break;
-        
-        p--;
-        if (p < 0)
-          p = 0;
         
         if (row.children[0].checked)
           a += "-D"+(4+n+p);
 
+        if (4+n+p > m)
+          m = 4+n+p;
+        
         spent.splice(p, 0, [
           parseInt(v[0]),
           parseInt(v[1]),
@@ -116,33 +119,26 @@
         ]);
         
         DelRow(row);
-        r++;
       }
 
-      var cc = Spent.getRange("D3:D3").getFormula().split("D");
-      a += cc[0];
-      for (let i = 1; i < cc.length; i++)
-        a += "D" + (parseInt(cc[i])+r-4) + cc[i].replace(/^[0-9]+/,'');
+      for (; m >= 4; m--)
+        Spent.getRange("F" + m + ":F" + m).setFormula("");
 
-      //spent.reverse();
       Spent.getRange("A4:Z" + (3+spent.length)).setValues(spent);
-      Spent.getRange("D3:D3").setFormula(a);
       
+      Spent.getRange("D3:D3").setFormula(a);
       Spent.getRange("D2:D2").setFormula("=SUM(D3:D"+(3+spent.length)+")-D1+E3");
 
       var top = Spent.getRange("F2:Z2").getFormulasR1C1();
       for (let i = 0; i < top[0].length; i++) {
         try {
           let m = top[0][i].match(/\:([A-Za-z])([0-9]+)/);
-          top[0][i] = top[0][i].replace(m[0], ":"+m[1]+(parseInt(m[2])+r-4));
+          top[0][i] = top[0][i].replace(m[0], ":"+m[1]+(parseInt(m[2])+r));
         } catch (e) {}
       }
       Spent.getRange("F2:Z2").setFormulasR1C1(top);
 
-      for (; r > 4; --r)
-        Spent.getRange("F" + r + ":F" + r).setFormula("");
       await timeout();
-      
       await SetupSpentFields();
     }
 
