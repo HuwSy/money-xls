@@ -22,14 +22,14 @@
     box-shadow: 1px 1px #ccc;
   ">
     <p>All files are processed directly within your own browser and never online, view the code <a href="https://github.com/HuwSy/money-xls">here</a>.</p>
-    <input id="Upload" onclick="Upload()" type="button" value="Import">
     Start:
     <input style="width:88px" type="date" onchange="StartChange(this.value)" id="start" placeholder="Override start date">
-    To:
+    Today:
     <input style="width:88px" type="date" onchange="TodayChange(this.value)" id="today" placeholder="Override todays date">
     <input type="file" style="display:none;" id="File" onchange="FileChange(this)">
+    <input id="Upload" onclick="Upload()" type="button" value="Import" style="float: right">
     
-    <div id="options" style="display:none;margin: 10px 0">
+    <div id="options" style="display:none;clear:both;margin: 10px 0">
       <div id="rows">
         <div>
           <input type="checkbox" title="CC expense">
