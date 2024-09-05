@@ -27,7 +27,7 @@
     Today:
     <input style="width:88px" type="date" onchange="TodayChange(this.value)" id="today" placeholder="Override todays date">
     <input type="file" style="display:none;" id="File" onchange="FileChange(this)">
-    <input id="Upload" onclick="Upload()" type="button" value="Up" style="float: right">
+    <input id="Upload" onclick="Upload()" type="button" value="Load" style="float: right">
     <br style="clear:both"><br>
     
     <div id="options" style="display:none">
@@ -41,7 +41,7 @@
           <input type="button" value="-" onclick="DelRow(this.parentNode)">
        </div>
       </div><br>
-      <input style=float:right type="button" value="Add" onclick="IncludeSpent()"><br><br>
+      <input style=float:right type="button" value="Inc." onclick="IncludeSpent()"><br><br>
   
       <div id="spent" style=clear:both>
       </div><br>
