@@ -247,7 +247,7 @@
 
     function UpdateCC() {
       Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
-      Spent.getRange("E3:E3").setValue(document.getElementById('E3').value);
+      Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
       document.getElementById('future').style.display = "none";
       calc(0);
     }
