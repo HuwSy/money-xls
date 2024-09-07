@@ -22,15 +22,17 @@
     box-shadow: 1px 1px #ccc;
   ">
     <p>All files are processed directly within your own browser and never online, view the code <a href="https://github.com/HuwSy/money-xls">here</a>.</p>
-    Start:
-    <input style="width:88px" type="date" onchange="StartChange(this.value)" id="start" placeholder="Override start date">
-    Today:
-    <input style="width:88px" type="date" onchange="TodayChange(this.value)" id="today" placeholder="Override todays date">
-    <input type="file" style="display:none;" id="File" onchange="FileChange(this)">
-    <input id="Upload" onclick="Upload()" type="button" value="Load" style="float: right">
-    <br style="clear:both"><br><br>
     
-    <div id="options" style="display:none">
+    <div id="top">
+      Start:
+      <input style="width:88px" type="date" onchange="StartChange(this.value)" id="start" placeholder="Override start date">
+      Today:
+      <input style="width:88px" type="date" onchange="TodayChange(this.value)" id="today" placeholder="Override todays date">
+      <input type="file" style="display:none;" id="File" onchange="FileChange(this)">
+      <input id="Upload" onclick="Upload()" type="button" value="Load" style="float: right">
+    </div>
+    
+    <div id="future" style="clear:both;display:none">
       <div id="rows">
         <div>
           <input type="checkbox" title="CC expense">
@@ -41,11 +43,13 @@
           <input type="button" value="-" onclick="DelRow(this.parentNode)">
        </div>
       </div>
-      <input style=float:right type="button" value="Inc." onclick="IncludeSpent()"><br><br>
-  
-      <div id="spent" style=clear:both>
-      </div><br>
-      
+      <input style=float:right type="button" value="Inc." onclick="IncludeSpent()">
+    </div>
+    
+    <div id="spent" style=clear:both>
+    </div>
+    
+    <div id="options" style="display:none">
       <a href="#" onclick=RunAll()>Run All</a><br><br>
       
       <a href="#" onclick=SetupSpentFields()>Blanks</a><br>
@@ -55,7 +59,7 @@
       <a href="#" onclick=Saving()>Save</a><br>
     </div>
   
-    <div id="output" style="margin: 10px 0">
+    <div id="output" style="margin: 10px 0;">
     </div>
   </div>
   
@@ -154,29 +158,40 @@
     }
 
     function populateSpent() {
-      var spent = Spent.getRange("A4:Z14").getValues();
-
       var s = document.getElementById("spent");
-      for (i in spent)
-        s.innerHTML += `
+
+      var template = `
            <span style="
               display: inline-block;
               width: 78px;
               overflow-x: hidden;
-          ">${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "")+spent[i][1]}-${(spent[i][2] < 10 ? "0" : "")+spent[i][2]}</span>
+          ">{0}</span>
           <span style="
               display: inline-block;
               width: 70px;
               overflow-x: hidden;
-          ">${spent[i][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"})}</span>
+          ">{1}</span>
           <span style="
               white-space: nowrap;
               overflow-x: hidden;
               display: inline-block;
               width: 172px;
               text-overflow: ellipsis;
-          ">${spent[i][4]}</span>
+          ">{2}</span>
           `;
+      
+      var current = Spent.getRange("D1:E3").getValues();
+      s.innerHTML = template.replace('{0}','').replace('{1}',current[0][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"})).replace('{2}',current[0][1]);
+      s.innerHTML += template.replace('{0}','').replace('{1}',current[1][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"})).replace('{2}',current[1][1]);
+      s.innerHTML += template.replace('{0}','').replace('{1}',current[2][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"})).replace('{2}',current[2][1]);
+      s.innerHTML += '<hr>';
+      
+      var spent = Spent.getRange("A4:Z14").getValues();
+      for (i in spent)
+        s.innerHTML += template
+          .replace('{0}',`${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "")+spent[i][1]}-${(spent[i][2] < 10 ? "0" : "")+spent[i][2]}`)
+          .replace('{1}',`${spent[i][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
+          .replace('{2}',`${spent[i][4]}`);
       
       var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var foundBlank = false;
@@ -254,8 +269,10 @@
       if (ths.files.length != 1)
         return;
       
+      document.getElementById('future').style.display = "none";
       document.getElementById('options').style.display = "none";
       clearRows();
+      document.getElementById('spent').innerHTML = ('');
       document.getElementById('output').innerHTML = ('Loading...<br>');
       await timeout()
       var f = ths.files[0];
@@ -532,6 +549,7 @@
 
       populateSpent()
       
+      document.getElementById('future').style.display = "block";
       document.getElementById('options').style.display = "block";
     }
 
