@@ -10,9 +10,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.7/xlsx.full.min.js" type="text/javascript"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-calc@0.6.7/xlsx-calc.min.js" type="text/javascript"></script>
-</head>
-<body>
-  <div style="
+  <style type="text/css">
+  body > div {
     width: 329px;
     margin: auto;
     background: white;
@@ -20,33 +19,43 @@
     border: 1px solid #bbb;
     border-radius: 4px;
     box-shadow: 1px 1px #ccc;
-  ">
-    <p>All files are processed directly within your own browser and never online, view the code <a href="https://github.com/HuwSy/money-xls">here</a>.</p>
+    overflow: hidden;
+  }
+  body > div > * {
+    margin-bottom: 10px
+  }
+  </style>
+</head>
+<body>
+  <div>
+    <p>All files are processed directly within your own browser and never online, view the code <a href="https://github.com/HuwSy/money-xls">here</a></p>
     
-    <div id="top" style="margin-bottom: 10px">
+    <div id="top">
       Start:
       <input style="width:88px" type="date" onchange="StartChange(this.value)" id="start" placeholder="Override start date">
       Today:
       <input style="width:88px" type="date" onchange="TodayChange(this.value)" id="today" placeholder="Override todays date">
       <input type="file" style="display:none;" id="File" onchange="FileChange(this)">
       <input id="Upload" onclick="Upload()" type="button" value="Load" style="float: right">
+      <br style="clear:both;">
     </div>
     
-    <div id="future" style="clear:both;display:none;margin-bottom: 10px">
-      <div id="rows">
-        <div>
-          <input type="checkbox" title="CC expense">
-          <input type="date" style="width: 60px;">
-          <input type="number" step="0.01" size="10" style="width: 50px">
-          <input type="text" placeholder="Activity" style="width: 70px">
-          <input type="button" value="+" onclick="NewRow(this.parentNode)">
-          <input type="button" value="-" onclick="DelRow(this.parentNode)">
-       </div>
-      </div>
+    <div id="future" style="display:none">
+      <table id="rows">
+        <tr>
+          <td><input type="checkbox" title="CC expense"></td>
+          <td><input type="date" style="width: 60px;"></td>
+          <td><input type="number" step="0.01" size="10" style="width: 50px"></td>
+          <td><input type="text" placeholder="Activity" style="width: 70px"></td>
+          <td><input type="button" value="+" onclick="NewRow(this.parentNode)"></td>
+          <td><input type="button" value="-" onclick="DelRow(this.parentNode)"></td>
+       </tr>
+      </table>
       <input style=float:right type="button" value="Inc." onclick="IncludeSpent()">
+      <br style=clear:both;>
     </div>
     
-    <table id="spent" style=clear:both;margin-bottom: 10px>
+    <table id="spent">
     </table>
     
     <div id="options" style="display:none">
@@ -59,51 +68,51 @@
       <a href="#" onclick=Saving()>Save</a><br>
     </div>
   
-    <div id="output" style="margin: 10px 0;">
+    <div id="output">
     </div>
   </div>
   
   <script type="text/javascript">
-    var rows = document.getElementById("rows");
+    var rows = document.getElementById("rows").getElementsByTagName('tr');
 
     function NewRow(ths) {
       var row = ths.cloneNode(true);
-      row.children[0].checked = null;
-      row.children[1].value = null;
-      row.children[2].value = null;
-      row.children[3].value = null;
+      row.children[0].children[0].checked = null;
+      row.children[1].children[0].value = null;
+      row.children[2].children[0].value = null;
+      row.children[3].children[0].value = null;
       ths.before(row);
     }
 
     function DelRow(ths) {
-      if (rows.children.length > 1)
+      if (rows.length > 1)
         return ths.parentNode.removeChild(ths);
 
-      ths.children[0].checked = null;
-      ths.children[1].value = null;
-      ths.children[2].value = null;
-      ths.children[3].value = null;
+      ths.children[0].children[0].checked = null;
+      ths.children[1].children[0].value = null;
+      ths.children[2].children[0].value = null;
+      ths.children[3].children[0].value = null;
     }
 
     function clearRows() {
-      while (rows.children.length > 1) {
-        DelRow(rows.children[0]);
+      while (rows.length > 1) {
+        DelRow(rows[0]);
       }
-      DelRow(rows.children[0]);
+      DelRow(rows[0]);
     }
 
     async function IncludeSpent() {
       await SetupSpentFields();
       await timeout();
 
-      for (let n = rows.children.length - 1; n >= 0; n--) {
-        let row = rows.children[n];
-        if (!row.children[2].value)
+      for (let n = rows.length - 1; n >= 0; n--) {
+        let row = rows[n];
+        if (!row.children[2].children[0].value)
           DelRow(row);
       }
 
       var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
-      var r = rows.children.length - 1;
+      var r = rows.length - 1;
       var m = 0;
 
       var cc = Spent.getRange("D3:D3").getFormula().split("D");
@@ -112,14 +121,14 @@
         a += "D" + (parseInt(cc[i])+1+r) + cc[i].replace(/^[0-9]+/,'');
       
       for (let n = r; n >= 0; n--) {
-        let row = rows.children[n];
-        let v = (typeof row.children[1].value == "string" ? row.children[1].value : row.children[1].value.toISOString().substring(0, 10)).split('-')
+        let row = rows[n];
+        let v = (typeof row.children[1].children[0].value == "string" ? row.children[1].children[0].value : row.children[1].children[0].value.toISOString().substring(0, 10)).split('-')
 
         for (var p = 0; p < spent.length; p++)
           if (new Date(spent[p][0], spent[p][1]-1, spent[p][2]) <= new Date(v[0], v[1]-1, v[2]))
               break;
         
-        if (row.children[0].checked)
+        if (row.children[0].children[0].checked)
           a += "-D"+(4+n+p);
 
         if (4+n+p > m)
@@ -129,8 +138,8 @@
           parseInt(v[0]),
           parseInt(v[1]),
           parseInt(v[2]),
-          parseFloat(row.children[2].value),
-          row.children[3].value
+          parseFloat(row.children[2].children[0].value),
+          row.children[3].children[0].value
         ]);
         
         DelRow(row);
@@ -162,25 +171,28 @@
 
       var template = `
         <tr>
-           <td style="
-              width: 78px;
-          ">{0}</td>
-          <td style="
-              width: 70px;
-          ">{1}</td>
-          <td style="
-              white-space: nowrap;
-              overflow-x: hidden;
-              width: 172px;
-              text-overflow: ellipsis;
-          ">{2}</td>
+          <td>{0}</td>
+          <td style="color: {4}">{1}</td>
+          <td style="white-space: nowrap;">{2}</td>
         </tr>
           `;
       
       var current = Spent.getRange("D1:E3").getValues();
-      s.innerHTML = template.replace('{0}','').replace('{1}',current[0][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"})).replace('{2}',current[0][1]);
-      s.innerHTML += template.replace('{0}','').replace('{1}',current[1][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"})).replace('{2}',current[1][1]);
-      s.innerHTML += template.replace('{0}','').replace('{1}',current[2][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"})).replace('{2}',current[2][1]);
+      s.innerHTML = template
+        .replace('{0}','')
+        .replace('{1}',current[0][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+        .replace('{2}',current[0][1])
+        .replace('{4}',current[0][0]<0?'red':'inherited');
+      s.innerHTML += template
+        .replace('{0}','')
+        .replace('{1}',current[1][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+        .replace('{2}',current[1][1])
+        .replace('{4}',current[1][0]<0?'red':'inherited');
+      s.innerHTML += template
+        .replace('{0}','')
+        .replace('{1}',current[2][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+        .replace('{2}',current[2][1].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+        .replace('{4}','inherited');
       s.innerHTML += '<hr>';
       
       var spent = Spent.getRange("A4:Z14").getValues();
@@ -188,7 +200,8 @@
         s.innerHTML += template
           .replace('{0}',`${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "")+spent[i][1]}-${(spent[i][2] < 10 ? "0" : "")+spent[i][2]}`)
           .replace('{1}',`${spent[i][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
-          .replace('{2}',`${spent[i][4]}`);
+          .replace('{2}',`${spent[i][4]}`)
+          .replace('{4}',spent[i][3]<0?'red':'inherited');
       
       var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var foundBlank = false;
@@ -204,11 +217,11 @@
             break;
 
           d.setHours(12);
-          rows.children[0].children[1].value = d.toISOString().substring(0, 10);
-          rows.children[0].children[2].value = future[f][3] ? future[f][3].toFixed(2) : 0;
-          rows.children[0].children[3].value = future[f][4];
+          rows[0].children[1].children[0].value = d.toISOString().substring(0, 10);
+          rows[0].children[2].children[0].value = future[f][3] ? future[f][3].toFixed(2) : 0;
+          rows[0].children[3].children[0].value = future[f][4];
 
-          NewRow(rows.children[0]);
+          NewRow(rows[0]);
         }
       }
     }
