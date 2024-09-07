@@ -55,6 +55,13 @@
       <br style=clear:both;>
     </div>
     
+    <div id="cc" style="display:none">
+      <input id="D3" style="width:95%"><br>
+      <input id="E3" type="number" step="0.01" size="15" style="width: 100px">
+      <input style=float:right type="button" value="Upd." onclick="UpdateCC()">
+      <br style=clear:both;>
+    </div>
+    
     <table id="spent">
     </table>
     
@@ -121,6 +128,7 @@
         a += "D" + (parseInt(cc[i])+1+r) + cc[i].replace(/^[0-9]+/,'');
       
       document.getElementById('spent').innerHTML = ('');
+      document.getElementById('cc').style.display = "none";
 
       for (let n = r; n >= 0; n--) {
         let row = rows[n];
@@ -226,6 +234,15 @@
           NewRow(rows[0]);
         }
       }
+
+      document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
+      document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
+    }
+
+    function UpdateCC() {
+      Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
+      Spent.getRange("E3:E3").setValue(document.getElementById('E3').value);
+      document.getElementById('future').style.display = "none";
     }
 
     var workbook = null;
@@ -282,6 +299,7 @@
         return;
       
       document.getElementById('future').style.display = "none";
+      document.getElementById('cc').style.display = "none";
       document.getElementById('options').style.display = "none";
       clearRows();
       document.getElementById('spent').innerHTML = ('');
@@ -562,6 +580,7 @@
       populateSpent()
       
       document.getElementById('future').style.display = "block";
+      document.getElementById('cc').style.display = "block";
       document.getElementById('options').style.display = "block";
     }
 
