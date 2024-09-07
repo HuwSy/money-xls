@@ -23,7 +23,7 @@
   ">
     <p>All files are processed directly within your own browser and never online, view the code <a href="https://github.com/HuwSy/money-xls">here</a>.</p>
     
-    <div id="top">
+    <div id="top" style="margin-bottom: 10px">
       Start:
       <input style="width:88px" type="date" onchange="StartChange(this.value)" id="start" placeholder="Override start date">
       Today:
@@ -32,7 +32,7 @@
       <input id="Upload" onclick="Upload()" type="button" value="Load" style="float: right">
     </div>
     
-    <div id="future" style="clear:both;display:none">
+    <div id="future" style="clear:both;display:none;margin-bottom: 10px">
       <div id="rows">
         <div>
           <input type="checkbox" title="CC expense">
@@ -46,8 +46,8 @@
       <input style=float:right type="button" value="Inc." onclick="IncludeSpent()">
     </div>
     
-    <div id="spent" style=clear:both>
-    </div>
+    <table id="spent" style=clear:both;margin-bottom: 10px>
+    </table>
     
     <div id="options" style="display:none">
       <a href="#" onclick=RunAll()>Run All</a><br><br>
@@ -161,23 +161,20 @@
       var s = document.getElementById("spent");
 
       var template = `
-           <span style="
-              display: inline-block;
+        <tr>
+           <td style="
               width: 78px;
-              overflow-x: hidden;
-          ">{0}</span>
-          <span style="
-              display: inline-block;
+          ">{0}</td>
+          <td style="
               width: 70px;
-              overflow-x: hidden;
-          ">{1}</span>
-          <span style="
+          ">{1}</td>
+          <td style="
               white-space: nowrap;
               overflow-x: hidden;
-              display: inline-block;
               width: 172px;
               text-overflow: ellipsis;
-          ">{2}</span>
+          ">{2}</td>
+        </tr>
           `;
       
       var current = Spent.getRange("D1:E3").getValues();
