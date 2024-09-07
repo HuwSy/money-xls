@@ -47,8 +47,8 @@
           <td><input type="date" style="width: 60px;"></td>
           <td><input type="number" step="0.01" size="10" style="width: 50px"></td>
           <td><input type="text" placeholder="Activity" style="width: 70px"></td>
-          <td><input type="button" value="+" onclick="NewRow(this.parentNode)"></td>
-          <td><input type="button" value="-" onclick="DelRow(this.parentNode)"></td>
+          <td><input type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
+          <td><input type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
        </tr>
       </table>
       <input style=float:right type="button" value="Inc." onclick="IncludeSpent()">
