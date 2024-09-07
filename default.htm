@@ -120,6 +120,8 @@
       for (let i = 1; i < cc.length; i++)
         a += "D" + (parseInt(cc[i])+1+r) + cc[i].replace(/^[0-9]+/,'');
       
+      document.getElementById('spent').innerHTML = ('');
+
       for (let n = r; n >= 0; n--) {
         let row = rows[n];
         let v = (typeof row.children[1].children[0].value == "string" ? row.children[1].children[0].value : row.children[1].children[0].value.toISOString().substring(0, 10)).split('-')
