@@ -176,10 +176,10 @@
       Spent.getRange("F2:Z2").setFormulasR1C1(top);
 
       calc(0);
-      populateSpent();
+      populateSpent(false);
     }
 
-    function populateSpent() {
+    function populateSpent(incFuture) {
       var s = document.getElementById("spent");
 
       var template = `
@@ -216,7 +216,7 @@
           .replace('{2}',`${spent[i][4]}`)
           .replace('{4}',spent[i][3]<0?'red':'inherited');
       
-      var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues()
+      var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var foundBlank = false;
       var next = new Date(today);
       next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
@@ -247,7 +247,7 @@
       Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
       
       calc(0);
-      populateSpent();
+      populateSpent(false);
     }
 
     var workbook = null;
@@ -582,7 +582,7 @@
       document.getElementById('output').innerHTML += ('Ready...<br>');
       await timeout()
 
-      populateSpent()
+      populateSpent(true)
       
       document.getElementById('future').style.display = "block";
       document.getElementById('cc').style.display = "block";
