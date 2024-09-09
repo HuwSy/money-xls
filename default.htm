@@ -133,9 +133,6 @@
       for (let i = 1; i < cc.length; i++)
         a += "D" + (parseInt(cc[i])+1+r) + cc[i].replace(/^[0-9]+/,'');
       
-      document.getElementById('spent').innerHTML = ('');
-      document.getElementById('cc').style.display = "none";
-
       for (let n = r; n >= 0; n--) {
         let row = rows[n];
         let v = (typeof row.children[1].children[0].value == "string" ? row.children[1].children[0].value : row.children[1].children[0].value.toISOString().substring(0, 10)).split('-')
@@ -178,8 +175,8 @@
       }
       Spent.getRange("F2:Z2").setFormulasR1C1(top);
 
-      await timeout();
-      await SetupSpentFields();
+      calc(0);
+      populateSpent();
     }
 
     function populateSpent() {
@@ -248,8 +245,9 @@
     function UpdateCC() {
       Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
       Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
-      document.getElementById('future').style.display = "none";
+      
       calc(0);
+      populateSpent();
     }
 
     var workbook = null;
