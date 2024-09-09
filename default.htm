@@ -59,7 +59,7 @@
     </div>
     
     <div id="cc" style="display:none">
-      <input id="D3" style="width:95%"><br>
+      <textarea id="D3" style="width:95%" rows=3></textarea><br>
       <input id="E3" type="number" step="0.01" size="15" style="width: 100px">
       <input style=float:right type="button" value="Upd." onclick="UpdateCC()">
       <br style=clear:both;>
@@ -211,7 +211,7 @@
         .replace('{4}','inherited');
       s.innerHTML += '<hr>';
       
-      var spent = Spent.getRange("A4:Z14").getValues();
+      var spent = Spent.getRange("A4:E23").getValues();
       for (i in spent)
         s.innerHTML += template
           .replace('{0}',`${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "")+spent[i][1]}-${(spent[i][2] < 10 ? "0" : "")+spent[i][2]}`)
