@@ -115,6 +115,8 @@
       await SetupSpentFields();
       await timeout();
 
+      document.getElementById('output').innerHTML += ('Including<br>');
+      
       for (let n = rows.length - 1; n >= 0; n--) {
         let row = rows[n];
         if (!row.children[2].children[0].value)
@@ -177,6 +179,7 @@
 
       calc(0);
       populateSpent(false);
+      document.getElementById('output').innerHTML += ('...done<br>');
     }
 
     function populateSpent(incFuture) {
@@ -243,11 +246,13 @@
     }
 
     function UpdateCC() {
+      document.getElementById('output').innerHTML += ('Overwriting<br>');
       Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
       Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
       
       calc(0);
       populateSpent(false);
+      document.getElementById('output').innerHTML += ('...done<br>');
     }
 
     var workbook = null;
