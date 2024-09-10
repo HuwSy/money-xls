@@ -334,7 +334,7 @@
               .replace('{5}', '')
               .replace('{0}', d.toISOString().substring(0, 10))
               .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-              .replace('>{2}', 'colspan=3 style=overflow:hidden;max-width:150px;>'+future[f][4])
+              .replace('>{2}', ' colspan=3 style=overflow:hidden;max-width:150px;>'+future[f][4])
               .replace('{4}', future[f][3]<0?'red':'inherited')
             rows[0].before(tr);
             c--;
