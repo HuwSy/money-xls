@@ -201,8 +201,12 @@
       
       for (let n = rows.length - 1; n >= 0; n--) {
         let row = rows[n];
-        if (!row.children[2].children[0].value)
+        try {
+          if (!row.children[2].children[0].value)
+            DelRow(row);
+        } catch (e) {
           DelRow(row);
+        }
       }
 
       var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
