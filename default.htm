@@ -300,12 +300,13 @@
       
       var spent = Spent.getRange("A4:E99").getValues();
       for (let i in spent)
-        s.innerHTML += template
-          .replace('{5}',parseInt(i)+4)
-          .replace('{0}',`${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "")+spent[i][1]}-${(spent[i][2] < 10 ? "0" : "")+spent[i][2]}`)
-          .replace('{1}',`${spent[i][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
-          .replace('{2}',`${spent[i][4]}`)
-          .replace('{4}',spent[i][3]<0?'red':'inherited');
+        if (spent[i][3] !== null && spent[i][3] !== '')
+          s.innerHTML += template
+            .replace('{5}',parseInt(i)+4)
+            .replace('{0}',!spent[i][2] ? '' : !spent[i][0] ? spent[i][2] : `${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "")+spent[i][1]}-${(spent[i][2] < 10 ? "0" : "")+spent[i][2]}`)
+            .replace('{1}',`${spent[i][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
+            .replace('{2}',`${spent[i][4]}`)
+            .replace('{4}',spent[i][3]<0?'red':'inherited');
       
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var foundBlank = false;
@@ -365,7 +366,7 @@
         plans[0].children[5].children[0].value = plan[p][9];
         if ((planf[p][0] || "") != "") {
           plans[0].children[5].children[0].type = "text";
-          plans[0].children[5].children[0].value = planf[p][0];
+          plans[0].children[5].children[0].value = "="+planf[p][0];
         }
         plans[0].children[6].children[0].value = plan[p][10];
         plans[0].children[7].children[0].value = plan[p][11];
