@@ -122,7 +122,7 @@
           <td><input type=number style=width:38px placeholder=Days></td>
           <td><input type="date" style=width:96px placeholder=Start></td>
           <td><input type="date" style=width:96px placeholder=End></td>
-          <td><input type=number style=width:56px></td>
+          <td><input type=number style=width:56px><input type=button value=T onclick="this.previousNode.type=this.previousNode.type=='number'?'text':'number'"</td>
           <td><input type=text style=width:120px></td>
           <td><input type=number style=width:34px placeholder=FNumber></td>
           <td><input type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
@@ -326,21 +326,27 @@
       document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
 
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
+      var planf = Plan.getRange("J2:J" + (plan.length + 1)).getFormulasR1C1();
       for (let p = plan.length - 1; p >= 0; p--) {
         plans[0].children[0].children[0].value = plan[p][0];
         plans[0].children[1].children[0].value = plan[p][1];
         plans[0].children[2].children[0].value = plan[p][2];
-        try {
+        if (plan[p][3] > 1900) {
           let s = new Date(plan[p][3],plan[p][4]-1,plan[p][5]);
           s.setHours(12);
           plans[0].children[3].children[0].value = s.toISOString().substring(0, 10);
-        } catch (e) {}
-        try {
+        }
+        if (plan[p][6] > 1900) {
           let e = new Date(plan[p][6],plan[p][7]-1,plan[p][8]);
           e.setHours(12);
           plans[0].children[4].children[0].value = e.toISOString().substring(0, 10);
-        } catch (e) {}
+        }
+        plans[0].children[5].children[0].type = "number";
         plans[0].children[5].children[0].value = plan[p][9];
+        if ((planf[p][0] || "") != "") {
+          plans[0].children[5].children[0].type = "text";
+          plans[0].children[5].children[0].value = planf[p][0];
+        }
         plans[0].children[6].children[0].value = plan[p][10];
         plans[0].children[7].children[0].value = plan[p][11];
 
@@ -369,7 +375,9 @@
           parseInt(e[0]),
           parseInt(e[1]),
           parseInt(e[2]),
-          parseFloat(row.children[5].children[0].value),
+          row.children[5].children[0].type == "number"
+            ? parseFloat(row.children[5].children[0].value)
+            : null,
           row.children[6].children[0].value,
           !row.children[7].children[0].value ? null : parseInt(row.children[7].children[0].value)
         ]);
@@ -377,8 +385,19 @@
 
       Plan.getRange("A2:L" + Plan.getMaxRows()).clear();
       Plan.getRange("A2:L" + (plan.length + 1)).setValues(plan);
+
       var formulas = Plan.getRange("M2:O2").getFormulasR1C1();
-      Plan.getRange("M3:O" + (plan.length + 1)).setFormulasR1C1(formulas);
+      for (let n = 0; n < plans.length; n++) {
+        let row = plans[n];
+
+        if (row.children[5].children[0].type == "text")
+          Plan.getRange("J"+(n+2)+":J"+(n+2)).setFormulasR1C1([[row.children[5].children[0].value]]);
+
+        Plan.getRange("M"+(n+2)+":O"+(n+2)).setFormulasR1C1(formulas);
+      }
+      
+      
+      
 
       calc(0);
       document.getElementById('output').innerHTML += ('...done<br>');
