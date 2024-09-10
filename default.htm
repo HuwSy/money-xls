@@ -400,10 +400,10 @@
         if (row.children[5].children[0].type == "text")
           Plan.getRange("J"+(n+2)+":J"+(n+2)).setFormulasR1C1([[row.children[5].children[0].value]]);
 
-        let f = formulas;
-        f[0] = f[0].replace(/2/g, (n+2));
-        f[1] = f[1].replace(/2/g, (n+2));
-        f[2] = f[2].replace(/2/g, (n+2));
+        let f = [];
+        f[0] = formulas[0].replace(/2/g, (n+2));
+        f[1] = formulas[1].replace(/2/g, (n+2));
+        f[2] = formulas[2].replace(/2/g, (n+2));
 
         Plan.getRange("M"+(n+2)+":O"+(n+2)).setFormulasR1C1(f);
       }
