@@ -312,20 +312,32 @@
       var next = new Date(today);
       next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
 
+      var c = 10;
       for (let f = 0; f < future.length; f++) {
         if ((future[f][4] || "") == "")
           foundBlank = true;
         else if (foundBlank) {
           let d = new Date(future[f][0],future[f][1]-1,future[f][2]);
-          if (d > next)
+          if (d <= next) {
+            d.setHours(12);
+            rows[0].children[1].children[0].value = d.toISOString().substring(0, 10);
+            rows[0].children[2].children[0].value = future[f][3] ? future[f][3].toFixed(2) : 0;
+            rows[0].children[3].children[0].value = future[f][4];
+
+            NewRow(rows[0]);
+          } else if (c > 0) {
+            let d = new Date(future[f][0],future[f][1]-1,future[f][2]);
+            let tr = document.createElement('tr');
+            tr.outerHTML = template
+              .replace('{5}', '')
+              .replace('{0}', d.toISOString().substring(0, 10))
+              .replace('{1}', future[f][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+              .replace('{2}', future[f][4])
+              .replace('{4}', future[f][3]<0?'red':'inherited')
+            rows[0].before(tr);
+            c--;
+          } else
             break;
-
-          d.setHours(12);
-          rows[0].children[1].children[0].value = d.toISOString().substring(0, 10);
-          rows[0].children[2].children[0].value = future[f][3] ? future[f][3].toFixed(2) : 0;
-          rows[0].children[3].children[0].value = future[f][4];
-
-          NewRow(rows[0]);
         }
       }
 
