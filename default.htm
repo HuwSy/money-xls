@@ -304,7 +304,7 @@
           s.innerHTML += template
             .replace('{5}',parseInt(i)+4)
             .replace('{0}',!spent[i][2] ? '' : !spent[i][0] ? spent[i][2] : `${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "")+spent[i][1]}-${(spent[i][2] < 10 ? "0" : "")+spent[i][2]}`)
-            .replace('{1}',`${spent[i][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
+            .replace('{1}',`${(spent[i][3] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
             .replace('{2}',`${spent[i][4]}`)
             .replace('{4}',spent[i][3]<0?'red':'inherited');
       
@@ -330,11 +330,11 @@
             NewRow(rows[0]);
           } else if (c > 0) {
             let tr = document.createElement('tr');
-            tr.outerHTML = template
+            tr.innerHTML = template.replace('<tr>','').replace('</tr>','')
               .replace('{5}', '')
               .replace('{0}', d.toISOString().substring(0, 10))
-              .replace('{1}', future[f][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-              .replace('{2}', future[f][4])
+              .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+              .replace('>{2}', 'colspan=3 style=overflow:hidden;max-width:150px;>'+future[f][4])
               .replace('{4}', future[f][3]<0?'red':'inherited')
             rows[0].before(tr);
             c--;
@@ -542,7 +542,7 @@
         row++;
       }
      
-      while ((Spent.getRange("F" + row + ":F" + row).getFormula() ?? "") == "" && Spent.getRange("F" + row + ":F" + row).getValue() == "") {
+      while ((Spent.getRange("F" + row + ":F" + row).getFormula() ?? "") == "" && Spent.getRange("F" + row + ":F" + row).getValue() == "" && row < Spent.getMaxRows()) {
         row++;
       }
       
@@ -1009,7 +1009,7 @@
       if (priority == null) {
         // calc from spent
         cur = Spent.getRange("D1:D1").getValue() + Spent.getRange("D2:D2").getValue() - Spent.getRange("D3:D3").getValue();
-        while (Spent.getRange("A" + blanks + ":A" + blanks).getValue() == "") {
+        while (Spent.getRange("A" + blanks + ":A" + blanks).getValue() == "" && blanks < Spent.getMaxRows()) {
           cur -= parseFloat(Spent.getRange("D" + blanks + ":D" + blanks).getValue() || 0);
           blanks++;
         }
