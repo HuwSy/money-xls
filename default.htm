@@ -72,12 +72,13 @@
       <input type="file" style="display:none;" id="File" onchange="FileChange(this)">
       <input id="Upload" onclick="Upload()" type="button" value="Load" style="float: right">
       <br style="clear:both;">
+      <input type=radio id=r0 style=display:none name=sheet>
     </div>
     
 <div class="tabs">
   <div id="future" style="display:none">
     <input onclick="checked(this)" type=radio id=r1 style=display:none name=sheet>
-    <label for=r1>Future</label>
+    <label onclick="checked(this.previousSibling)" for=r1>Future</label>
     <div>
       <table id="rows">
         <tr>
@@ -95,7 +96,7 @@
   </div>
   <div id="cc" style="display:none">
     <input onclick="checked(this)" type=radio id=r2 style=display:none name=sheet>
-    <label for=r2>Functions</label>
+    <label onclick="checked(this.previousSibling)" for=r2>Functions</label>
     <div>
       <textarea id="D3" style="width:95%" rows=3></textarea><br>
       <input id="E3" type="number" step="0.01" size="15" style="width: 100px">
@@ -105,7 +106,7 @@
   </div>
   <div id="spent" style="display:none">
     <input onclick="checked(this)" type=radio id=r3 style=display:none name=sheet>
-    <label for=r3>Spent</label>
+    <label onclick="checked(this.previousSibling)" for=r3>Spent</label>
     <div>
       <table>
       </table>
@@ -113,7 +114,7 @@
   </div>
   <div id="plan" style="display:none">
     <input onclick="checked(this)" type=radio id=r4 style=display:none name=sheet>
-    <label for=r4>Plan</label>
+    <label onclick="checked(this.previousSibling)" for=r4>Plan</label>
     <div>
       <table id="plans">
         <tr>
@@ -135,7 +136,7 @@
   </div>
   <div id="options" style="display:none">
     <input onclick="checked(this)" type=radio id=r5 style=display:none name=sheet>
-    <label for=r5>Tasks</label>
+    <label onclick="checked(this.previousSibling)" for=r5>Tasks</label>
     <div>
       <a href="#" onclick=RunAll()>Run All</a><br><br>
       
@@ -155,7 +156,7 @@
   <script type="text/javascript">
     function checked(ths) {
       if (ths.checked)
-        ths.checked = null;
+        document.getElementById("r0").checked = true;
     }
     
     var rows = document.getElementById("rows").getElementsByTagName('tr');
