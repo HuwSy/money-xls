@@ -330,14 +330,14 @@
       
       var over = Over.getRange("A2:J99").getValues();
       for (let i in over)
-        o.innerHTML += template
-          .replace('{5}',over[i][0]+"-"+over[i][1])
-          .replace('{0}',!over[i][5]?'':over[i][5].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-          .replace('{1}',!over[i][8]?'':over[i][8].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-          .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-          .replace('{4}',over[i][8]<0?'red':'inherited');
+        if (over[i][0])
+          o.innerHTML += template
+            .replace('{5}',over[i][0]+"-"+over[i][1])
+            .replace('{0}',!over[i][5]?'':over[i][5].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+            .replace('{1}',!over[i][8]?'':over[i][8].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+            .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+            .replace('{4}',over[i][8]<0?'red':'inherited');
 
-      
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var foundBlank = false;
       var next = new Date(today);
