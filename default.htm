@@ -321,14 +321,21 @@
             .replace('{2}',`${spent[i][4]}`)
             .replace('{4}',spent[i][3]<0?'red':'inherited');
 
+      o.innerHTML = template
+        .replace('{5}','Y-M')
+        .replace('{0}','Under')
+        .replace('{1}','Annual')
+        .replace('{2}','Low')
+        .replace('{4}','inherited')
+      
       var over = Over.getRange("A2:J99").getValues();
       for (let i in over)
         o.innerHTML += template
-          .replace('{5}','')
-            .replace('{0}',over[i][0])
-            .replace('{1}',`${(over[i][8] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
-            .replace('{2}',`${(over[i][9] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
-            .replace('{4}',over[i][8]<0?'red':'inherited');
+          .replace('{5}',over[i][0]+"-"+over[i][1])
+          .replace('{0}',!over[i][5]?'':over[i][5].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+          .replace('{1}',!over[i][8]?'':over[i][8].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+          .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+          .replace('{4}',over[i][8]<0?'red':'inherited');
 
       
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
@@ -522,6 +529,7 @@
       clearRows(rows);
       clearRows(plans);
       document.getElementById('spent').getElementsByTagName('table')[0].innerHTML = ('');
+      document.getElementById('over').getElementsByTagName('table')[0].innerHTML = ('');
       document.getElementById('output').innerHTML = ('Loading...<br>');
       await timeout()
       var f = ths.files[0];
