@@ -99,6 +99,7 @@
     <div>
       <textarea id="D3" name=d3 style="width:95%" rows=3></textarea><br>
       <input id="E3" name=e3 type="number" step="0.01" size="15" style="width: 100px">
+      <input id=Sum name=sum type=number size=15 style="width: 100px" disabled>
       <input name=update style=float:right type="button" value="Upd." onclick="UpdateCC()">
       <br style=clear:both;>
     </div>
@@ -182,13 +183,16 @@
       rename(row.children[1].children[0], k);
       rename(row.children[2].children[0], k);
       rename(row.children[3].children[0], k);
+      rename(row.children[4].children[0], k);
+      rename(row.children[5].children[0], k);
       if (row.children[0].children[0].type == "checkbox") {
         row.children[0].children[0].checked = null;
       } else {
-        rename(row.children[4].children[0], k);
-        rename(row.children[5].children[0], k);
+        rename(row.children[5].children[1], k);
         rename(row.children[6].children[0], k);
         rename(row.children[7].children[0], k);
+        rename(row.children[8].children[0], k);
+        rename(row.children[9].children[0], k);
         row.children[0].children[0].value = null;
         row.children[4].children[0].value = null;
         row.children[5].children[0].value = null;
@@ -388,6 +392,7 @@
 
       document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
       document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
+      document.getElementById('Sum').value = parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue());
 
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
       var planf = Plan.getRange("J2:J" + (plan.length + 1)).getFormulasR1C1();
