@@ -66,45 +66,45 @@
     
     <div id="top">
       Start:
-      <input style="width:88px" type="date" onchange="StartChange(this.value)" id="start" placeholder="Override start date">
+      <input style="width:88px" type="date" onchange="StartChange(this.value)" id="start" name=start placeholder="Override start date">
       Today:
-      <input style="width:88px" type="date" onchange="TodayChange(this.value)" id="today" placeholder="Override todays date">
-      <input type="file" style="display:none;" id="File" onchange="FileChange(this)">
-      <input id="Upload" onclick="Upload()" type="button" value="Load" style="float: right">
+      <input style="width:88px" type="date" onchange="TodayChange(this.value)" id="today" name=today placeholder="Override todays date">
+      <input type="file" style="display:none;" id="File" name=file onchange="FileChange(this)">
+      <input id="Upload" name=upload onclick="Upload()" type="button" value="Load" style="float: right">
       <br style="clear:both;">
     </div>
     
 <div class="tabs">
   <div id="future" style="display:none">
-    <input type=radio id=r1 style=display:none name=sheet>
+    <input type=radio id=r1 name=r1 style=display:none name=sheet>
     <label onclick="Checked(this)" for=r1>Future</label>
     <div>
       <table id="rows">
         <tr>
-          <td><input type="checkbox" title="CC expense"></td>
-          <td><input type="date" style="width: 60px;"></td>
-          <td><input type="number" step="0.01" size="10" style="width: 50px"></td>
-          <td><input type="text" placeholder="Activity" style="width: 70px"></td>
-          <td><input type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
-          <td><input type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
+          <td><input name=cc type="checkbox" title="CC expense"></td>
+          <td><input name=date type="date" style="width: 60px;"></td>
+          <td><input name=amount type="number" step="0.01" size="10" style="width: 50px"></td>
+          <td><input name=activity type="text" placeholder="Activity" style="width: 70px"></td>
+          <td><input name=add type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
+          <td><input name=remove type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
        </tr>
       </table>
-      <input style=float:right type="button" value="Inc." onclick="IncludeSpent()">
+      <input name=include style=float:right type="button" value="Inc." onclick="IncludeSpent()">
       <br style=clear:both;>
     </div>
   </div>
   <div id="cc" style="display:none">
-    <input type=radio id=r2 style=display:none name=sheet>
+    <input type=radio id=r2 name=r2 style=display:none name=sheet>
     <label onclick="Checked(this)" for=r2>Functions</label>
     <div>
-      <textarea id="D3" style="width:95%" rows=3></textarea><br>
-      <input id="E3" type="number" step="0.01" size="15" style="width: 100px">
-      <input style=float:right type="button" value="Upd." onclick="UpdateCC()">
+      <textarea id="D3" name=d3 style="width:95%" rows=3></textarea><br>
+      <input id="E3" name=e3 type="number" step="0.01" size="15" style="width: 100px">
+      <input name=update style=float:right type="button" value="Upd." onclick="UpdateCC()">
       <br style=clear:both;>
     </div>
   </div>
   <div id="spent" style="display:none">
-    <input type=radio id=r3 style=display:none name=sheet>
+    <input type=radio id=r3 name=r3 style=display:none name=sheet>
     <label onclick="Checked(this.previousSibling)" for=r3>Spent</label>
     <div>
       <table>
@@ -112,7 +112,7 @@
     </div>
   </div>
   <div id="over" style="display:none">
-    <input type=radio id=r6 style=display:none name=sheet>
+    <input type=radio id=r6 name=r6 style=display:none name=sheet>
     <label onclick="Checked(this.previousSibling)" for=r6>Over</label>
     <div>
       <table>
@@ -120,21 +120,21 @@
     </div>
   </div>
   <div id="plan" style="display:none">
-    <input type=radio id=r4 style=display:none name=sheet>
+    <input type=radio id=r4 name=r4 style=display:none name=sheet>
     <label onclick="Checked(this)" for=r4>Plan</label>
     <div>
       <table id="plans">
         <tr>
-          <td><input type=number style=width:34px placeholder=Years></td>
-          <td><input type=number style=width:38px placeholder=Months></td>
-          <td><input type=number style=width:38px placeholder=Days></td>
-          <td><input type="date" style=width:96px placeholder=Start></td>
-          <td><input type="date" style=width:96px placeholder=End></td>
-          <td><input type=number style=width:56px><input type=button value=T onclick="this.previousSibling.type=this.previousSibling.type=='number'?'text':'number'"</td>
-          <td><input type=text style=width:120px></td>
-          <td><input type=number style=width:34px placeholder=FNumber></td>
-          <td><input type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
-          <td><input type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
+          <td><input name=year type=number style=width:34px placeholder=Years></td>
+          <td><input name=month type=number style=width:38px placeholder=Months></td>
+          <td><input name=day type=number style=width:38px placeholder=Days></td>
+          <td><input name=starting type="date" style=width:96px placeholder=Start></td>
+          <td><input name=ending type="date" style=width:96px placeholder=End></td>
+          <td><input name=cost type=number style=width:56px><input type=button value=T onclick="this.previousSibling.type=this.previousSibling.type=='number'?'text':'number'"</td>
+          <td><input name=title type=text style=width:120px></td>
+          <td><input name=f type=number style=width:34px placeholder=FNumber></td>
+          <td><input name=new type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
+          <td><input name=rem type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
         </tr>
       </table>
       <input style=float:right type="button" value="Sav." onclick="SavePlan()">
@@ -142,7 +142,7 @@
     </div>
   </div>
   <div id="options" style="display:none">
-    <input type=radio id=r5 style=display:none name=sheet>
+    <input type=radio id=r5 name=r5 style=display:none name=sheet>
     <label onclick="Checked(this)" for=r5>Tasks</label>
     <div>
       <a href="#" onclick=RunAll()>Run All</a><br><br>
@@ -171,11 +171,24 @@
     var rows = document.getElementById("rows").getElementsByTagName('tr');
     var plans = document.getElementById("plans").getElementsByTagName('tr');
 
+    function rename(t, k) {
+      t.name = t.name.replace(/[0-9]*/,'') + k;
+    }
+    
     function NewRow(ths) {
+      var k = + new Date();
       var row = ths.cloneNode(true);
+      rename(row.children[0].children[0], k);
+      rename(row.children[1].children[0], k);
+      rename(row.children[2].children[0], k);
+      rename(row.children[3].children[0], k);
       if (row.children[0].children[0].type == "checkbox") {
         row.children[0].children[0].checked = null;
       } else {
+        rename(row.children[4].children[0], k);
+        rename(row.children[5].children[0], k);
+        rename(row.children[6].children[0], k);
+        rename(row.children[7].children[0], k);
         row.children[0].children[0].value = null;
         row.children[4].children[0].value = null;
         row.children[5].children[0].value = null;
