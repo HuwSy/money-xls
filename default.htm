@@ -11,53 +11,53 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js" type="text/javascript"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-calc@0.6.7/xlsx-calc.min.js" type="text/javascript"></script>
   <style type="text/css">
-  body > div {
-    width: 329px;
-    margin: auto;
-    background: white;
-    padding: 0 10px;
-    border: 1px solid #bbb;
-    border-radius: 4px;
-    box-shadow: 1px 1px #ccc;
-    overflow: hidden;
-  }
-  body > div > * {
-    margin-bottom: 10px
-  }
-  td {
-    white-space: nowrap;
-  }
-
-  .tabs {
-    width: 100%;
-  }
-  .tabs > div {
-    margin-bottom: 6px
-  }
-  .tabs > div > label {
-    width: 100%;
-    display: flex;
-    cursor: pointer;
-    justify-content: space-between;
-  }
-  .tabs > div > label::after {
-    content: "\276F";
-    transform: rotate(90deg);
-    transition: all 0.35s;
-  }
-  .tabs > div > input:checked + label::after {
-    transform: translateX(-2px) rotate(270deg);
-  }
-  .tabs > div > div {
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.35s;
-  }
-  .tabs > div > input:checked ~ div {
-    max-height: 10000px;
-    overflow: auto;
-    margin-bottom: 18px
-  }
+    body > div {
+      width: 329px;
+      margin: auto;
+      background: white;
+      padding: 0 10px;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      box-shadow: 1px 1px #ccc;
+      overflow: hidden;
+    }
+    body > div > * {
+      margin-bottom: 10px
+    }
+    td {
+      white-space: nowrap;
+    }
+  
+    .tabs {
+      width: 100%;
+    }
+    .tabs > div {
+      margin-bottom: 6px
+    }
+    .tabs > div > label {
+      width: 100%;
+      display: flex;
+      cursor: pointer;
+      justify-content: space-between;
+    }
+    .tabs > div > label::after {
+      content: "\276F";
+      transform: rotate(90deg);
+      transition: all 0.35s;
+    }
+    .tabs > div > input:checked + label::after {
+      transform: translateX(-2px) rotate(270deg);
+    }
+    .tabs > div > div {
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.35s;
+    }
+    .tabs > div > input:checked ~ div {
+      max-height: 10000px;
+      overflow: auto;
+      margin-bottom: 18px
+    }
   </style>
 </head>
 <body>
@@ -74,88 +74,88 @@
       <br style="clear:both;">
     </div>
     
-<div class="tabs">
-  <div id="future" style="display:none">
-    <input type=radio id=r1 style=display:none name=sheet>
-    <label onclick="Checked(this)" for=r1>Future</label>
-    <div>
-      <table id="rows">
-        <tr>
-          <td><input name=cc type="checkbox" title="CC expense"></td>
-          <td><input name=date type="date" style="width: 60px;"></td>
-          <td><input name=amount type="number" step="0.01" size="10" style="width: 50px"></td>
-          <td><input name=activity type="text" placeholder="Activity" style="width: 70px"></td>
-          <td><input name=add type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
-          <td><input name=remove type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
-       </tr>
-      </table>
-      <input name=include style=float:right type="button" value="Inc." onclick="IncludeSpent()">
-      <br style=clear:both;>
+    <div class="tabs">
+      <div id="future" style="display:none">
+        <input type=radio id=r1 style=display:none name=sheet>
+        <label onclick="Checked(this)" for=r1>Future</label>
+        <div>
+          <table id="rows">
+            <tr>
+              <td><input name=cc type="checkbox" title="CC expense"></td>
+              <td><input name=date type="date" style="width: 60px;"></td>
+              <td><input name=amount type="number" step="0.01" size="10" style="width: 50px"></td>
+              <td><input name=activity type="text" placeholder="Activity" style="width: 70px"></td>
+              <td><input name=add type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
+              <td><input name=remove type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
+           </tr>
+          </table>
+          <input name=include style=float:right type="button" value="Inc." onclick="IncludeSpent()">
+          <br style=clear:both;>
+        </div>
+      </div>
+      <div id="cc" style="display:none">
+        <input type=radio id=r2 style=display:none name=sheet>
+        <label onclick="Checked(this)" for=r2>Functions</label>
+        <div>
+          <textarea id="D3" name=d3 style="width:95%" rows=3></textarea><br>
+          <input id="E3" name=e3 type="number" step="0.01" size="15" style="width: 100px">
+          <input id=Sum name=sum type=number size=15 style="width: 100px" disabled>
+          <input name=update style=float:right type="button" value="Upd." onclick="UpdateCC()">
+          <br style=clear:both;>
+        </div>
+      </div>
+      <div id="spent" style="display:none">
+        <input type=radio id=r3 style=display:none name=sheet>
+        <label onclick="Checked(this.previousSibling)" for=r3>Spent</label>
+        <div>
+          <table>
+          </table>
+        </div>
+      </div>
+      <div id="over" style="display:none">
+        <input type=radio id=r6 style=display:none name=sheet>
+        <label onclick="Checked(this.previousSibling)" for=r6>Over</label>
+        <div>
+          <table>
+          </table>
+        </div>
+      </div>
+      <div id="plan" style="display:none">
+        <input type=radio id=r4 style=display:none name=sheet>
+        <label onclick="Checked(this)" for=r4>Plan</label>
+        <div>
+          <table id="plans">
+            <tr>
+              <td><input name=year type=number style=width:34px placeholder=Years></td>
+              <td><input name=month type=number style=width:38px placeholder=Months></td>
+              <td><input name=day type=number style=width:38px placeholder=Days></td>
+              <td><input name=starting type="date" style=width:96px placeholder=Start></td>
+              <td><input name=ending type="date" style=width:96px placeholder=End></td>
+              <td><input name=cost type=number style=width:56px><input type=button value=T onclick="this.previousSibling.type=this.previousSibling.type=='number'?'text':'number'"</td>
+              <td><input name=title type=text style=width:120px></td>
+              <td><input name=f type=number style=width:34px placeholder=FNumber></td>
+              <td><input name=new type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
+              <td><input name=rem type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
+            </tr>
+          </table>
+          <input style=float:right type="button" value="Sav." onclick="SavePlan()">
+          <br style=clear:both;>
+        </div>
+      </div>
+      <div id="options" style="display:none">
+        <input type=radio id=r5 style=display:none name=sheet>
+        <label onclick="Checked(this)" for=r5>Tasks</label>
+        <div>
+          <a href="#" onclick=RunAll()>Run All</a><br><br>
+          
+          <a href="#" onclick=SetupSpentFields()>Blanks</a><br>
+          <a href="#" onclick=SetupOneYear()>One Year</a><br>
+          <a href="#" onclick=SetupLimited()>F1-9</a><br>
+          <a href="#" onclick=SetupAllYears()>All Years</a><br>
+          <a href="#" onclick=Saving()>Save</a><br>
+        </div>
+      </div>
     </div>
-  </div>
-  <div id="cc" style="display:none">
-    <input type=radio id=r2 style=display:none name=sheet>
-    <label onclick="Checked(this)" for=r2>Functions</label>
-    <div>
-      <textarea id="D3" name=d3 style="width:95%" rows=3></textarea><br>
-      <input id="E3" name=e3 type="number" step="0.01" size="15" style="width: 100px">
-      <input id=Sum name=sum type=number size=15 style="width: 100px" disabled>
-      <input name=update style=float:right type="button" value="Upd." onclick="UpdateCC()">
-      <br style=clear:both;>
-    </div>
-  </div>
-  <div id="spent" style="display:none">
-    <input type=radio id=r3 style=display:none name=sheet>
-    <label onclick="Checked(this.previousSibling)" for=r3>Spent</label>
-    <div>
-      <table>
-      </table>
-    </div>
-  </div>
-  <div id="over" style="display:none">
-    <input type=radio id=r6 style=display:none name=sheet>
-    <label onclick="Checked(this.previousSibling)" for=r6>Over</label>
-    <div>
-      <table>
-      </table>
-    </div>
-  </div>
-  <div id="plan" style="display:none">
-    <input type=radio id=r4 style=display:none name=sheet>
-    <label onclick="Checked(this)" for=r4>Plan</label>
-    <div>
-      <table id="plans">
-        <tr>
-          <td><input name=year type=number style=width:34px placeholder=Years></td>
-          <td><input name=month type=number style=width:38px placeholder=Months></td>
-          <td><input name=day type=number style=width:38px placeholder=Days></td>
-          <td><input name=starting type="date" style=width:96px placeholder=Start></td>
-          <td><input name=ending type="date" style=width:96px placeholder=End></td>
-          <td><input name=cost type=number style=width:56px><input type=button value=T onclick="this.previousSibling.type=this.previousSibling.type=='number'?'text':'number'"</td>
-          <td><input name=title type=text style=width:120px></td>
-          <td><input name=f type=number style=width:34px placeholder=FNumber></td>
-          <td><input name=new type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
-          <td><input name=rem type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
-        </tr>
-      </table>
-      <input style=float:right type="button" value="Sav." onclick="SavePlan()">
-      <br style=clear:both;>
-    </div>
-  </div>
-  <div id="options" style="display:none">
-    <input type=radio id=r5 style=display:none name=sheet>
-    <label onclick="Checked(this)" for=r5>Tasks</label>
-    <div>
-      <a href="#" onclick=RunAll()>Run All</a><br><br>
-      
-      <a href="#" onclick=SetupSpentFields()>Blanks</a><br>
-      <a href="#" onclick=SetupOneYear()>One Year</a><br>
-      <a href="#" onclick=SetupLimited()>F1-9</a><br>
-      <a href="#" onclick=SetupAllYears()>All Years</a><br>
-      <a href="#" onclick=Saving()>Save</a><br>
-    </div>
-  </div>
-</div>
 
     <div id="output">
     </div>
@@ -294,9 +294,7 @@
     }
 
     function populateSpent(incFuture) {
-      document.getElementById('spent').style.display = "block";
       var s = document.getElementById('spent').getElementsByTagName('table')[0];
-      var o = document.getElementById('over').getElementsByTagName('table')[0];
 
       var template = `
         <tr>
@@ -338,6 +336,8 @@
             .replace('{2}',`${spent[i][4]}`)
             .replace('{4}',spent[i][3]<0?'red':'inherited');
 
+      var o = document.getElementById('over').getElementsByTagName('table')[0];
+      
       o.innerHTML = template
         .replace('{5}','Y-M')
         .replace('{0}','Under')
@@ -355,6 +355,8 @@
             .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
             .replace('{4}',over[i][8]<0?'red':'inherited');
 
+      clearRows(rows);
+      
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var foundBlank = false;
       var next = new Date(today);
@@ -394,6 +396,8 @@
       document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
       document.getElementById('Sum').value = parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue());
 
+      clearRows(plans);
+      
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
       var planf = Plan.getRange("J2:J" + (plan.length + 1)).getFormulasR1C1();
       for (let p = plan.length - 1; p >= 0; p--) {
@@ -471,7 +475,7 @@
       }
 
       calc(0);
-      populateSpent(false);
+      populateSpent(true);
       document.getElementById('output').innerHTML += ('...done<br>');
     }
 
@@ -481,7 +485,7 @@
       Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
       
       calc(0);
-      populateSpent(false);
+      populateSpent(true);
       document.getElementById('output').innerHTML += ('...done<br>');
     }
 
@@ -538,17 +542,15 @@
       if (ths.files.length != 1)
         return;
       
+      document.getElementById('output').innerHTML = ('Loading...<br>');
+      
       document.getElementById('future').style.display = "none";
       document.getElementById('cc').style.display = "none";
       document.getElementById('spent').style.display = "none";
       document.getElementById('plan').style.display = "none";
       document.getElementById('over').style.display = "none";
       document.getElementById('options').style.display = "none";
-      clearRows(rows);
-      clearRows(plans);
-      document.getElementById('spent').getElementsByTagName('table')[0].innerHTML = ('');
-      document.getElementById('over').getElementsByTagName('table')[0].innerHTML = ('');
-      document.getElementById('output').innerHTML = ('Loading...<br>');
+      
       await timeout()
       var f = ths.files[0];
       window.name = f.name;
@@ -634,6 +636,13 @@
         sumrow--;
       }
       
+      document.getElementById('output').innerHTML += ('...done<br>');
+      await timeout()
+    }
+
+    async function SetupOneYear() {
+      document.getElementById('output').innerHTML += ('One year...<br>');
+      
       document.getElementById('output').innerHTML += ('...clearing<br>');
       await timeout()
       
@@ -647,12 +656,6 @@
       
       calc(1);
       
-      document.getElementById('output').innerHTML += ('...done<br>');
-      await timeout()
-    }
-
-    async function SetupOneYear() {
-      document.getElementById('output').innerHTML += ('One year...<br>');
       await timeout()
       futureYear(0);
       document.getElementById('output').innerHTML += ('...overspent<br>');
@@ -822,13 +825,14 @@
       document.getElementById('output').innerHTML += ('Ready...<br>');
       await timeout()
 
-      populateSpent(true)
-      
       document.getElementById('future').style.display = "block";
       document.getElementById('cc').style.display = "block";
+      document.getElementById('spent').style.display = "block";
       document.getElementById('plan').style.display = "block";
       document.getElementById('over').style.display = "block";
       document.getElementById('options').style.display = "block";
+
+      populateSpent(true)
     }
 
     function futureYear(len, priority) {
@@ -1135,6 +1139,9 @@
     }
 
     function calc(sub) {
+      // 0
+      // All
+    
       // 1
       // Spent.getRange('F4:F' + row).recalc();
       // Spent.getRange('H4:M' + row).recalc();
