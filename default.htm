@@ -148,10 +148,10 @@
         <div>
           <a href="#" onclick=RunAll()>Run All</a><br><br>
           
-          <a href="#" onclick=SetupSpentFields()>Blanks</a><br>
           <a href="#" onclick=SetupOneYear()>One Year</a><br>
           <a href="#" onclick=SetupLimited()>F1-9</a><br>
-          <a href="#" onclick=SetupAllYears()>All Years</a><br>
+          <a href="#" onclick=SetupAllYears()>All Years</a><br><br>
+          
           <a href="#" onclick=Saving()>Save</a><br>
         </div>
       </div>
@@ -219,7 +219,7 @@
     }
 
     async function IncludeSpent() {
-      await SetupSpentFields();
+      await setupSpentFields();
       await timeout();
 
       document.getElementById('output').innerHTML += ('Including<br>');
@@ -289,11 +289,14 @@
       Spent.getRange("F2:Z2").setFormulasR1C1(top);
 
       calc(0);
-      populateSpent(false);
+      await populateSpent(false);
       document.getElementById('output').innerHTML += ('...done<br>');
     }
 
-    function populateSpent(incFuture) {
+    async function populateSpent(incFuture) {
+      await setupSpentFields();
+      await timeout();
+      
       var s = document.getElementById('spent').getElementsByTagName('table')[0];
 
       var template = `
@@ -428,7 +431,7 @@
       }
     }
 
-    function SavePlan() {
+    async function SavePlan() {
       document.getElementById('output').innerHTML += ('Planning<br>');
       
       var plan = [];
@@ -475,17 +478,17 @@
       }
 
       calc(0);
-      populateSpent(true);
+      await populateSpent(true);
       document.getElementById('output').innerHTML += ('...done<br>');
     }
 
-    function UpdateCC() {
+    async function UpdateCC() {
       document.getElementById('output').innerHTML += ('Overwriting<br>');
       Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
       Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
       
       calc(0);
-      populateSpent(true);
+      await populateSpent(true);
       document.getElementById('output').innerHTML += ('...done<br>');
     }
 
@@ -564,9 +567,6 @@
     }
     
     async function RunAll() {
-      await SetupSpentFields();
-      await timeout();
-      
       await SetupOneYear();
       await timeout();
       
@@ -575,11 +575,14 @@
       
       await SetupAllYears();
       await timeout();
+
+      await populateSpent(true);
+      await timeout();
       
       await Saving();
     }
 
-    async function SetupSpentFields() {
+    async function setupSpentFields() {
       document.getElementById('output').innerHTML += ('Sorting...<br>');
       await timeout()
       
