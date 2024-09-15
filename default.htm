@@ -173,7 +173,7 @@
     var plans = document.getElementById("plans").getElementsByTagName('tr');
 
     function rename(t, k) {
-      t.name = t.name.replace(/[0-9]*/,'') + k;
+      t.name = t.name.replace(/[0-9]*/g,'') + k;
     }
     
     function NewRow(ths) {
