@@ -222,7 +222,8 @@
       await setupSpentFields();
       await timeout();
 
-      document.getElementById('output').innerHTML += ('Including<br>');
+      document.getElementById('output').innerHTML += ('Cleaning<br>');
+      await timeout();
       
       for (let n = rows.length - 1; n >= 0; n--) {
         let row = rows[n];
@@ -234,6 +235,9 @@
         }
       }
 
+      document.getElementById('output').innerHTML += ('Moving sums<br>');
+      await timeout();
+      
       var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
       var r = rows.length - 1;
       var m = 0;
@@ -245,6 +249,9 @@
       var a = "="+cc[0];
       for (let i = 1; i < cc.length; i++)
         a += "D" + (parseInt(cc[i])+1+r) + cc[i].replace(/^[0-9]+/,'');
+      
+      document.getElementById('output').innerHTML += ('Including<br>');
+      await timeout();
       
       for (let n = r; n >= 0; n--) {
         let row = rows[n];
@@ -271,6 +278,9 @@
         DelRow(row);
       }
 
+      document.getElementById('output').innerHTML += ('Setting formulas<br>');
+      await timeout();
+      
       for (; m >= 4; m--)
         Spent.getRange("F" + m + ":F" + m).setFormula("");
 
@@ -289,12 +299,14 @@
       Spent.getRange("F2:Z2").setFormulasR1C1(top);
 
       calc(0);
-      await populateSpent(false);
-      document.getElementById('output').innerHTML += ('...done<br>');
+      populateSpent(false);
     }
 
     async function populateSpent(incFuture) {
       await setupSpentFields();
+      await timeout();
+      
+      document.getElementById('output').innerHTML += ('Setting current<br>');
       await timeout();
       
       var s = document.getElementById('spent').getElementsByTagName('table')[0];
@@ -329,6 +341,9 @@
         .replace('{4}','inherited');
       s.innerHTML += '<hr>';
       
+      document.getElementById('output').innerHTML += ('Setting spents<br>');
+      await timeout();
+      
       var spent = Spent.getRange("A4:E99").getValues();
       for (let i in spent)
         if (spent[i][3] !== null && spent[i][3] !== '')
@@ -339,6 +354,9 @@
             .replace('{2}',`${spent[i][4]}`)
             .replace('{4}',spent[i][3]<0?'red':'inherited');
 
+      document.getElementById('output').innerHTML += ('Setting over<br>');
+      await timeout();
+      
       var o = document.getElementById('over').getElementsByTagName('table')[0];
       
       o.innerHTML = template
@@ -358,6 +376,9 @@
             .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
             .replace('{4}',over[i][8]<0?'red':'inherited');
 
+      document.getElementById('output').innerHTML += ('Setting future<br>');
+      await timeout();
+      
       clearRows(rows);
       
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
@@ -395,10 +416,16 @@
         }
       }
 
+      document.getElementById('output').innerHTML += ('Setting formulas<br>');
+      await timeout();
+      
       document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
       document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
       document.getElementById('Sum').value = parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue());
 
+      document.getElementById('output').innerHTML += ('Setting plans<br>');
+      await timeout();
+      
       clearRows(plans);
       
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
@@ -429,6 +456,8 @@
         if (p > 0)
           NewRow(plans[0]);
       }
+      
+      document.getElementById('output').innerHTML += ('...done<br>');
     }
 
     async function SavePlan() {
@@ -462,6 +491,9 @@
       Plan.getRange("A2:L" + Plan.getMaxRows()).clear();
       Plan.getRange("A2:L" + (plan.length + 1)).setValues(plan);
 
+      document.getElementById('output').innerHTML += ('Formulas<br>');
+      await timeout();
+      
       var formulas = Plan.getRange("M2:O2").getFormulasR1C1();
       for (let n = 0; n < plans.length; n++) {
         let row = plans[n];
@@ -478,18 +510,18 @@
       }
 
       calc(0);
-      await populateSpent(true);
-      document.getElementById('output').innerHTML += ('...done<br>');
+      populateSpent(true);
     }
 
     async function UpdateCC() {
       document.getElementById('output').innerHTML += ('Overwriting<br>');
+      await timeout();
+      
       Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
       Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
       
       calc(0);
-      await populateSpent(true);
-      document.getElementById('output').innerHTML += ('...done<br>');
+      populateSpent(true);
     }
 
     var workbook = null;
@@ -638,9 +670,6 @@
         Spent.getRange("F" + sumrow + ":Z" + sumrow).setFormulasR1C1(sum);
         sumrow--;
       }
-      
-      document.getElementById('output').innerHTML += ('...done<br>');
-      await timeout()
     }
 
     async function SetupOneYear() {
@@ -825,9 +854,6 @@
       Over = workbook.Sheets['Over'];
       Plan = workbook.Sheets['Plan'];
       
-      document.getElementById('output').innerHTML += ('Ready...<br>');
-      await timeout()
-
       document.getElementById('future').style.display = "block";
       document.getElementById('cc').style.display = "block";
       document.getElementById('spent').style.display = "block";
@@ -835,7 +861,9 @@
       document.getElementById('over').style.display = "block";
       document.getElementById('options').style.display = "block";
 
-      populateSpent(true)
+      await populateSpent(true);
+      
+      document.getElementById('output').innerHTML += ('Ready...<br>');
     }
 
     function futureYear(len, priority) {
