@@ -505,7 +505,7 @@
       document.getElementById('output').innerHTML += ('...formulas<br>');
       await timeout();
       
-      var formulas = Plan.getRange("M2:O2").getFormulasR1C1();
+      var formulas = Plan.getRange("M2:O2").getFormulasR1C1()[0];
       for (let n = 0; n < plans.length; n++) {
         let row = plans[n];
 
@@ -517,7 +517,7 @@
         f[1] = formulas[1].replace(/2/g, (n+2));
         f[2] = formulas[2].replace(/2/g, (n+2));
 
-        Plan.getRange("M"+(n+2)+":O"+(n+2)).setFormulasR1C1(f);
+        Plan.getRange("M"+(n+2)+":O"+(n+2)).setFormulasR1C1([f]);
       }
 
       document.getElementById('output').innerHTML += ('...calc<br>');
