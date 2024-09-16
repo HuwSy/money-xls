@@ -177,7 +177,12 @@
     }
     
     function NewRow(ths) {
-      var k = + new Date();
+      var m = ths.parentNode.getAttribute('max')?.toString();
+      if (!m)
+        m = '0';
+      var k = parseInt(m) + 1;
+      ths.parentNode.setAttribute('max', k);
+      
       var row = ths.cloneNode(true);
       rename(row.children[0].children[0], k);
       rename(row.children[1].children[0], k);
