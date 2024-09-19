@@ -443,7 +443,7 @@
       await timeout();
 
       document.getElementById("plans").style.display = 'block';
-      ths.nextElementSibling.style.display = 'block';
+      ths.nextSibling.style.display = 'block';
       ths.style.display = 'none';
       
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
