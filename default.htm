@@ -436,15 +436,15 @@
       document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
       document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
       document.getElementById('Sum').value = parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue());
-
-      document.getElementById('output').innerHTML += ('...setting plans<br>');
-      await timeout();
     }
 
     function PopulatePlan(ths) {
+      document.getElementById('output').innerHTML += ('Getting plans<br>');
+      await timeout();
+      
       ths.style.display = 'none';
-      ths.previousSibling.style.display = 'block';
-      ths.nextSibling.style.display = 'block';
+      ths.previousElementSibling.style.display = 'block';
+      ths.nextElementSibling.style.display = 'block';
       
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
       var planf = Plan.getRange("J2:J" + (plan.length + 1)).getFormulasR1C1();
@@ -474,6 +474,9 @@
         if (p > 0)
           NewRow(plans[0]);
       }
+
+      document.getElementById('output').innerHTML += ('...done<br>');
+      await timeout();
     }
 
     async function SavePlan() {
