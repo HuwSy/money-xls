@@ -113,7 +113,7 @@
         <input type=radio id=r4 style=display:none name=sheet>
         <label onclick="Checked(this.previousSibling)" onclick="Checked(this)" for=r4>Plan</label>
         <div>
-          <table id="plans">
+          <table id="plans" style="display:none">
             <tr>
               <td><input name=year type=number style=width:34px placeholder=Years></td>
               <td><input name=month type=number style=width:38px placeholder=Months></td>
@@ -127,8 +127,8 @@
               <td><input name=rem type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
             </tr>
           </table>
-          <input type="button" value="Load" onclick="PopulatePlan()">
-          <input type="button" value="Save" onclick="SavePlan()">
+          <input type="button" value="Load" onclick="PopulatePlan(this)">
+          <input type="button" value="Save" onclick="SavePlan()" style="display:none">
           <br style=clear:both;>
         </div>
       </div>
@@ -441,7 +441,11 @@
       await timeout();
     }
 
-    function PopulatePlan() {
+    function PopulatePlan(ths) {
+      ths.style.display = 'none';
+      ths.previousSibling.style.display = 'block';
+      ths.nextSibling.style.display = 'block';
+      
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
       var planf = Plan.getRange("J2:J" + (plan.length + 1)).getFormulasR1C1();
       for (let p = plan.length - 1; p >= 0; p--) {
