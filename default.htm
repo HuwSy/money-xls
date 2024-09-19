@@ -441,10 +441,10 @@
     function PopulatePlan(ths) {
       document.getElementById('output').innerHTML += ('Getting plans<br>');
       await timeout();
-      
-      ths.style.display = 'none';
-      ths.previousElementSibling.style.display = 'block';
+
+      document.getElementById("plans").style.display = 'block';
       ths.nextElementSibling.style.display = 'block';
+      ths.style.display = 'none';
       
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
       var planf = Plan.getRange("J2:J" + (plan.length + 1)).getFormulasR1C1();
