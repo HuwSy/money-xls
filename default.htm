@@ -395,18 +395,22 @@
       clearRows(rows);
       
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
-      var foundBlank = false;
       var next = new Date(today);
       next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
       next.setHours(13);
+      var last = new Date(year+10,0,0);
       
       var c = 10;
+      var foundBlank = false;
       for (let f = 0; f < future.length; f++) {
         if ((future[f][4] || "") == "")
           foundBlank = true;
         else if (foundBlank) {
           let d = new Date(future[f][0],future[f][1]-1,future[f][2]);
           d.setHours(12);
+
+          if (d > last)
+            break;
           
           if (d <= next) {
             rows[0].children[1].children[0].value = d.toISOString().substring(0, 10);
@@ -414,7 +418,7 @@
             rows[0].children[3].children[0].value = future[f][4];
 
             NewRow(rows[0]);
-          } else if (c > 0) {
+          } else {
             let tr = document.createElement('tr');
             tr.innerHTML = template.replace('<tr>','').replace('</tr>','')
               .replace('{5}', '')
@@ -424,9 +428,41 @@
               .replace('{6}', 'colspan=3 style=overflow:hidden;max-width:150px;')
               .replace('{4}', future[f][3]<0?'red':'inherited')
             rows[0].before(tr);
+            
             c--;
-          } else
+            if (c == 0) {
+              last = d;
+            }
+          }
+        }
+      }
+
+      future = !incFuture || !workbook.Sheets['F1'] ? [] : workbook.Sheets['F1'].getRange("A2:E" + workbook.Sheets['F1'].getMaxRows()).getValues();
+      next.setMonth(next.getMonth()+1);
+      
+      var foundBlank = false;
+      for (let f = 0; f < future.length; f++) {
+        if ((future[f][4] || "") == "")
+          foundBlank = true;
+        else if (foundBlank) {
+          let d = new Date(future[f][0],future[f][1]-1,future[f][2]);
+          d.setHours(12);
+
+          if (d > next) {
             break;
+          }
+
+          if (d > last) {
+            let tr = document.createElement('tr');
+            tr.innerHTML = template.replace('<tr>','').replace('</tr>','')
+              .replace('{5}', '')
+              .replace('{0}', d.toISOString().substring(0, 10))
+              .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+              .replace('{2}', future[f][4])
+              .replace('{6}', 'colspan=3 style=overflow:hidden;max-width:150px;')
+              .replace('{4}', future[f][3]<0?'red':'inherited')
+            rows[0].before(tr);
+          }
         }
       }
 
