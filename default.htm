@@ -399,7 +399,7 @@
       
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var next = new Date(today);
-      next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
+      //next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
       next.setHours(13);
       var last = new Date(year+10,0,0);
       
