@@ -518,7 +518,7 @@
       await timeout();
     }
 
-    async function SavePlan() {
+    async function SavePlan(ths) {
       if (plans.length == 1 && !row.children[5].children[0].value)
         return;
 
