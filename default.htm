@@ -166,7 +166,7 @@
         event.preventDefault();
       }
       setTimeout(function() {
-        document.getElementsByTagName('p')[0].scrollIntoView();
+        document.getElementsByTagName('p')[0].scrollIntoView({ block: 'end',  behavior: 'smooth' });
       },500);
     }
     
