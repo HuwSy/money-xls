@@ -832,8 +832,11 @@
       currentCols[25] = {width: 100/7};
       
       Spent['!cols'] = currentCols;
+      Spent.fixHeight(1, Spent.getMaxRows());
+      
       Plan['!cols'] = [{width: 25/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 25/7},{width: 125/7},{width: 125/7},{width: 100/7}];
-
+      Plan.fixHeight(1, Plan.getMaxRows());
+      
       for (var priority = 9; priority >= 0; priority--) {
         Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
         if (typeof Future == "undefined" || Future == null)
@@ -1415,21 +1418,24 @@
         }
       }
 
-      function showHide(b,e,v) {
+      function rowsSet(b,e,v,t) {
         s['!rows'] = s['!rows'] || {};
         b--;
         while (b <= e) {
           s['!rows'][b] = s['!rows'][b] || {};
-          s['!rows'][b].hidden = v;
+          s['!rows'][b][t] = v;
           b++;
         }
       }
 
       s.hideRows = function(b,e) {
-        showHide(b,e,true);
+        rowsSet(b,e,true,'hidden');
       }
       s.showRows = function(b,e) {
-        showHide(b,e,false);
+        rowsSet(b,e,false,'hidden');
+      }
+      s.fixHeight = function(b,e) {
+        rowsSet(b,e,20,'hpx');
       }
     }
 
