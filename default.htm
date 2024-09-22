@@ -165,7 +165,9 @@
         ths.parentNode.children[0].checked = false;
         event.preventDefault();
       }
-      document.body.scrollTop = 0;
+      setTimeout(function() {
+        ths.nextSibling.scrollIntoView();
+      },500);
     }
     
     var rows = document.getElementById("rows").getElementsByTagName('tr');
