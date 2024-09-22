@@ -128,7 +128,7 @@
             </tr>
           </table>
           <input type="button" value="Load" onclick="PopulatePlan(this)">
-          <input type="button" value="Save" onclick="SavePlan()" style="display:none">
+          <input type="button" value="Save" onclick="SavePlan(this)" style="display:none">
           <br style=clear:both;>
         </div>
       </div>
@@ -523,6 +523,10 @@
         return;
 
       document.getElementById('output').innerHTML += ('Planning<br>');
+      
+      document.getElementById("plans").style.display = 'none';
+      ths.previousElementSibling.style.display = 'block';
+      ths.style.display = 'none';
       
       var plan = [];
       for (let n = 0; n < plans.length; n++) {
