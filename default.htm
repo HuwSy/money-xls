@@ -164,7 +164,8 @@
       if (ths.parentNode.children[0].checked) {
         ths.parentNode.children[0].checked = false;
         event.preventDefault();
-      }
+      } else
+        setTimeout(function(){ths.scrollIntoView()},1000);
     }
     
     var rows = document.getElementById("rows").getElementsByTagName('tr');
