@@ -953,7 +953,7 @@
       // loop all planned items
       for (p = 0; p < plan.length; p++) {
         // if limited skip lower priority
-        if ((priority == null && plan[p][11] == "0")
+        if ((priority == null && plan[p][11] == "-1")
             || (priority != null && plan[p][11] > priority))
           continue;
         
@@ -961,8 +961,8 @@
         if (plan[p][6] != "" && plan[p][7] != "" && plan[p][8] != "" && plan[p][10] != "") {
           var t = new Date(plan[p][6], plan[p][7]-1, plan[p][8]);
           if (t >= EndDate) continue;
-          var c = plan[p][11] == "0" ? "" : plan[p][9];
-          var n = plan[p][11] == "0" ? "" : plan[p][10];
+          var c = plan[p][11] == "-1" ? "" : plan[p][9];
+          var n = plan[p][11] == "-1" ? "" : plan[p][10];
           
           var ay = plan[p][0];
           if (ay == '') ay = 0;
@@ -1349,7 +1349,7 @@
                   s[o].w = (s[o].v < 0 ? "-" : "") + pound + parseFloat(s[o].v || 0).toFixed(2);
                 else
                   s[o].w = XLSX.SSF.format(v,s[o].v)
-              } else if (field == null || !v[a] || (!v[a][b] && v[a][b] !== 0)) {
+              } else if (field == null || !v[a] || !v[a][b]) {
                 delete s[o].v;
                 delete s[o].f;
                 delete s[o].w;
