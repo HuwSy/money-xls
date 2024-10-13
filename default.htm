@@ -1349,7 +1349,7 @@
                   s[o].w = (s[o].v < 0 ? "-" : "") + pound + parseFloat(s[o].v || 0).toFixed(2);
                 else
                   s[o].w = XLSX.SSF.format(v,s[o].v)
-              } else if (field == null || !v[a] || v[a][b] === null) {
+              } else if (field == null || !v[a] || (!v[a][b] && v[a][b] !== 0)) {
                 delete s[o].v;
                 delete s[o].f;
                 delete s[o].w;
