@@ -139,7 +139,7 @@
           </table>
           <input type="button" value="Plan" onclick="PopulatePlan(this)">
           <input type="button" value="Save" onclick="SavePlan(this)" style="display:none">
-          <br style=clear:both;>
+          <br><br style=clear:both;>
           
           <input type="button" onclick=RunAll() value="Run All"><br><br>
           
@@ -392,12 +392,12 @@
             .replace('{4}',over[i][8]<0?'red':'inherited')
             .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}));
 
-      o.innerHTML += template
+      o.innerHTML += '<tr><td rowspan=4><hr></td></tr>' + template
         .replace('{5}','Y-M-D')
         .replace('{0}','Value')
-        .replace('{1}','')
+        .replace('{1}','Balance')
         .replace('{4}','inherited')
-        .replace('{2}','Balance')
+        .replace('{2}','')
       
       var c = 0;
       var F1 = workbook.Sheets['F1'];
@@ -407,10 +407,9 @@
           o.innerHTML += template
             .replace('{5}',f1[i][0]+"-"+f1[i][1]+"-"+f1[i][2])
             .replace('{0}',f1[i][3])
-            .replace('{1}',f1[i][4])
-            .replace('{4}','inherited')
-            .replace('{2}',f1[i][6])
-            .replace('{6}','style=color:'+(f1[i][6]<0?'red':'inherited'));
+            .replace('{1}',!f1[i][6]?'':f1[i][6].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+            .replace('{4}',f1[i][6]<0?'red':'inherited')
+            .replace('{2}',!f1[i][4]?'':f1[i][4].toLocaleString("en-GB", {style:"currency", currency:"GBP"}));
           c++;
           if (c > 100)
             break;
