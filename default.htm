@@ -82,7 +82,7 @@
         <label onclick="Checked(this.previousSibling)" for=r1>Spends</label>
         <div>
           <table id="upcoming">
-            <tr><td></td></tr>
+            <tr></tr>
            </tr>
           </table>
           <table id="rows">
@@ -212,9 +212,11 @@
     }
 
     function DelRow(ths) {
-      if (ths.parentNode.children.length == 1)
-        NewRow(ths);
-      ths.parentNode.removeChild(ths);
+      try {
+        if (ths.parentNode.children.length == 1)
+          NewRow(ths);
+        ths.parentNode.removeChild(ths);
+      } catch {}
     }
 
     function clearRows(ths) {
