@@ -389,9 +389,33 @@
             .replace('{5}',over[i][0]+"-"+over[i][1])
             .replace('{0}',!over[i][5]?'':over[i][5].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
             .replace('{1}',!over[i][8]?'':over[i][8].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-            .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-            .replace('{4}',over[i][8]<0?'red':'inherited');
+            .replace('{4}',over[i][8]<0?'red':'inherited')
+            .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}));
 
+      o.innerHTML += template
+        .replace('{5}','Y-M-D')
+        .replace('{0}','Value')
+        .replace('{1}','')
+        .replace('{4}','inherited')
+        .replace('{2}','Balance')
+      
+      var c = 0;
+      var F1 = workbook.Sheets['F1'];
+      var f1 = F1.getRange("A2:G" + F1.getMaxRows()).getValues();
+      for (let i in f1)
+        if (f1[i][6]) {
+          o.innerHTML += template
+            .replace('{5}',f1[i][0]+"-"+f1[i][1]+"-"+f1[i][2])
+            .replace('{0}',f1[i][3])
+            .replace('{1}',f1[i][4])
+            .replace('{4}','inherited')
+            .replace('{2}',f1[i][6])
+            .replace('{6}','style=color:'+(f1[i][6]<0?'red':'inherited'));
+          c++;
+          if (c > 100)
+            break;
+        }
+  
       document.getElementById('output').innerHTML += ('...setting future<br>');
       await timeout();
       
@@ -1265,7 +1289,8 @@
 
       XLSX_CALC(workbook);
     }
-    
+
+    // Mimic google sheets api that this was originally developed against
     function sheetConfig(sheetName) {
       var s = workbook.Sheets[sheetName];
 
