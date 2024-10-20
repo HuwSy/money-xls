@@ -79,8 +79,12 @@
     <div class="tabs">
       <div id="future" style="display:none">
         <input type=radio id=r1 style=display:none name=sheet>
-        <label onclick="Checked(this.previousSibling)" for=r1>Future</label>
+        <label onclick="Checked(this.previousSibling)" for=r1>Spends</label>
         <div>
+          <table id="upcoming">
+            <tr></tr>
+           </tr>
+          </table>
           <table id="rows">
             <tr>
               <td><input name=cc type="checkbox" title="CC expense"></td>
@@ -93,19 +97,14 @@
           </table>
           <input name=include style=float:right type="button" value="Inc." onclick="IncludeSpent()">
           <br style=clear:both;>
-        </div>
-      </div>
-      <div id="spent" style="display:none">
-        <input type=radio id=r3 style=display:none name=sheet>
-        <label onclick="Checked(this.previousSibling)" for=r3>Spent</label>
-        <div>
+          
           <textarea id="D3" name=d3 style="width:95%" rows=3></textarea><br>
           <input id="E3" name=e3 type="number" step="0.01" size="15" style="width: 100px">
           <input id=Sum name=sum type=number size=15 style="width: 100px" disabled>
           <input name=update style=float:right type="button" value="Upd." onclick="UpdateCC()">
           <br style=clear:both;>
           <hr>
-          <table>
+          <table id="spent">
           </table>
         </div>
       </div>
@@ -171,6 +170,7 @@
     }
     
     var rows = document.getElementById("rows").getElementsByTagName('tr');
+    var upcoming = document.getElementById("upcoming").getElementsByTagName('tr');
     var plans = document.getElementById("plans").getElementsByTagName('tr');
 
     function rename(t, k) {
@@ -334,7 +334,7 @@
         </tr>
           `;
       
-      var s = document.getElementById('spent').getElementsByTagName('table')[0];
+      var s = document.getElementById('spent');
 
       var current = Spent.getRange("D1:E3").getValues();
       s.innerHTML = template
@@ -396,6 +396,7 @@
       await timeout();
       
       clearRows(rows);
+      clearRows(upcoming);
       
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var next = new Date(today);
@@ -430,7 +431,7 @@
               .replace('{2}', future[f][4])
               .replace('{6}', 'colspan=3 style=overflow:hidden;max-width:150px;')
               .replace('{4}', future[f][3]<0?'red':'inherited')
-            rows[0].before(tr);
+            upcoming[0].before(tr);
             
             c--;
             if (c == 0) {
@@ -464,7 +465,7 @@
               .replace('{2}', future[f][4])
               .replace('{6}', 'colspan=3 style=overflow:hidden;max-width:150px;')
               .replace('{4}', future[f][3]<0?'red':'inherited')
-            rows[0].before(tr);
+            upcoming[0].before(tr);
           }
         }
       }
