@@ -392,12 +392,21 @@
             .replace('{4}',over[i][8]<0?'red':'inherited')
             .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}));
 
-      o.innerHTML += '<tr><td rowspan=4><hr></td></tr>' + template
+      o.innerHTML += '<tr><td colspan=4><hr></td></tr>' + template
         .replace('{5}','Y-M-D')
         .replace('{0}','Value')
         .replace('{1}','Balance')
         .replace('{4}','inherited')
         .replace('{2}','')
+      
+      var template = `
+        <tr>
+          <td style=width:22px>{5}</td>
+          <td style=width:96px>{0}</td>
+          <td style="color: {4}">{1}</td>
+          <td {6}>{2}</td>
+        </tr>
+          `;
       
       var c = 0;
       var F1 = workbook.Sheets['F1'];
