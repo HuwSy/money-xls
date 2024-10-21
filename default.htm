@@ -83,7 +83,6 @@
         <div>
           <table id="upcoming">
             <tr></tr>
-           </tr>
           </table>
           
           <table id="rows">
@@ -94,7 +93,7 @@
               <td><input name=activity type="text" placeholder="Activity" style="width: 70px"></td>
               <td><input name=add type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
               <td><input name=remove type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
-           </tr>
+            </tr>
           </table>
           <input name=include style=float:right type="button" value="Inc." onclick="IncludeSpent()">
           <br style=clear:both;>
@@ -400,7 +399,7 @@
         .replace('{2}','')
       
       var c = 0;
-      var F1 = workbook.Sheets['F1'];
+      var F1 = workbook.Sheets['F1'] || workbook.Sheets['F2'] || workbook.Sheets['F3'] || workbook.Sheets['F4'] || workbook.Sheets['F5'] || Future;
       var f1 = F1.getRange("A2:G" + F1.getMaxRows()).getValues();
       for (let i in f1)
         if (f1[i][6]) {
@@ -463,6 +462,9 @@
           }
         }
       }
+
+      // cleanup additional added row
+      DelRow(rows[0]);
 
       future = !incFuture || !workbook.Sheets['F1'] ? [] : workbook.Sheets['F1'].getRange("A2:E" + workbook.Sheets['F1'].getMaxRows()).getValues();
       next.setMonth(next.getMonth()+1);
