@@ -734,22 +734,25 @@
       
       // get latest date below blanks
       var last = Spent.getRange("A" + row + ":C" + row).getValues();
+      var y = last[0][0];
+      var m = last[0][1];
+      var d = last[0][2];
      
       // set dates correctlt
       var daterow = row - 1;
       while (daterow >= 4) {
-        var y = last[0][0];
-        var m = last[0][1];
-        var d = Spent.getRange("C" + daterow + ":C" + daterow).getValue();
+        var c = Spent.getRange("C" + daterow + ":C" + daterow).getValue();
         
         // new month
-        if (d < last[0][2]) {
+        if (c < d) {
           m++;
           if (m > 12) {
             m = 1;
             y++;
           }
         }
+
+        d = c;
         
         if (new Date(y, m - 1, d) <= today) {
           Spent.getRange("A" + daterow + ":A" + daterow).setValue(y);
