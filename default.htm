@@ -741,6 +741,9 @@
       // set dates correctlt
       var daterow = row - 1;
       while (daterow >= 4) {
+        if (Spent.getRange("A" + daterow + ":A" + daterow).getValue() != "")
+          continue;
+        
         var c = Spent.getRange("C" + daterow + ":C" + daterow).getValue();
         
         // new month
