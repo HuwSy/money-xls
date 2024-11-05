@@ -889,7 +889,7 @@
       Spent.getRange("E3:E3").setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
       
       var mRows = Spent.getMaxRows();
-      for (var m = 2; m < mRows; m++) {
+      for (var m = 2; m <= mRows; m++) {
         try {
           Spent.getRange("B" + m + ":C" +m).setNumberFormat("00");
         } catch (e) {}
@@ -903,7 +903,7 @@
 
       Plan.getRange("A2:I" + Plan.getMaxRows()).setNumberFormat("00");
       mRows = Plan.getMaxRows();
-      for (var m = 1; m < mRows; m++) {
+      for (var m = 1; m <= mRows; m++) {
         try {
           Plan.getRange("J" + m + ":J" + m).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
         } catch (e) {}
