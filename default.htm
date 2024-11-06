@@ -855,6 +855,11 @@
       document.getElementById('output').innerHTML += ('Saving...<br>');
       await timeout()
       
+      workbook.Props.Author = "HuwSy/Money-XLS";
+      workbook.Props.CreatedDate = new Date(2021,2,7,8,35);
+      workbook.Props.ModifiedDate = new Date();
+      workbook.Props.LastAuthor = "HuwSy/Money-XLS";
+
       // formatting
       var currentCols = [];
       currentCols[0] = {width: 45/7};
@@ -883,7 +888,24 @@
         Future['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 100/7}];
       }
       Over['!cols'] = [{width: 45/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 60/7},{width: 60/7}];
-      
+            
+      Over['!merges'] = [];
+      var len = Spent.getRange("G1:G1").getValue();
+      for (var col = 6; col <= 11; col++) {
+        for (var y = 1; y <= len; y++) {
+          Over['!merges'].push({
+            s: {
+              c: col,
+              r: 1+(y-1)*12
+            },
+            e: {
+              c: col,
+              r: y*12
+            }
+          });
+        }
+      }
+
       Spent.getRange("B1:C1").setNumberFormat("00");
       Spent.getRange("D1:D1").setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
       Spent.getRange("E3:E3").setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
@@ -923,8 +945,9 @@
           return buf;
       }
 
-      // saving xlsx
-      var wb = XLSX.write(workbook, {bookType:'xlsx',cellStyles:true,compression:true,type:'binary'});//base64
+      // saving file
+      var format = name.substring(name.lastIndexOf('.')+1);
+      var wb = XLSX.write(workbook, {bookType:format,cellStyles:true,compression:'DEFLATE',type:'binary'});
       var buf = s2ab(wb);
       var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
       
@@ -933,7 +956,7 @@
       aElement.innerHTML = name;
       aElement.download = name;
       aElement.setAttribute('download', name);
-      aElement.href = window.URL.createObjectURL(blob);//`data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${wb}`;
+      aElement.href = window.URL.createObjectURL(blob);
       aElement.target = "_blank";
       
       document.getElementById('output').innerHTML += ('...done<br>');
