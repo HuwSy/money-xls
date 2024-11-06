@@ -728,7 +728,7 @@
         row++;
       }
      
-      while ((Spent.getRange("F" + row + ":F" + row).getFormula() ?? "") == "" && Spent.getRange("F" + row + ":F" + row).getValue() == "" && row < Spent.getMaxRows()) {
+      while ((Spent.getRange("F" + row + ":F" + row).getFormula() ?? "") == "" && Spent.getRange("F" + row + ":Z" + row).getValues()[0].map(function (c) { return c || '' }).join('') == "" && row < Spent.getMaxRows()) {
         row++;
       }
       
