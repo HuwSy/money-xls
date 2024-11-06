@@ -890,7 +890,7 @@
       Over['!cols'] = [{width: 45/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 60/7},{width: 60/7}];
             
       Over['!merges'] = [];
-      var len = Spent.getRange("G1:G1").getValue();
+      var len = Spent.getRange("G1:G1").getValue() + 1;
       for (var col = 6; col <= 11; col++) {
         for (var y = 1; y <= len; y++) {
           Over['!merges'].push({
@@ -947,7 +947,7 @@
 
       // saving file
       var format = name.substring(name.lastIndexOf('.')+1);
-      var wb = XLSX.write(workbook, {bookType:format,cellStyles:true,compression:'DEFLATE',type:'binary'});
+      var wb = XLSX.write(workbook, {bookType:format,cellStyles:true,compression:true,type:'binary'});
       var buf = s2ab(wb);
       var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
       
