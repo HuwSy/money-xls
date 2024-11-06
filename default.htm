@@ -946,7 +946,7 @@
 
       // saving file
       var format = name.substring(name.lastIndexOf('.')+1);
-      var wb = XLSX.write(workbook, {bookType:format,cellStyles:true,compression:true,type:'binary'});
+      var wb = XLSX.write(workbook, {bookType:format,cellStyles:true,compression:'DEFLATE',type:'binary'});
       var buf = s2ab(wb);
       var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
       
