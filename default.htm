@@ -279,7 +279,7 @@
           parseInt(v[1]),
           parseInt(v[2]),
           parseFloat(row.children[2].children[0].value),
-          row.children[3].children[0].value
+          row.children[3].children[0].value.trim()
         ]);
         
         DelRow(row);
@@ -573,7 +573,7 @@
           row.children[5].children[0].type == "number"
             ? parseFloat(row.children[5].children[0].value || '0')
             : null,
-          row.children[6].children[0].value,
+          row.children[6].children[0].value.trim(),
           row.children[7].children[0].value === null || row.children[7].children[0].value === '' ? null : parseInt(row.children[7].children[0].value)
         ]);
       }
