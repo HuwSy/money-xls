@@ -861,6 +861,17 @@
       workbook.Props.ModifiedDate = new Date();
       workbook.Props.LastAuthor = "HuwSy/Money-XLS";
 
+      // hiding
+      if (year > begining.getFullYear()+1)
+        Over.hideRows(2, ((year - begining.getFullYear()-1)*12));
+      var future = Future.getRange("A2:G" +  + Future.getMaxRows()).getValues();
+      var f = 0;
+      while (f < future.length && new Date(future[f][0], future[f][1]-1, future[f][2]) <= today) {
+        f++;
+      }
+      if (f > 0)
+        Future.hideRows(2, 2 + (f > 10 ? f - 10 : 0));
+      
       // formatting
       var currentCols = [];
       currentCols[0] = {width: 45/7};
@@ -1191,10 +1202,6 @@
         Over.getRange("L" + s + ":L" + s).setFormula("=H" + s + "/K" + s + "");
         Over.getRange("L" + s + ":L" + s).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
       }
-     
-      // hide previous years for now
-      if (year > begining.getFullYear()+1)
-        Over.hideRows(2, ((year - begining.getFullYear()-1)*12));
     }
 
     function nowData(priority) {
