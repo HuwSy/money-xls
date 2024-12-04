@@ -773,7 +773,9 @@
       var sum = Spent.getRange("F3:Z3").getFormulasR1C1();
       while (sumrow >= 4 && sumrow > daterow) {
         for (var s = 0; s < sum[0].length; s++)
-          sum[0][s] = sum[0][s].replace(/([A-Za-z]+)([0-9]+)/g, '$1'+sumrow);
+          try {
+            sum[0][s] = sum[0][s].replace(/([A-Za-z]+)([0-9]+)/g, '$1'+sumrow);
+          } catch (e) {}
         Spent.getRange("F" + sumrow + ":Z" + sumrow).setFormulasR1C1(sum);
         sumrow--;
       }
