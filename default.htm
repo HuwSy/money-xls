@@ -281,6 +281,9 @@
           parseFloat(row.children[2].children[0].value),
           row.children[3].children[0].value.trim()
         ]);
+
+        if (p+4 > StartSepnt)
+          StartSepnt = p+1;
         
         DelRow(row);
       }
@@ -626,6 +629,7 @@
 
     var workbook = null;
     var Spent,Future,Over,Plan;
+    var StartSepnt = 4;
     // encode due to xlsx issues
     var pound = decodeURIComponent("%C2%A3");
     
@@ -722,7 +726,7 @@
       await timeout()
       
       // find blank year or calcs in spent to copy top row into
-      var row = 4;
+      var row = StartSepnt;
       while (Spent.getRange("A" + row + ":A" + row).getValue() == "") {
         row++;
       }
