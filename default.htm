@@ -636,12 +636,11 @@
     // encode due to xlsx issues
     var pound = decodeURIComponent("%C2%A3");
     
-    // get overrideable min 1 year history based on april start
+    // get overrideable min 1 year history based on 1st april start
     var begining = new Date();
     begining.setFullYear(begining.getFullYear() - (begining.getMonth() >= 3 ? 1 : 2));
-    // if currently april use jan start for more average data/history
     begining.setDate(1);
-    begining.setMonth(begining.getMonth() == 3 ? 0 : 3);
+    begining.setMonth(3);
     document.getElementById('start').value = begining.toJSON().substring(0,10);
     
     // get overrideable today point
