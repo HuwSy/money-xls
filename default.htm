@@ -899,12 +899,10 @@
       
       Spent['!cols'] = currentCols;
       Spent['!autofilter'] = { ref: "A2:Z"+ Spent.getMaxRows() };
-      Spent['!_FilterDatabase'] = "A2:Z"+ Spent.getMaxRows();
       Spent.fixHeight(1, Spent.getMaxRows());
       
       Plan['!cols'] = [{width: 25/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 25/7},{width: 125/7},{width: 125/7},{width: 100/7}];
       Plan['!autofilter'] = { ref: "A1:O"+ Plan.getMaxRows() };
-      Plan['!_FilterDatabase'] = "A1:O"+ Plan.getMaxRows();
       Plan.fixHeight(1, Plan.getMaxRows());
       
       for (var priority = 9; priority >= 0; priority--) {
