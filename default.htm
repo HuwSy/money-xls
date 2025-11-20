@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-  <meta content="utf-8" http-equiv="encoding">
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link rel="icon" type="image/x-icon" href="/money-xls/favicon.ico">
+  <meta content="text/html;charset=utf-8"
+        http-equiv="Content-Type">
+  <meta content="utf-8"
+        http-equiv="encoding">
+  <meta name="viewport"
+        content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable"
+        content="yes">
+  <link rel="icon"
+        type="image/x-icon"
+        href="/money-xls/favicon.ico">
   <title>Money</title>
-  <script lang="javascript" src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx-calc@0.9.2/xlsx-calc.min.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+          type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-calc@0.9.2/xlsx-calc.min.js"
+          type="text/javascript"></script>
   <style type="text/css">
-    body > div {
-      width: 329px;
+    body>div {
+      width: calc(99vw - 20px);
       margin: auto;
       background: white;
       padding: 0 10px;
@@ -19,134 +28,294 @@
       border-radius: 4px;
       box-shadow: 1px 1px #ccc;
       overflow: hidden;
+      box-sizing: border-box;
     }
-    body > div > * {
+
+    body>div>* {
       margin-bottom: 10px
     }
+
     td {
       white-space: nowrap;
     }
-  
-    .tabs {
-      width: 100%;
-    }
-    .tabs > div {
+
+    .tabs>div {
       margin-bottom: 6px
     }
-    .tabs > div > label {
-      width: 100%;
+
+    .tabs>div>label {
       display: flex;
       cursor: pointer;
       justify-content: space-between;
     }
-    .tabs > div > label::after {
+
+    .tabs>div>label::after {
       content: "\276F";
       transform: rotate(90deg);
       transition: all 0.35s;
     }
-    .tabs > div > input:checked + label::after {
+
+    .tabs>div>input:checked+label::after {
       transform: translateX(-2px) rotate(270deg);
     }
-    .tabs > div > div {
+
+    .tabs>div>div {
       max-height: 0;
       overflow: hidden;
       transition: all 0.35s;
     }
-    .tabs > div > input:checked ~ div {
+
+    .tabs>div>input:checked~div {
       max-height: initial;
       overflow: auto;
-      margin-bottom: 18px
+      margin-bottom: 18px;
       padding-top: 10px;
       padding-bottom: 10px;
     }
   </style>
 </head>
+
 <body>
   <div>
     <p>All files are processed directly within your own browser and never online, view the code <a href="https://github.com/HuwSy/money-xls">here</a></p>
-    
+
     <div id="top">
       Start:
-      <input style="width:88px" type="date" onchange="StartChange(this.value)" id="start" name=start placeholder="Override start date">
+      <input style="width:88px"
+             type="date"
+             onchange="StartChange(this.value)"
+             id="start"
+             name=start
+             placeholder="Override start date">
       Today:
-      <input style="width:88px" type="date" onchange="TodayChange(this.value)" id="today" name=today placeholder="Override todays date">
-      <input type="file" style="display:none;" id="File" name=file onchange="FileChange(this)">
-      <input id="Upload" name=upload onclick="Upload()" type="button" value="Load" style="float: right">
+      <input style="width:88px"
+             type="date"
+             onchange="TodayChange(this.value)"
+             id="today"
+             name=today
+             placeholder="Override todays date">
+      <input type="file"
+             style="display:none;"
+             id="File"
+             name=file
+             onchange="FileChange(this)">
+      <input id="Upload"
+             name=upload
+             onclick="Upload()"
+             type="button"
+             value="Load"
+             style="float: right">
       <br style="clear:both;">
     </div>
-    
+
     <div class="tabs">
-      <div id="future" style="display:none">
-        <input checked type=radio id=r1 style=display:none name=sheet>
-        <label onclick="Checked(this.previousSibling)" for=r1>Spending</label>
+      <div id="future"
+           style="display:none">
+        <input checked
+               type=radio
+               id=r1
+               style=display:none
+               name=sheet>
+        <label onclick="HideUnhide(this.previousSibling)"
+               for=r1>Spending</label>
         <div>
           <table id="upcoming">
             <tr></tr>
           </table>
-          
-          <table id="rows">
+
+          <table id="spending">
             <tr>
-              <td><input name=cc type="checkbox" title="CC expense"></td>
-              <td><input name=date type="date" style="width: 60px;"></td>
-              <td><input name=amount type="number" step="0.01" size="10" style="width: 50px"></td>
-              <td><input name=activity type="text" placeholder="Activity" style="width: 70px"></td>
-              <td><input name=add type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
-              <td><input name=remove type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
+              <td>
+                <input name=cc
+                       type="checkbox"
+                       title="CC expense">
+              </td>
+              <td>
+                <input name=date
+                       type="date"
+                       style="width: 60px;">
+              </td>
+              <td>
+                <input name=amount
+                       type="number"
+                       step="0.01"
+                       size="10"
+                       style="width: 50px">
+              </td>
+              <td>
+                <input name=activity
+                       type="text"
+                       placeholder="Activity"
+                       style="width: 70px">
+              </td>
+              <td>
+                <input name=add
+                       type="button"
+                       value="+"
+                       onclick="NewRow(this.parentNode.parentNode, true)">
+              </td>
+              <td>
+                <input name=remove
+                       type="button"
+                       value="-"
+                       onclick="DelRow(this.parentNode.parentNode, true)">
+              </td>
             </tr>
           </table>
-          <input name=include style=float:right type="button" value="Inc." onclick="IncludeSpent()">
+          <input name=include
+                 style=float:right
+                 type="button"
+                 value="Inc."
+                 onclick="IncludeSpent()">
           <br style=clear:both;>
-          
+
           <hr>
-          <textarea id="D3" name=d3 style="width:95%" rows=3></textarea><br>
-          <input id="E3" name=e3 type="number" step="0.01" style="width: 75px">
-          <input id=Sum name=sum type=number style="width: 75px" disabled>
-          <input id=D1 name=D1 type=number step=0.01 style=width:75px;>
-          <input name=update style=float:right type="button" value="Upd." onclick="UpdateCC()">
+          <textarea id="D3"
+                    name=d3
+                    style="width:95%"
+                    rows=3></textarea>
+          <br>
+          <input id="E3"
+                 name=e3
+                 type="number"
+                 step="0.01"
+                 style="width: 75px">
+          <input id=Sum
+                 name=sum
+                 type=number
+                 style="width: 75px"
+                 disabled>
+          <input id=D1
+                 name=D1
+                 type=number
+                 step=0.01
+                 style=width:75px;>
+          <input name=update
+                 style=float:right
+                 type="button"
+                 value="Upd."
+                 onclick="UpdateCC()">
           <br style=clear:both;>
-          
+
           <hr>
           <table id="spent">
           </table>
         </div>
       </div>
-      <div id="over" style="display:none">
-        <input type=radio id=r6 style=display:none name=sheet>
-        <label onclick="Checked(this.previousSibling)" for=r6>Futures</label>
+      <div id="over"
+           style="display:none">
+        <input type=radio
+               id=r6
+               style=display:none
+               name=sheet>
+        <label onclick="HideUnhide(this.previousSibling)"
+               for=r6>Futures</label>
         <div>
           <table>
           </table>
         </div>
       </div>
-      <div id="options" style="display:none">
-        <input type=radio id=r5 style=display:none name=sheet>
-        <label onclick="Checked(this.previousSibling)" for=r5>Tasks</label>
+      <div id="options"
+           style="display:none">
+        <input type=radio
+               id=r5
+               style=display:none
+               name=sheet>
+        <label onclick="HideUnhide(this.previousSibling)"
+               for=r5>Tasks</label>
         <div>
-          <table id="plans" style="display:none">
+          <table id="plans"
+                 style="display:none">
             <tr>
-              <td><input name=year type=number style=width:34px placeholder=Years></td>
-              <td><input name=month type=number style=width:38px placeholder=Months></td>
-              <td><input name=day type=number style=width:38px placeholder=Days></td>
-              <td><input name=end type="date" style=width:96px placeholder=End></td>
-              <td><input name=start type="date" style=width:96px placeholder=Start></td>
-              <td><input name=cost type=number style=width:56px><input type=button value=T onclick="this.previousSibling.type=this.previousSibling.type=='number'?'text':'number'"</td>
-              <td><input name=title type=text style=width:120px></td>
-              <td><input name=f type=number style=width:34px placeholder=FNumber></td>
-              <td><input name=new type="button" value="+" onclick="NewRow(this.parentNode.parentNode)"></td>
-              <td><input name=rem type="button" value="-" onclick="DelRow(this.parentNode.parentNode)"></td>
+              <td>
+                <input name=year
+                       type=number
+                       style=width:34px
+                       placeholder=Years>
+              </td>
+              <td>
+                <input name=month
+                       type=number
+                       style=width:38px
+                       placeholder=Months>
+              </td>
+              <td>
+                <input name=day
+                       type=number
+                       style=width:38px
+                       placeholder=Days>
+              </td>
+              <td>
+                <input name=end
+                       type="date"
+                       style=width:96px
+                       placeholder=End>
+              </td>
+              <td>
+                <input name=start
+                       type="date"
+                       style=width:96px
+                       placeholder=Start>
+              </td>
+              <td>
+                <input name=cost
+                       type=number
+                       style=width:56px><input type=button
+                       value=T
+                       onclick="this.previousSibling.type=this.previousSibling.type=='number'?'text':'number'">
+              </td>
+              <td>
+                <input name=title
+                       type=text
+                       style=width:120px>
+              </td>
+              <td>
+                <input name=f
+                       type=number
+                       style=width:34px
+                       placeholder=FNumber>
+              </td>
+              <td>
+                <input name=new
+                       type="button"
+                       value="+"
+                       onclick="NewRow(this.parentNode.parentNode)">
+              </td>
+              <td>
+                <input name=rem
+                       type="button"
+                       value="-"
+                       onclick="DelRow(this.parentNode.parentNode)">
+              </td>
             </tr>
           </table>
-          <input type="button" value="Plan" onclick="PopulatePlan(this)" style="display: block;">
-          <input type="button" value="Save" onclick="SavePlan(this)" style="display:none">
+          <input type="button"
+                 value="Plan"
+                 onclick="PopulatePlan(this)"
+                 style="display: block;">
+          <input type="button"
+                 value="Save"
+                 onclick="SavePlan(this)"
+                 style="display:none">
           <br style=clear:both;>
-          
-          <input type="button" onclick=RunAll() value="Run All"><br><br>
-          
-          <input type="button" onclick=SetupOneYear() value="One Year">
-          <input type="button" onclick=SetupLimited() value="F1-9">
-          <input type="button" onclick=SetupAllYears() value="All Years"><br><br>
-          
-          <input type="button" onclick=Saving() value="Save"><br>
+
+          <input type="button"
+                 onclick=RunAll()
+                 value="Run All"><br><br>
+
+          <input type="button"
+                 onclick=SetupOneYear()
+                 value="One Year">
+          <input type="button"
+                 onclick=SetupLimited()
+                 value="F1-9">
+          <input type="button"
+                 onclick=SetupAllYears()
+                 value="All Years"><br><br>
+
+          <input type="button"
+                 onclick=Saving()
+                 value="Save"><br>
         </div>
       </div>
     </div>
@@ -154,33 +323,54 @@
     <div id="output">
     </div>
   </div>
-  
+
   <script type="text/javascript">
-    function Checked(ths) {
+    // variables
+
+    var name = ".xlsx";
+    var workbook = null;
+    var Spent, Future, Over, Plan;
+    var StartSpent = 4;
+    // encode due to xlsx issues
+    var pound = decodeURIComponent("%C2%A3");
+
+    var spending = document.getElementById("spending").getElementsByTagName('tr');
+    var upcoming = document.getElementById("upcoming").getElementsByTagName('tr');
+    var plans = document.getElementById("plans").getElementsByTagName('tr');
+
+    // get overrideable min 1 year history based on 1st april start
+    var begining = new Date();
+    begining.setFullYear(begining.getFullYear() - (begining.getMonth() >= 3 ? 1 : 2));
+    begining.setDate(1);
+    begining.setMonth(3);
+    document.getElementById('start').value = begining.toJSON().substring(0, 10);
+
+    // get overrideable today point
+    var today = new Date();
+    document.getElementById('today').value = today.toJSON().substring(0, 10);
+
+    // get year end name
+    var year = today.getFullYear() + (today.getMonth() + 1 >= begining.getMonth() + 1 ? 1 : 0);
+
+    // functions
+
+    function HideUnhide(ths) {
       if (ths.parentNode.children[0].checked) {
         ths.parentNode.children[0].checked = false;
         event.preventDefault();
       }
-      setTimeout(function() {
-        document.getElementsByTagName('p')[0].scrollIntoView({ block: 'end',  behavior: 'smooth' });
-      },500);
+      setTimeout(function () {
+        document.getElementsByTagName('p')[0].scrollIntoView({ block: 'end', behavior: 'smooth' });
+      }, 500);
     }
-    
-    var rows = document.getElementById("rows").getElementsByTagName('tr');
-    var upcoming = document.getElementById("upcoming").getElementsByTagName('tr');
-    var plans = document.getElementById("plans").getElementsByTagName('tr');
 
-    function rename(t, k) {
-      t.name = t.name.replace(/[0-9]*/g,'') + k;
-    }
-    
-    function NewRow(ths) {
+    function NewRow(ths, checked = null) {
       var m = ths.parentNode.getAttribute('max')?.toString();
       if (!m)
         m = '0';
       var k = parseInt(m) + 1;
       ths.parentNode.setAttribute('max', k);
-      
+
       var row = ths.cloneNode(true);
       rename(row.children[0].children[0], k);
       rename(row.children[1].children[0], k);
@@ -189,7 +379,7 @@
       rename(row.children[4].children[0], k);
       rename(row.children[5].children[0], k);
       if (row.children[0].children[0].type == "checkbox") {
-        row.children[0].children[0].checked = null;
+        row.children[0].children[0].checked = checked;
       } else {
         rename(row.children[5].children[1], k);
         rename(row.children[6].children[0], k);
@@ -208,12 +398,16 @@
       ths.before(row);
     }
 
+    function rename(t, k) {
+      t.name = t.name.replace(/[0-9]*/g, '') + k;
+    }
+
     function DelRow(ths) {
       try {
         if (ths.parentNode.children.length == 1)
-          NewRow(ths);
+          NewRow(ths, true);
         ths.parentNode.removeChild(ths);
-      } catch {}
+      } catch { }
     }
 
     function clearRows(ths) {
@@ -223,18 +417,19 @@
       DelRow(ths[0]);
     }
 
+    // here
     async function IncludeSpent() {
       document.getElementById('output').innerHTML += ('Including<br>');
       await timeout();
-      
+
       await setupSpentFields();
       await timeout();
 
       document.getElementById('output').innerHTML += ('...cleaning<br>');
       await timeout();
-      
-      for (let n = rows.length - 1; n >= 0; n--) {
-        let row = rows[n];
+
+      for (let n = spending.length - 1; n >= 0; n--) {
+        let row = spending[n];
         try {
           if (!row.children[2].children[0].value)
             DelRow(row);
@@ -243,38 +438,43 @@
         }
       }
 
-      document.getElementById('output').innerHTML += ('...moving sums<br>');
+      document.getElementById('output').innerHTML += ('...reading<br>');
       await timeout();
-      
+
       var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
-      var r = rows.length - 1;
+      var r = spending.length - 1;
       var m = 0;
 
-      if (r == 0 && !rows[r].children[2].children[0].value)
+      if (r == 0 && !spending[r].children[2].children[0].value)
         return;
 
-      var cc = Spent.getRange("D3:D3").getFormula().split("D");
-      var a = "="+cc[0];
-      for (let i = 1; i < cc.length; i++)
-        a += "D" + (parseInt(cc[i])+1+r) + cc[i].replace(/^[0-9]+/,'');
-      
       document.getElementById('output').innerHTML += ('...inserting<br>');
       await timeout();
-      
+
       for (let n = r; n >= 0; n--) {
-        let row = rows[n];
+        let row = spending[n];
         let v = (typeof row.children[1].children[0].value == "string" ? row.children[1].children[0].value : row.children[1].children[0].value.toISOString().substring(0, 10)).split('-')
 
         for (var p = 0; p < spent.length; p++)
-          if (new Date(spent[p][0], spent[p][1]-1, spent[p][2]) <= new Date(v[0], v[1]-1, v[2]))
-              break;
-        
-        if (row.children[0].children[0].checked)
-          a += "-D"+(4+n+p);
+          if (new Date(spent[p][0], spent[p][1] - 1, spent[p][2]) <= new Date(v[0], v[1] - 1, v[2]))
+            break;
 
-        if (4+n+p > m)
-          m = 4+n+p;
-        
+        var cc = Spent.getRange("D3:D3").getFormula().split("D");
+        var a = "=" + cc[0];
+        for (let i = 1; i < cc.length; i++) {
+          if ((p+4) <= parseInt(cc[i]))
+            a += "D" + (parseInt(cc[i]) + 1) + cc[i].replace(/^[0-9]+/, '');
+          else
+            a += "D" + cc[i];
+        }
+
+        if (row.children[0].children[0].checked)
+          a += "-D" + (4 + p);
+        Spent.getRange("D3:D3").setFormula(a);
+
+        if (4 + n + p > m)
+          m = 4 + n + p;
+
         spent.splice(p, 0, [
           parseInt(v[0]),
           parseInt(v[1]),
@@ -283,50 +483,51 @@
           row.children[3].children[0].value.trim()
         ]);
 
-        if (m > StartSepnt)
-          StartSepnt = m+2;
-        
+        // move start along for populate spent to work
+        if (m > StartSpent)
+          StartSpent = m + 2;
+
         DelRow(row);
       }
 
       document.getElementById('output').innerHTML += ('...setting formulas<br>');
       await timeout();
-      
+
+      // clear off for populate spent to work
       for (; m >= 4; m--)
         Spent.getRange("F" + m + ":F" + m).setFormula("");
 
-      Spent.getRange("A4:Z" + (3+spent.length)).setValues(spent);
-      
-      Spent.getRange("D3:D3").setFormula(a);
-      Spent.getRange("D2:D2").setFormula("=SUM(D3:D"+(3+spent.length)+")-D1+E3");
+      Spent.getRange("A4:Z" + (3 + spent.length)).setValues(spent);
+
+      Spent.getRange("D2:D2").setFormula("=SUM(D3:D" + (3 + spent.length) + ")-D1+E3");
 
       var top = Spent.getRange("F2:Z2").getFormulasR1C1();
       for (let i = 0; i < top[0].length; i++) {
         try {
           let m = top[0][i].match(/\:([A-Za-z])([0-9]+)/);
-          top[0][i] = top[0][i].replace(m[0], ":"+m[1]+(parseInt(m[2])+1+r));
-        } catch (e) {}
+          top[0][i] = top[0][i].replace(m[0], ":" + m[1] + (parseInt(m[2]) + 1 + r));
+        } catch (e) { }
       }
       Spent.getRange("F2:Z2").setFormulasR1C1(top);
 
       document.getElementById('output').innerHTML += ('...calc<br>');
       await timeout()
-      
-      calc(0);
+
+      calc();
       await populateSpent(true);
-      
+
       document.getElementById('output').innerHTML += ('...done<br>');
     }
 
     async function populateSpent(incFuture) {
       clearRows(plans);
-      
+
       await setupSpentFields();
       await timeout();
-      
+
       document.getElementById('output').innerHTML += ('...setting current<br>');
       await timeout();
-      
+
       var template = `
         <tr>
           <td style=width:22px>{5}</td>
@@ -335,131 +536,132 @@
           <td {6}>{2}</td>
         </tr>
           `;
-      
+
       var s = document.getElementById('spent');
 
       var current = Spent.getRange("D1:E3").getValues();
       s.innerHTML = template
-        .replace('{5}','')
-        .replace('{0}','')
-        .replace('{1}',current[0][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-        .replace('{2}',current[0][1])
-        .replace('{4}',current[0][0]<0?'red':'inherited');
+        .replace('{5}', '')
+        .replace('{0}', '')
+        .replace('{1}', current[0][0].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+        .replace('{2}', current[0][1])
+        .replace('{4}', current[0][0] < 0 ? 'red' : 'inherited');
       s.innerHTML += template
-        .replace('{5}','')
-        .replace('{0}','')
-        .replace('{1}',current[1][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-        .replace('{2}',current[1][1])
-        .replace('{4}',current[1][0]<0?'red':'inherited');
+        .replace('{5}', '')
+        .replace('{0}', '')
+        .replace('{1}', current[1][0].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+        .replace('{2}', current[1][1])
+        .replace('{4}', current[1][0] < 0 ? 'red' : 'inherited');
       s.innerHTML += template
-        .replace('{5}','')
-        .replace('{0}','')
-        .replace('{1}',current[2][0].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-        .replace('{2}',current[2][1].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-        .replace('{4}','inherited');
+        .replace('{5}', '')
+        .replace('{0}', '')
+        .replace('{1}', current[2][0].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+        .replace('{2}', current[2][1].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+        .replace('{4}', 'inherited');
       s.innerHTML += "<tr><td colspan=9><hr></td></tr>";
-      
+
       document.getElementById('output').innerHTML += ('...setting spents<br>');
       await timeout();
-      
+
       var spent = Spent.getRange("A4:E99").getValues();
       for (let i in spent)
         if (spent[i][3] !== null && spent[i][3] !== '')
           s.innerHTML += template
-            .replace('{5}',parseInt(i)+4)
-            .replace('{0}',!spent[i][2] ? '' : !spent[i][0] ? spent[i][2] : `${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "")+spent[i][1]}-${(spent[i][2] < 10 ? "0" : "")+spent[i][2]}`)
-            .replace('{1}',`${(spent[i][3] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"})}`)
-            .replace('{2}',`${spent[i][4]}`)
-            .replace('{4}',spent[i][3]<0?'red':'inherited');
+            .replace('{5}', parseInt(i) + 4)
+            .replace('{0}', !spent[i][2] ? '' : !spent[i][0] ? spent[i][2] : `${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "") + spent[i][1]}-${(spent[i][2] < 10 ? "0" : "") + spent[i][2]}`)
+            .replace('{1}', `${(spent[i][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" })}`)
+            .replace('{2}', `${spent[i][4]}`)
+            .replace('{4}', spent[i][3] < 0 ? 'red' : 'inherited');
 
       document.getElementById('output').innerHTML += ('...setting over<br>');
       await timeout();
-      
+
       var o = document.getElementById('over').getElementsByTagName('table')[0];
-      
+
       o.innerHTML = template
-        .replace('{5}','Y-M')
-        .replace('{0}','Under')
-        .replace('{1}','Annual')
-        .replace('{2}','Low')
-        .replace('{4}','inherited')
-      
+        .replace('{5}', 'Y-M')
+        .replace('{0}', 'Under')
+        .replace('{1}', 'Annual')
+        .replace('{2}', 'Low')
+        .replace('{4}', 'inherited')
+
       var over = Over.getRange("A2:J99").getValues();
       for (let i in over)
         if (over[i][0])
           o.innerHTML += template
-            .replace('{5}',over[i][0]+"-"+over[i][1])
-            .replace('{0}',!over[i][5]?'':over[i][5].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-            .replace('{1}',!over[i][8]?'':over[i][8].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-            .replace('{4}',over[i][8]<0?'red':'inherited')
-            .replace('{2}',!over[i][9]?'':over[i][9].toLocaleString("en-GB", {style:"currency", currency:"GBP"}));
+            .replace('{5}', over[i][0] + "-" + over[i][1])
+            .replace('{0}', !over[i][5] ? '' : over[i][5].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+            .replace('{1}', !over[i][8] ? '' : over[i][8].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+            .replace('{4}', over[i][8] < 0 ? 'red' : 'inherited')
+            .replace('{2}', !over[i][9] ? '' : over[i][9].toLocaleString("en-GB", { style: "currency", currency: "GBP" }));
 
       o.innerHTML += '<tr><td colspan=4><hr></td></tr>' + template
-        .replace('{5}','Y-M-D')
-        .replace('{0}','Value')
-        .replace('{1}','Balance')
-        .replace('{4}','inherited')
-        .replace('{2}','')
-      
+        .replace('{5}', 'Y-M-D')
+        .replace('{0}', 'Value')
+        .replace('{1}', 'Balance')
+        .replace('{4}', 'inherited')
+        .replace('{2}', '')
+
       var c = 0;
       var F1 = workbook.Sheets['F1'] || workbook.Sheets['F2'] || workbook.Sheets['F3'] || workbook.Sheets['F4'] || workbook.Sheets['F5'] || Future;
       var f1 = F1.getRange("A2:G" + F1.getMaxRows()).getValues();
       for (let i in f1)
         if (f1[i][6]) {
           o.innerHTML += template
-            .replace('{5}',f1[i][0]+"-"+(f1[i][1] < 10 ? '0' : '')+f1[i][1]+"-"+(f1[i][2] < 10 ? '0' : '')+f1[i][2])
-            .replace('{0}',!f1[i][3]?'':f1[i][3].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-            .replace('{1}',!f1[i][6]?'':f1[i][6].toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
-            .replace('{4}',f1[i][6]<0?'red':'inherited')
-            .replace('{2}',f1[i][4]);
+            .replace('{5}', f1[i][0] + "-" + (f1[i][1] < 10 ? '0' : '') + f1[i][1] + "-" + (f1[i][2] < 10 ? '0' : '') + f1[i][2])
+            .replace('{0}', !f1[i][3] ? '' : f1[i][3].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+            .replace('{1}', !f1[i][6] ? '' : f1[i][6].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+            .replace('{4}', f1[i][6] < 0 ? 'red' : 'inherited')
+            .replace('{2}', f1[i][4]);
           c++;
           if (c > 100)
             break;
         }
-  
+
       document.getElementById('output').innerHTML += ('...setting future<br>');
       await timeout();
-      
-      clearRows(rows);
+
+      clearRows(spending);
       clearRows(upcoming);
-      
+
       var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var next = new Date(today);
       //next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
       next.setHours(13);
       var week = new Date(next);
-      week.setDate(week.getDate()+7);
-      var last = new Date(year+10,0,0);
-      
+      week.setDate(week.getDate() + 7);
+      var last = new Date(year + 10, 0, 0);
+
       var c = 10;
       var foundBlank = false;
       for (let f = 0; f < future.length; f++) {
         if ((future[f][4] || "") == "")
           foundBlank = true;
         else if (foundBlank) {
-          let d = new Date(future[f][0],future[f][1]-1,future[f][2]);
+          let d = new Date(future[f][0], future[f][1] - 1, future[f][2]);
           d.setHours(12);
 
           if (d > last)
             break;
-          
-          if (d <= next) {
-            rows[0].children[1].children[0].value = d.toISOString().substring(0, 10);
-            rows[0].children[2].children[0].value = future[f][3] ? future[f][3].toFixed(2) : 0;
-            rows[0].children[3].children[0].value = future[f][4];
 
-            NewRow(rows[0]);
+          if (d <= next) {
+            spending[0].children[0].children[0].checked = null;
+            spending[0].children[1].children[0].value = d.toISOString().substring(0, 10);
+            spending[0].children[2].children[0].value = future[f][3] ? future[f][3].toFixed(2) : 0;
+            spending[0].children[3].children[0].value = future[f][4];
+
+            NewRow(spending[0]);
           } else {
             let tr = document.createElement('tr');
-            tr.innerHTML = template.replace('<tr>','').replace('</tr>','')
+            tr.innerHTML = template.replace('<tr>', '').replace('</tr>', '')
               .replace('{5}', '')
               .replace('{0}', d.toISOString().substring(0, 10))
-              .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+              .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
               .replace('{2}', future[f][4])
-              .replace('{6}', 'colspan=3 style=overflow:hidden;max-width:150px;')
-              .replace('{4}', future[f][3]<0?'red':'inherited')
+              .replace('{6}', 'colspan=3')
+              .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited')
             upcoming[0].before(tr);
-            
+
             c--;
             if (c <= 0 && d >= week) {
               last = d;
@@ -469,17 +671,17 @@
       }
 
       // cleanup additional added row
-      DelRow(rows[0]);
+      DelRow(spending[0]);
 
       future = !incFuture || !workbook.Sheets['F1'] ? [] : workbook.Sheets['F1'].getRange("A2:E" + workbook.Sheets['F1'].getMaxRows()).getValues();
-      next.setMonth(next.getMonth()+1);
-      
+      next.setMonth(next.getMonth() + 1);
+
       var foundBlank = false;
       for (let f = 0; f < future.length; f++) {
         if ((future[f][4] || "") == "")
           foundBlank = true;
         else if (foundBlank) {
-          let d = new Date(future[f][0],future[f][1]-1,future[f][2]);
+          let d = new Date(future[f][0], future[f][1] - 1, future[f][2]);
           d.setHours(12);
 
           if (d > next) {
@@ -488,13 +690,13 @@
 
           if (d > last) {
             let tr = document.createElement('tr');
-            tr.innerHTML = template.replace('<tr>','').replace('</tr>','')
+            tr.innerHTML = template.replace('<tr>', '').replace('</tr>', '')
               .replace('{5}', '')
               .replace('{0}', d.toISOString().substring(0, 10))
-              .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", {style:"currency", currency:"GBP"}))
+              .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
               .replace('{2}', future[f][4])
-              .replace('{6}', 'colspan=3 style=overflow:hidden;max-width:150px;')
-              .replace('{4}', future[f][3]<0?'red':'inherited')
+              .replace('{6}', 'colspan=3')
+              .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited')
             upcoming[0].before(tr);
           }
         }
@@ -516,7 +718,7 @@
       document.getElementById("plans").style.display = 'block';
       ths.nextElementSibling.style.display = 'block';
       ths.style.display = 'none';
-      
+
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
       var planf = Plan.getRange("J2:J" + (plan.length + 1)).getFormulasR1C1();
       for (let p = plan.length - 1; p >= 0; p--) {
@@ -524,12 +726,12 @@
         plans[0].children[1].children[0].value = plan[p][1];
         plans[0].children[2].children[0].value = plan[p][2];
         if (plan[p][3] > 1900) {
-          let s = new Date(plan[p][3],plan[p][4]-1,plan[p][5]);
+          let s = new Date(plan[p][3], plan[p][4] - 1, plan[p][5]);
           s.setHours(12);
           plans[0].children[3].children[0].value = s.toISOString().substring(0, 10);
         }
         if (plan[p][6] > 1900) {
-          let e = new Date(plan[p][6],plan[p][7]-1,plan[p][8]);
+          let e = new Date(plan[p][6], plan[p][7] - 1, plan[p][8]);
           e.setHours(12);
           plans[0].children[4].children[0].value = e.toISOString().substring(0, 10);
         }
@@ -537,7 +739,7 @@
         plans[0].children[5].children[0].value = plan[p][9];
         if ((planf[p][0] || "") != "") {
           plans[0].children[5].children[0].type = "text";
-          plans[0].children[5].children[0].value = "="+planf[p][0];
+          plans[0].children[5].children[0].value = "=" + planf[p][0];
         }
         plans[0].children[6].children[0].value = plan[p][10];
         plans[0].children[7].children[0].value = plan[p][11];
@@ -555,17 +757,17 @@
         return;
 
       document.getElementById('output').innerHTML += ('Planning<br>');
-      
+
       document.getElementById("plans").style.display = 'none';
       ths.previousElementSibling.style.display = 'block';
       ths.style.display = 'none';
-      
+
       var plan = [];
       for (let n = 0; n < plans.length; n++) {
         let row = plans[n];
 
-        let s = !row.children[3].children[0].value ? [null,null,null] : (typeof row.children[3].children[0].value == "string" ? row.children[3].children[0].value : row.children[3].children[0].value.toISOString().substring(0, 10)).split('-')
-        let e = !row.children[4].children[0].value ? [null,null,null] : (typeof row.children[4].children[0].value == "string" ? row.children[4].children[0].value : row.children[4].children[0].value.toISOString().substring(0, 10)).split('-')
+        let s = !row.children[3].children[0].value ? [null, null, null] : (typeof row.children[3].children[0].value == "string" ? row.children[3].children[0].value : row.children[3].children[0].value.toISOString().substring(0, 10)).split('-')
+        let e = !row.children[4].children[0].value ? [null, null, null] : (typeof row.children[4].children[0].value == "string" ? row.children[4].children[0].value : row.children[4].children[0].value.toISOString().substring(0, 10)).split('-')
 
         plan.push([
           !row.children[0].children[0].value ? null : parseInt(row.children[0].children[0].value),
@@ -590,28 +792,29 @@
 
       document.getElementById('output').innerHTML += ('...formulas<br>');
       await timeout();
-      
+
       var formulas = Plan.getRange("M2:O2").getFormulasR1C1()[0];
       for (let n = 0; n < plans.length; n++) {
         let row = plans[n];
 
         if (row.children[5].children[0].type == "text")
-          Plan.getRange("J"+(n+2)+":J"+(n+2)).setFormulasR1C1([[row.children[5].children[0].value]]);
+          Plan.getRange("J" + (n + 2) + ":J" + (n + 2)).setFormulasR1C1([[row.children[5].children[0].value]]);
 
         let f = [];
-        f[0] = formulas[0].replace(/([A-Za-z]+)2/g, '$1'+(n+2));
-        f[1] = formulas[1].replace(/([A-Za-z]+)2/g, '$1'+(n+2));
-        f[2] = formulas[2].replace(/([A-Za-z]+)2/g, '$1'+(n+2));
+        f[0] = formulas[0].replace(/([A-Za-z]+)2/g, '$1' + (n + 2));
+        f[1] = formulas[1].replace(/([A-Za-z]+)2/g, '$1' + (n + 2));
+        f[2] = formulas[2].replace(/([A-Za-z]+)2/g, '$1' + (n + 2));
 
-        Plan.getRange("M"+(n+2)+":O"+(n+2)).setFormulasR1C1([f]);
+        if (row.children[6].children[0].value != null && row.children[6].children[0].value != '')
+          Plan.getRange("M" + (n + 2) + ":O" + (n + 2)).setFormulasR1C1([f]);
       }
 
       document.getElementById('output').innerHTML += ('...calc<br>');
       await timeout()
-      
-      calc(0);
+
+      calc();
       await populateSpent(true);
-      
+
       document.getElementById('output').innerHTML += ('...done<br>');
     }
 
@@ -622,75 +825,51 @@
       Spent.getRange("D1:D1").setValue(parseFloat(document.getElementById('D1').value));
       Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
       Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
-      
+
       document.getElementById('output').innerHTML += ('...calc<br>');
       await timeout()
-      
-      calc(0);
+
+      calc();
       await populateSpent(true);
-      
+
       document.getElementById('output').innerHTML += ('...done<br>');
     }
 
-    var workbook = null;
-    var Spent,Future,Over,Plan;
-    var StartSepnt = 4;
-    // encode due to xlsx issues
-    var pound = decodeURIComponent("%C2%A3");
-    
-    // get overrideable min 1 year history based on 1st april start
-    var begining = new Date();
-    begining.setFullYear(begining.getFullYear() - (begining.getMonth() >= 3 ? 1 : 2));
-    begining.setDate(1);
-    begining.setMonth(3);
-    document.getElementById('start').value = begining.toJSON().substring(0,10);
-    
-    // get overrideable today point
-    var today = new Date();
-    document.getElementById('today').value = today.toJSON().substring(0,10);
-    
-    // get year end name
-    var year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
-    
-    // on start changed
     function StartChange(ths) {
       if (ths == null || ths == "")
         begining = new Date(2011, 3, 1);
       else {
         var val = typeof ths == "string" ? ths : ths.toISOString();
-        begining = new Date(val.substring(0,4),parseInt(val.substring(5,7))-1,val.substring(8,10),12,0,0);
+        begining = new Date(val.substring(0, 4), parseInt(val.substring(5, 7)) - 1, val.substring(8, 10), 12, 0, 0);
       }
-      year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
+      year = today.getFullYear() + (today.getMonth() + 1 >= begining.getMonth() + 1 ? 1 : 0);
     }
 
-    // on today changed
     function TodayChange(ths) {
       if (ths == null || ths == "")
         today = new Date();
       else {
         var val = typeof ths == "string" ? ths : ths.toISOString();
-        today = new Date(val.substring(0,4),parseInt(val.substring(5,7))-1,val.substring(8,10),12,0,0);
+        today = new Date(val.substring(0, 4), parseInt(val.substring(5, 7)) - 1, val.substring(8, 10), 12, 0, 0);
       }
-      year = today.getFullYear() + (today.getMonth()+1 >= begining.getMonth() + 1 ? 1 : 0);
+      year = today.getFullYear() + (today.getMonth() + 1 >= begining.getMonth() + 1 ? 1 : 0);
     }
-    
-    // on upload clicked
-    function Upload () {
+
+    function Upload() {
       document.getElementById('File').value = null;
       document.getElementById('File').click();
     }
 
-    // on file changed, load binary
-    async function FileChange (ths) {
+    async function FileChange(ths) {
       if (ths.files.length != 1)
         return;
-      
+
       document.getElementById('output').innerHTML = ('Loading...<br>');
-      
+
       document.getElementById('future').style.display = "none";
       document.getElementById('over').style.display = "none";
       document.getElementById('options').style.display = "none";
-      
+
       await timeout()
       var f = ths.files[0];
       window.name = f.name;
@@ -702,109 +881,97 @@
       reader.onload = fileLoaded
       reader.readAsBinaryString(f);
     }
-    
+
     async function RunAll() {
       await SetupOneYear();
       await timeout();
-      
+
       await SetupLimited();
       await timeout();
-      
+
       await SetupAllYears();
       await timeout();
 
       await populateSpent(true);
       await timeout();
-      
+
       await Saving();
     }
 
     async function setupSpentFields() {
-      document.getElementById('output').innerHTML += ('...sorting<br>');
-      await timeout()
-      
-      // order plan sheet
-      Plan.getRange("A2:O" + Plan.getMaxRows()).sort([{column: 13, ascending: true}, {column: 14, ascending: true}, {column: 7, ascending: true}, {column: 8, ascending: true}, {column: 9, ascending: true}]);
-
       document.getElementById('output').innerHTML += ('...blanks<br>');
       await timeout()
-      
+
       // find blank year or calcs in spent to copy top row into
-      var row = StartSepnt;
-      while (Spent.getRange("A" + row + ":A" + row).getValue() == "") {
+      var row = StartSpent;
+      while (Spent.getRange("A" + row + ":A" + row).getValue() == "" && row < Spent.getMaxRows()) {
         row++;
       }
-     
+
       while ((Spent.getRange("F" + row + ":F" + row).getFormula() ?? "") == "" && Spent.getRange("F" + row + ":Z" + row).getValues()[0].map(function (c) { return c || '' }).join('') == "" && row < Spent.getMaxRows()) {
         row++;
       }
-      
+
       // get latest date below blanks
       var last = Spent.getRange("A" + row + ":C" + row).getValues();
+      if (last[0][0] == "")
+        last[0] = [begining.getFullYear(), begining.getMonth() + 1, begining.getDate()];
+      var sum = Spent.getRange("F3:Z3").getFormulasR1C1();
       var y = last[0][0];
       var m = last[0][1];
       var d = last[0][2];
-     
-      // set dates correctlt
+
+      // set dates correctly and formulas for before today only to allow while above to continue operating
       var daterow = row - 1;
       while (daterow >= 4) {
-        if (Spent.getRange("A" + daterow + ":A" + daterow).getValue() != "") {
-          daterow--;
-          continue;
-        }
-        
-        var c = Spent.getRange("C" + daterow + ":C" + daterow).getValue();
-        
-        // new month
-        if (c < d) {
-          m++;
-          if (m > 12) {
-            m = 1;
-            y++;
-          }
-        }
+        if (Spent.getRange("A" + daterow + ":A" + daterow).getValue() == "") {
+          var c = Spent.getRange("C" + daterow + ":C" + daterow).getValue();
 
-        d = c;
-        
-        if (new Date(y, m - 1, d) <= today) {
+          // new month
+          if (c < d) {
+            m++;
+            if (m > 12) {
+              m = 1;
+              y++;
+            }
+          }
+
+          d = c;
+
           Spent.getRange("A" + daterow + ":A" + daterow).setValue(y);
           Spent.getRange("B" + daterow + ":B" + daterow).setValue(m);
-        } else {
-          break;
         }
-        
+
+        var dates = Spent.getRange("A" + daterow + ":C" + daterow).getValues();
+        if (new Date(dates[0][0], dates[0][1] - 1, dates[0][2]) <= today) {
+          for (var s = 0; s < sum[0].length; s++)
+            try {
+              sum[0][s] = sum[0][s].replace(/([A-Za-z]+)([0-9]+)/g, '$1' + daterow);
+            } catch (e) { }
+          
+          Spent.getRange("F" + daterow + ":Z" + daterow).setFormulasR1C1(sum);
+        }
+
         daterow--;
-      }
-     
-      // set formulas side
-      var sumrow = row - 1;
-      var sum = Spent.getRange("F3:Z3").getFormulasR1C1();
-      while (sumrow >= 4 && sumrow > daterow) {
-        for (var s = 0; s < sum[0].length; s++)
-          try {
-            sum[0][s] = sum[0][s].replace(/([A-Za-z]+)([0-9]+)/g, '$1'+sumrow);
-          } catch (e) {}
-        Spent.getRange("F" + sumrow + ":Z" + sumrow).setFormulasR1C1(sum);
-        sumrow--;
       }
     }
 
     async function SetupOneYear() {
       document.getElementById('output').innerHTML += ('One year...<br>');
-      
+
       document.getElementById('output').innerHTML += ('...clearing<br>');
       await timeout()
-      
+
       // blank over sheet and recalc
-      var r = ((year - begining.getFullYear()-1)*12) + 2;
+      var r = ((year - begining.getFullYear() - 1) * 12) + 2;
       Over.getRange("H" + r + ":L" + (r + 11)).setFormula("=0");
       Over.getRange("L" + r + ":L" + r).setFormula("=0");
 
       document.getElementById('output').innerHTML += ('...calc<br>');
       await timeout()
-      
+
       calc(1);
-      
+
       await timeout()
       futureYear(0);
       document.getElementById('output').innerHTML += ('...overspent<br>');
@@ -821,13 +988,13 @@
 
     async function SetupLimited() {
       document.getElementById('output').innerHTML += ('F');
-      
+
       // calc any Fn sheets if they exist, ie F3 using plan items with values <= 3
       for (var priority = 1; priority <= 9; priority++) {
         Future = workbook.Sheets["F" + priority];
         if (typeof Future == "undefined" || Future == null)
           continue;
-        
+
         document.getElementById('output').innerHTML += (priority + "...");
         await timeout()
         futureYear(1, priority);
@@ -865,54 +1032,54 @@
     async function Saving() {
       document.getElementById('output').innerHTML += ('Saving...<br>');
       await timeout()
-      
+
       workbook.Props.Author = "HuwSy/Money-XLS";
-      workbook.Props.CreatedDate = new Date(2021,2,7,8,35);
+      workbook.Props.CreatedDate = new Date(2021, 2, 7, 8, 35);
       workbook.Props.ModifiedDate = new Date();
       workbook.Props.LastAuthor = "HuwSy/Money-XLS";
 
       // hiding
-      if (year > begining.getFullYear()+1)
-        Over.hideRows(2, ((year - begining.getFullYear()-1)*12));
-      var future = Future.getRange("A2:G" +  + Future.getMaxRows()).getValues();
+      if (year > begining.getFullYear() + 1)
+        Over.hideRows(2, ((year - begining.getFullYear() - 1) * 12));
+      var future = Future.getRange("A2:G" + + Future.getMaxRows()).getValues();
       var f = 0;
-      while (f < future.length && new Date(future[f][0], future[f][1]-1, future[f][2]) <= today) {
+      while (f < future.length && new Date(future[f][0], future[f][1] - 1, future[f][2]) <= today) {
         f++;
       }
       if (f > 0)
         Future.hideRows(2, 2 + (f > 10 ? f - 10 : 0));
-      
+
       // formatting
       var currentCols = [];
-      currentCols[0] = {width: 45/7};
-      currentCols[1] = {width: 25/7};
-      currentCols[2] = {width: 25/7};
-      currentCols[3] = {width: 100/7};
-      currentCols[4] = {width: 175/7};
-      currentCols[5] = {width: 100/7};
-      currentCols[6] = {width: 25/7};
+      currentCols[0] = { width: 45 / 7 };
+      currentCols[1] = { width: 25 / 7 };
+      currentCols[2] = { width: 25 / 7 };
+      currentCols[3] = { width: 100 / 7 };
+      currentCols[4] = { width: 175 / 7 };
+      currentCols[5] = { width: 100 / 7 };
+      currentCols[6] = { width: 25 / 7 };
       var headings = Spent.getRange("H1:X1").getValues();
       for (var heading = 0; heading < 17; heading++)
-        currentCols.push((headings[0][heading] || '') == '' ? {width: 25/7} : {width: 85/7});
-      currentCols[24] = {width: 100/7};
-      currentCols[25] = {width: 100/7};
-      
+        currentCols.push((headings[0][heading] || '') == '' ? { width: 25 / 7 } : { width: 85 / 7 });
+      currentCols[24] = { width: 100 / 7 };
+      currentCols[25] = { width: 100 / 7 };
+
       Spent['!cols'] = currentCols;
-      Spent['!autofilter'] = { ref: "A2:Z"+ Spent.getMaxRows() };
+      Spent['!autofilter'] = { ref: "A2:Z" + Spent.getMaxRows() };
       Spent.fixHeight(1, Spent.getMaxRows());
-      
-      Plan['!cols'] = [{width: 25/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 25/7},{width: 125/7},{width: 125/7},{width: 100/7}];
-      Plan['!autofilter'] = { ref: "A1:O"+ Plan.getMaxRows() };
+
+      Plan['!cols'] = [{ width: 25 / 7 }, { width: 25 / 7 }, { width: 25 / 7 }, { width: 45 / 7 }, { width: 25 / 7 }, { width: 25 / 7 }, { width: 45 / 7 }, { width: 25 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 175 / 7 }, { width: 25 / 7 }, { width: 125 / 7 }, { width: 125 / 7 }, { width: 100 / 7 }];
+      Plan['!autofilter'] = { ref: "A1:O" + Plan.getMaxRows() };
       Plan.fixHeight(1, Plan.getMaxRows());
-      
+
       for (var priority = 9; priority >= 0; priority--) {
         Future = workbook.Sheets[priority > 0 ? "F" + priority : "Future"];
         if (typeof Future == "undefined" || Future == null)
           continue;
-        Future['!cols'] = [{width: 45/7},{width: 25/7},{width: 25/7},{width: 100/7},{width: 175/7},{width: 100/7},{width: 100/7}];
+        Future['!cols'] = [{ width: 45 / 7 }, { width: 25 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 175 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }];
       }
-      Over['!cols'] = [{width: 45/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 25/7},{width: 100/7},{width: 100/7},{width: 100/7},{width: 60/7},{width: 60/7}];
-            
+      Over['!cols'] = [{ width: 45 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 60 / 7 }, { width: 60 / 7 }];
+
       Over['!merges'] = [];
       var len = Spent.getRange("G1:G1").getValue() + 1;
       for (var col = 6; col <= 11; col++) {
@@ -920,11 +1087,11 @@
           Over['!merges'].push({
             s: {
               c: col,
-              r: 1+(y-1)*12
+              r: 1 + (y - 1) * 12
             },
             e: {
               c: col,
-              r: y*12
+              r: y * 12
             }
           });
         }
@@ -933,18 +1100,18 @@
       Spent.getRange("B1:C1").setNumberFormat("00");
       Spent.getRange("D1:D1").setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
       Spent.getRange("E3:E3").setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-      
+
       var mRows = Spent.getMaxRows();
       for (var m = 2; m <= mRows; m++) {
         try {
-          Spent.getRange("B" + m + ":C" +m).setNumberFormat("00");
-        } catch (e) {}
+          Spent.getRange("B" + m + ":C" + m).setNumberFormat("00");
+        } catch (e) { }
         try {
           Spent.getRange("D" + m + ":D" + m).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-        } catch (e) {}
+        } catch (e) { }
         try {
           Spent.getRange("F" + m + ":Z" + m).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-        } catch (e) {}
+        } catch (e) { }
       }
 
       Plan.getRange("A2:I" + Plan.getMaxRows()).setNumberFormat("00");
@@ -952,75 +1119,75 @@
       for (var m = 1; m <= mRows; m++) {
         try {
           Plan.getRange("J" + m + ":J" + m).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-        } catch (e) {}
+        } catch (e) { }
         try {
           Plan.getRange("M" + m + ":N" + m).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-        } catch (e) {}
+        } catch (e) { }
       }
-      
+
       document.getElementById('output').innerHTML += ('...outputting<br>');
       await timeout()
-      
+
       // saving buffer
       function s2ab(s) {
         var buf = new ArrayBuffer(s.length);
         var view = new Uint8Array(buf);
-        for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-          return buf;
+        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+        return buf;
       }
 
       // saving file
-      var format = name.substring(name.lastIndexOf('.')+1);
-      var wb = XLSX.write(workbook, {bookType:format,cellStyles:true,compression:true,bookSST:true,dense:true,type:'binary'});
+      var format = window.name.substring(window.name.lastIndexOf('.') + 1);
+      var wb = XLSX.write(workbook, { bookType: format, cellStyles: true, compression: true, bookSST: true, dense: true, type: 'binary' });
       var buf = s2ab(wb);
-      var blob = new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: name});
-      
+      var blob = new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", charset: "UTF-8", name: window.name });
+
       // downloading
       var aElement = document.createElement('a');
-      aElement.innerHTML = name;
-      aElement.download = name;
-      aElement.setAttribute('download', name);
+      aElement.innerHTML = window.name;
+      aElement.download = window.name;
+      aElement.setAttribute('download', window.name);
       aElement.href = window.URL.createObjectURL(blob);
       aElement.target = "_blank";
-      
+
       document.getElementById('output').innerHTML += ('...done<br>');
-      
+
       document.getElementById('output').appendChild(aElement);
       document.getElementById('output').innerHTML += ('<br>');
       aElement.click();
     }
 
-    async function fileLoaded (e) {
+    async function fileLoaded(e) {
       // loading xlsx
       workbook = null, Spent = null, Future = null, Over = null, Plan = null;
-      workbook = XLSX.read(e.target.result, {type: 'binary',cellStyles:false});
+      workbook = XLSX.read(e.target.result, { type: 'binary', cellStyles: false });
       document.getElementById('output').innerHTML += ('...loaded ' + workbook.SheetNames.length + ' sheets<br>');
       await timeout()
 
       // sheet functions to mimic gs
       workbook.SheetNames.forEach(sheetConfig);
-      
+
       // sheets
       Spent = workbook.Sheets['Spent'];
       Future = workbook.Sheets['Future'];
       Over = workbook.Sheets['Over'];
       Plan = workbook.Sheets['Plan'];
-      
+
       document.getElementById('future').style.display = "block";
       document.getElementById('over').style.display = "block";
       document.getElementById('options').style.display = "block";
 
       await populateSpent(true);
-      
+
       document.getElementById('output').innerHTML += ('Ready...<br>');
     }
 
     function futureYear(len, priority) {
       // how much data we will store
-      var EndDate = new Date(year + len, begining.getMonth() + 1-1, 1);
-      var NotBefore = new Date(begining.toJSON().substring(0,10));
+      var EndDate = new Date(year + len, begining.getMonth() + 1 - 1, 1);
+      var NotBefore = new Date(begining.toJSON().substring(0, 10));
       if (len <= 0)
-        NotBefore = new Date(year - 1, begining.getMonth() + 1-1, 1);
+        NotBefore = new Date(year - 1, begining.getMonth() + 1 - 1, 1);
       if (NotBefore < begining)
         NotBefore = begining;
 
@@ -1031,57 +1198,57 @@
       for (p = 0; p < plan.length; p++) {
         // if limited skip lower priority
         if ((priority == null && plan[p][11] == "-1")
-            || (priority != null && plan[p][11] > priority))
+          || (priority != null && plan[p][11] > priority))
           continue;
-        
+
         // if there is start date and details
         if (plan[p][6] != "" && plan[p][7] != "" && plan[p][8] != "" && plan[p][10] != "") {
-          var t = new Date(plan[p][6], plan[p][7]-1, plan[p][8]);
+          var t = new Date(plan[p][6], plan[p][7] - 1, plan[p][8]);
           if (t >= EndDate) continue;
           var c = plan[p][11] == "-1" ? "" : plan[p][9];
           var n = plan[p][11] == "-1" ? "" : plan[p][10];
-          
+
           var ay = plan[p][0];
           if (ay == '') ay = 0;
           var am = plan[p][1];
           if (am == '') am = 0;
           var ad = plan[p][2];
           if (ad == '') ad = 0;
-          
+
           var e = EndDate;
-        
+
           // get end date if exists
           if (plan[p][3] != "" && plan[p][4] != "" && plan[p][5] != "") {
-            e = new Date(plan[p][3], plan[p][4]-1, plan[p][5]);
+            e = new Date(plan[p][3], plan[p][4] - 1, plan[p][5]);
           }
-        
+
           // if no repeat use current date
-          if (ay+am+ad <= 0) {
+          if (ay + am + ad <= 0) {
             e = t;
           }
-        
+
           // override end date with EndDate
           if (e > EndDate) {
             e = EndDate;
           }
-     
+
           // speed up one year calc or shorrter beginning dates
           if (NotBefore != null) {
             if (e < NotBefore || (e.toUTCString() == NotBefore.toUTCString() && ay + am + ad > 0))
               continue;
-            
+
             if (ay + am + ad > 0)
               while (t < NotBefore) {
                 t = new Date(t.getFullYear() + ay, t.getMonth() + am, t.getDate() + ad);
               }
-            
+
             if (t >= EndDate)
               continue;
           }
-        
+
           if (t > e || (t.toUTCString() == e.toUTCString() && ay + am + ad > 0))
             continue;
-        
+
           // populate future and loop until end date
           do {
             var f = future.length;
@@ -1097,18 +1264,18 @@
         }
       }
 
-      future.sort(function (a,b) {
+      future.sort(function (a, b) {
         if (a[0] == b[0] && a[1] == b[1])
           return a[2] - b[2];
         if (a[0] == b[0])
           return a[1] - b[1];
-        return a[0] - b[0];  
+        return a[0] - b[0];
       });
 
-      Future.showRows(2,Future.getMaxRows());
+      Future.showRows(2, Future.getMaxRows());
       Future.getRange("A2:G" + Future.getMaxRows()).clear();
       Future.getRange("A2:E" + (future.length + 1)).setValues(future);
-      
+
       Future.getRange("A2:C" + Future.getMaxRows()).setNumberFormat("00");
       Future.getRange("D2:D" + Future.getMaxRows()).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
     }
@@ -1116,13 +1283,13 @@
     function overSpent() {
       var spent = Spent.getRange("A4:F" + Spent.getMaxRows()).getValues();
       var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues();
-     
+
       var over = [];
       // loop future output
       for (var f = 0; f < future.length;) {
         var cc = future[f++];
         // if data exists
-        if (cc[0] != "" && cc[1] != "" && cc[2] != "" && new Date(cc[0], cc[1]-1, cc[2]) <= today) {
+        if (cc[0] != "" && cc[1] != "" && cc[2] != "" && new Date(cc[0], cc[1] - 1, cc[2]) <= today) {
           // create over row
           var o = over.length;
           over[o] = [];
@@ -1132,31 +1299,31 @@
           over[o][3] = 0.0; // spent f
           over[o][4] = parseFloat(cc[3] || 0);
           over[o][5] = 0.0; // [2] - [3] - [4]
-          
+
           // loop future summing into [4]
-          while (f < future.length && future[f][0] == cc[0] && future[f][1] == cc[1] && new Date(future[f][0], future[f][1]-1, future[f][2]) <= today) {
+          while (f < future.length && future[f][0] == cc[0] && future[f][1] == cc[1] && new Date(future[f][0], future[f][1] - 1, future[f][2]) <= today) {
             over[o][4] += parseFloat(future[f++][3] || 0);
           }
 
           // find end of spent for this over row
           var s = spent.length - 1;
           while (s >= 0 && (spent[s][0] != cc[0] || spent[s][1] != cc[1])) s--;
-          
+
           // loop spent into [2,3]
-          while (s >= 0 && spent[s][0] == cc[0] && spent[s][1] == cc[1] && new Date(spent[s][0], spent[s][1]-1, spent[s][2]) <= today) {
+          while (s >= 0 && spent[s][0] == cc[0] && spent[s][1] == cc[1] && new Date(spent[s][0], spent[s][1] - 1, spent[s][2]) <= today) {
             over[o][2] += parseFloat(spent[s][3] || 0);
             over[o][3] += parseFloat(spent[s][5] || 0);
             s--;
           }
-          
+
           // calculate [5]
           over[o][5] = over[o][2] - over[o][3] - over[o][4];
         }
       }
-     
+
       Over.getRange("A2:F" + Over.getMaxRows()).clear();
       Over.getRange("I2:I" + Over.getMaxRows()).clear();
-      
+
       var start = (((over[0][0] - begining.getFullYear()) * 12) + 2);
       Over.getRange("A" + start + ":F" + (start + over.length - 1)).setValues(over);
 
@@ -1188,54 +1355,50 @@
 
         // loop back to next year
       }
-      
-      if (year > begining.getFullYear()+1)
-        Over.showRows(2, ((year - begining.getFullYear())*12) + 1);
-     
+
+      if (year > begining.getFullYear() + 1)
+        Over.showRows(2, ((year - begining.getFullYear()) * 12) + 1);
+
       // output merged cells, formulas etc
       for (var i = 0; i < over.length; i++) {
         if (i == over.length - 1 && over[i][1] == 0)
           continue;
-        var s = (((over[i][0] - begining.getFullYear()-1) * 12) + 2);
+        var s = (((over[i][0] - begining.getFullYear() - 1) * 12) + 2);
         var e = s + 11;
-        
+
         Over.getRange("A" + s + ":A" + s).setValue((over[i][0] - 1));
         Over.getRange("A" + e + ":A" + e).setValue(over[i][0] - (begining.getMonth() > 0 ? 0 : 1));
-        Over.getRange("H" + s + ":H" + e).mergeVertically();
         Over.getRange("H" + s + ":H" + s).setFormula("=SUM(F" + s + ":F" + e + ")");
         Over.getRange("H" + s + ":H" + s).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-        Over.getRange("I" + s + ":I" + e).mergeVertically();
         Over.getRange("I" + s + ":I" + s).setValue(over[i][1]);
         Over.getRange("I" + s + ":I" + s).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
-        Over.getRange("K" + s + ":K" + e).mergeVertically();
-        Over.getRange("K" + s + ":K" + s).setFormula("=IF(TODAY()-DATE(A" + s + ","+(begining.getMonth() + 1)+",1)<1,52,IF(TODAY()-DATE(A" + s + ","+(begining.getMonth() + 1)+",1)>366,52,(TODAY()-DATE(A" + s + ","+(begining.getMonth() + 1)+",1))/7))");
+        Over.getRange("K" + s + ":K" + s).setFormula("=IF(TODAY()-DATE(A" + s + "," + (begining.getMonth() + 1) + ",1)<1,52,IF(TODAY()-DATE(A" + s + "," + (begining.getMonth() + 1) + ",1)>366,52,(TODAY()-DATE(A" + s + "," + (begining.getMonth() + 1) + ",1))/7))");
         Over.getRange("K" + s + ":K" + s).setNumberFormat('00');
-        Over.getRange("L" + s + ":L" + e).mergeVertically();
         Over.getRange("L" + s + ":L" + s).setFormula("=H" + s + "/K" + s + "");
         Over.getRange("L" + s + ":L" + s).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
       }
     }
 
     function nowData(priority) {
-      var future = Future.getRange("A2:G" +  + Future.getMaxRows()).getValues();
-     
+      var future = Future.getRange("A2:G" + + Future.getMaxRows()).getValues();
+
       // find today and before begining
       var f = 0, april = 1;
-      while (f < future.length && new Date(future[f][0], future[f][1]-1, future[f][2]) <= today) {
+      while (f < future.length && new Date(future[f][0], future[f][1] - 1, future[f][2]) <= today) {
         f++;
         if (f >= future.length || future[f][0] < (year - 1) || (future[f][1] < begining.getMonth() + 1 && future[f][0] == (year - 1)))
           april++;
       }
-     
+
       var nfuture = [];
-     
+
       // find last 10 items incase they haven passed yet
       var last10 = (f - 10) > 0 ? (f - 10) : 0;
       var x = last10 < april ? last10 : april;
       for (var p = x; p < f; p++) {
         nfuture[nfuture.length] = future[p];
       }
-     
+
       // current balance
       var cur = 0.0, blanks = 4;
       if (priority == null) {
@@ -1256,13 +1419,13 @@
 
       var minim = [], mincr = cur, minyr = year;
       //today.setHours(0, 0, 0, 0);
-      nfuture[nfuture.length] = [today.getFullYear(),today.getMonth() + 1,today.getDate(),'','',today,cur];
-     
+      nfuture[nfuture.length] = [today.getFullYear(), today.getMonth() + 1, today.getDate(), '', '', today, cur];
+
       // find all future balance based off current
       for (var p = f; p < future.length && future[p][0] != ""; p++) {
         var n = nfuture.length;
         nfuture[n] = future[p];
-        nfuture[n][5] = new Date(nfuture[n][0], nfuture[n][1]-1, nfuture[n][2]);
+        nfuture[n][5] = new Date(nfuture[n][0], nfuture[n][1] - 1, nfuture[n][2]);
         if (nfuture[n][4] == "") {
           if (priority != null) {
             cur = 0.0;
@@ -1281,32 +1444,31 @@
         }
       }
       minim.push([mincr, minyr]);
-     
+
       // output low points to over if not in Fn sheet
       if (priority == null) {
         Over.getRange("J2:J" + Over.getMaxRows()).clear();
-        
-        var r = ((year - begining.getFullYear()-1) * 12) + 2;
+
+        var r = ((year - begining.getFullYear() - 1) * 12) + 2;
         for (var m in minim) {
           Over.getRange("A" + r + ":A" + r).setValue((minim[m][1] - 1));
           Over.getRange("A" + (r + 11) + ":A" + (r + 11)).setValue(minim[m][1] - (begining.getMonth() > 0 ? 0 : 1));
-          
-          Over.getRange("J" + r + ":J" + (r + 11)).mergeVertically();
+
           Over.getRange("J" + r + ":J" + r).setValue(minim[m][0]);
           Over.getRange("J" + r + ":J" + r).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
           r += 12;
         }
       }
-     
+
       Future.getRange("A2:G" + Future.getMaxRows()).clear();
       Future.getRange("A2:G" + (nfuture.length + 1)).setValues(nfuture);
-     
+
       Future.getRange("A2:C" + (nfuture.length + 1)).setNumberFormat("00");
       Future.getRange("D2:D" + (nfuture.length + 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
       Future.getRange("G2:G" + (nfuture.length + 1)).setNumberFormat(pound + "#,##0.00;[Red]-" + pound + "#,##0.00");
       Future.getRange("F2:F" + (nfuture.length + 1)).setNumberFormat("yyyy-mm-dd");
-      
-      if (f - x -10 >= 2)
+
+      if (f - x - 10 >= 2)
         Future.hideRows(2, f - x - 10);
     }
 
@@ -1314,31 +1476,7 @@
       return new Promise(resolve => setTimeout(resolve, ms || 10));
     }
 
-    function calc(sub) {
-      // 0
-      // All
-    
-      // 1
-      // Spent.getRange('F4:F' + row).recalc();
-      // Spent.getRange('H4:M' + row).recalc();
-      // Spent.getRange('O4:S' + row).recalc();
-      // Spent.getRange('H2:M2').recalc();
-      // Spent.getRange('O2:S2').recalc();
-      // Over.getRange('L1:L' + Over.getMaxRows()).recalc();
-      // Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
-
-      // 2
-      // Over.getRange('H1:H' + Over.getMaxRows()).recalc();
-      // Over.getRange('K1:K' + Over.getMaxRows()).recalc();
-      // Over.getRange('L1:L' + Over.getMaxRows()).recalc();
-      // Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
-
-      // 4
-      // Over.getRange('H1:H' + Over.getMaxRows()).recalc();
-      // Over.getRange('L1:L' + Over.getMaxRows()).recalc();
-      // Plan.getRange('J1:J' + Plan.getMaxRows()).recalc();
-      // Plan.getRange('M1:N' + Plan.getMaxRows()).recalc();
-
+    function calc() {
       XLSX_CALC(workbook);
     }
 
@@ -1346,17 +1484,26 @@
     function sheetConfig(sheetName) {
       var s = workbook.Sheets[sheetName];
 
-      s.getMaxRows = function() {
+      s.getMaxRows = function () {
+        let p = 1;
         try {
-          return parseInt(s['!ref'].match(/[0-9]*$/)[0]);
+          if (s['!ref'])
+            return parseInt(s['!ref'].match(/[0-9]*$/)[0]);
+
+          while (true) {
+            let r = s.getRange("A" + p + ":Z" + p).getValues();
+            if (!r || r.length == 0  || !r[0] || r[0].length == 0 || r[0].every(c => c == null || c.toString().trim() == ''))
+              break;
+            p++;
+          }
         } catch (e) {
-          return 64000;
         }
+        return p;
       }
 
       s.getRange = function (r) {
         r = r.match(/([A-Z]+)([0-9]+):*([A-Z]*)([0-9]*)/);
-        r = [r[1],parseInt(r[2]),r[3] || r[1],parseInt(r[4] || r[2])];
+        r = [r[1], parseInt(r[2]), r[3] || r[1], parseInt(r[4] || r[2])];
         var r0 = r[0];
 
         function nextChar(c) {
@@ -1366,140 +1513,127 @@
         function getter(field) {
           var ret = [];
           while (r[3] >= r[1]) {
-            var p =[];
-            while(('0000'+r[2]).slice(-5) >= ('0000'+r[0]).slice(-5)) {
-             try {
-              var o = s[r[0]+r[1]] || {};
-              if (o.t == 'e')
+            var p = [];
+            while (('0000' + r[2]).slice(-5) >= ('0000' + r[0]).slice(-5)) {
+              try {
+                var o = s[r[0] + r[1]] || {};
+                if (o.t == 'e')
+                  p.push(null);
+                else if (o[field])
+                  p.push(o[field]);
+                else
+                  p.push(field == 'f' ? null : o.t == 'n' ? 0.0 : o.t == 'd' ? null : '');
+              } catch (e) {
                 p.push(null);
-              else if (o[field])
-                p.push(o[field]);
-              else
-                p.push(field == 'f' ? null : o.t == 'n' ? 0.0 : o.t == 'd' ? null : '');
-             } catch (e) {
-              p.push(null);
-             }
-             r[0] = nextChar(r[0]);
+              }
+              r[0] = nextChar(r[0]);
             }
             ret.push(p);
             r[1]++;
-            r[0]=r0;
+            r[0] = r0;
           }
           return ret;
         }
 
-        function setter(field,v) {
+        function setter(field, v) {
           if (s.getMaxRows() < r[3])
             s['!ref'] = s['!ref'].replace(/[0-9]*$/, r[3]);
 
-          var a=0,b,formula_ref = {},cells = [];
+          var a = 0, b, formula_ref = {}, cells = [];
           while (r[3] >= r[1]) {
             b = 0;
-            while(('0000'+r[2]).slice(-5) >= ('0000'+r[0]).slice(-5)) {
-             var o = r[0]+r[1]
-             try {
-              if (!s[o])
-                s[o] = {};
+            while (('0000' + r[2]).slice(-5) >= ('0000' + r[0]).slice(-5)) {
+              var o = r[0] + r[1]
+              try {
+                if (!s[o])
+                  s[o] = {};
 
-              if (field == 'c') {
-                var formula = formula_ref[sheetName + '!' + o] = {
-                  formula_ref: formula_ref,
-                  wb: workbook,
-                  sheet: s,
-                  sheet_name: sheetName,
-                  cell: s[o],
-                  name: o,
-                  status: 'new',
-                  exec_formula: (v||{}).exec_formula
-                };
-                cells.push(formula);
-              } else if (field == 'w') {
-                s[o].z = v;
-                if (s[o].v && v == '00')
-                  s[o].w = (s[o].v < 10 ? '0' : '') + s[o].v;
-                else if (s[o].v && v == 'yyyy-mm-dd')
-                  s[o].w = (new Date(s[o].v)).toJSON().substring(0,10);
-                else if (s[o].v && v.indexOf(pound) >= 0)
-                  s[o].w = (s[o].v < 0 ? "-" : "") + pound + parseFloat(s[o].v || 0).toFixed(2);
-                else
-                  s[o].w = XLSX.SSF.format(v,s[o].v)
-              } else if (field == null || !v[a] || !v[a][b]) {
-                delete s[o].v;
-                delete s[o].f;
-                delete s[o].w;
-              } else if (field == 'v') {
-                s[o].t = typeof v[a][b] == 'number' ? 'n' : typeof v[a][b] == 'object' ? 'd' : 't';
-                s[o].v = v[a][b];
-                s[o].w = v[a][b].toString();
-              } else if (field == 'f') {
-                // TODO: this is a dirty hack for what is needed specifically not actual fix
-                s[o].f = v[a][b] ? v[a][b]
-                  .replace(/(\$)([A-Z]+)3/g, '$1$2' + r[1])
-                  .replace(/^=/,'')
-                : null;
-                s[o].t = v[a][b] ? 's' : 't';
-                s[o].v = '';
-                s[o].w = '';
-              }
-             } catch (e) {}
-             r[0] = nextChar(r[0]);
-             b++;
+                if (field == 'c') {
+                  var formula = formula_ref[sheetName + '!' + o] = {
+                    formula_ref: formula_ref,
+                    wb: workbook,
+                    sheet: s,
+                    sheet_name: sheetName,
+                    cell: s[o],
+                    name: o,
+                    status: 'new',
+                    exec_formula: (v || {}).exec_formula
+                  };
+                  cells.push(formula);
+                } else if (field == 'w') {
+                  s[o].z = v;
+                  if (s[o].v && v == '00')
+                    s[o].w = (s[o].v < 10 ? '0' : '') + s[o].v;
+                  else if (s[o].v && v == 'yyyy-mm-dd')
+                    s[o].w = (new Date(s[o].v)).toJSON().substring(0, 10);
+                  else if (s[o].v && v.indexOf(pound) >= 0)
+                    s[o].w = (s[o].v < 0 ? "-" : "") + pound + parseFloat(s[o].v || 0).toFixed(2);
+                  else
+                    s[o].w = XLSX.SSF.format(v, s[o].v)
+                } else if (field == null || !v[a] || !v[a][b]) {
+                  delete s[o].v;
+                  delete s[o].f;
+                  delete s[o].w;
+                } else if (field == 'v') {
+                  s[o].t = typeof v[a][b] == 'number' ? 'n' : typeof v[a][b] == 'object' ? 'd' : 't';
+                  s[o].v = v[a][b];
+                  s[o].w = v[a][b].toString();
+                } else if (field == 'f') {
+                  // TODO: this is a dirty hack for what is needed specifically not actual fix
+                  s[o].f = v[a][b] ? v[a][b]
+                    .replace(/(\$)([A-Z]+)3/g, '$1$2' + r[1])
+                    .replace(/^=/, '')
+                    : null;
+                  s[o].t = v[a][b] ? 's' : 't';
+                  s[o].v = '';
+                  s[o].w = '';
+                }
+              } catch (e) { }
+              r[0] = nextChar(r[0]);
+              b++;
             }
             r[1]++;
-            r[0]=r0;
+            r[0] = r0;
             a++;
           }
           return cells;
         }
 
         return {
-          getValue: function(){
+          getValue: function () {
             return getter('v')[0][0];
           },
-          setValue: function(v) {
-            setter('v',[[v]]);
+          setValue: function (v) {
+            setter('v', [[v]]);
           },
-          getValues: function() {
+          getValues: function () {
             return getter('v');
           },
-          setValues: function(v) {
-            setter('v',v);
+          setValues: function (v) {
+            setter('v', v);
           },
           clear: function () {
-            setter(null,null);
+            setter(null, null);
           },
-          getFormula: function(){
+          getFormula: function () {
             return getter('f')[0][0];
           },
-          setFormula: function(v) {
-            setter('f',[[v]]);
+          setFormula: function (v) {
+            setter('f', [[v]]);
           },
-          getFormulasR1C1: function() {
+          getFormulasR1C1: function () {
             return getter('f');
           },
-          setFormulasR1C1: function(v) {
-            setter('f',v);
+          setFormulasR1C1: function (v) {
+            setter('f', v);
           },
-          setNumberFormat: function(f) {
-            setter('w',f.replace(pound,'"' + pound + '"').replace(pound,'"' + pound + '"'));
-          },
-          mergeVertically: function() {
-            // TODO: not needed as clear doesnt unmerge but will be needed for new years
-          },
-          sort: function(p) {
-            // TODO: not done as little benefit for large complication
-          },
-          recalc: function () {
-            var c = XLSX_CALC.calculator(workbook);
-            var cells = setter('c',c);
-            for (var i in cells)
-              c.exec_formula(cells[i]);
-            c.execute();
+          setNumberFormat: function (f) {
+            setter('w', f.replace(pound, '"' + pound + '"').replace(pound, '"' + pound + '"'));
           }
         }
       }
 
-      function rowsSet(b,e,v,t) {
+      function rowsSet(b, e, v, t) {
         s['!rows'] = s['!rows'] || {};
         b--;
         while (b <= e) {
@@ -1509,21 +1643,20 @@
         }
       }
 
-      s.hideRows = function(b,e) {
-        rowsSet(b,e,true,'hidden');
+      s.hideRows = function (b, e) {
+        rowsSet(b, e, true, 'hidden');
       }
-      s.showRows = function(b,e) {
-        rowsSet(b,e,false,'hidden');
+      s.showRows = function (b, e) {
+        rowsSet(b, e, false, 'hidden');
       }
-      s.fixHeight = function(b,e) {
-        rowsSet(b,e,15,'hpt');
+      s.fixHeight = function (b, e) {
+        rowsSet(b, e, 15, 'hpt');
       }
     }
 
-    // should be on ready
     setTimeout(function () {
       XLSX_CALC.import_functions({
-        'FIND': function (a,b,c) {
+        'FIND': function (a, b, c) {
           return (b || '').toString().indexOf((a || '').toString(), parseInt(c || 0));
         },
         'LOWER': function (a) {
@@ -1532,19 +1665,20 @@
         'ISERROR': function (a) {
           return a == -1;
         },
-        'DATE': function (y,m,d) {
-          return new Date(parseInt(y),parseInt(m)-1,parseInt(d),0,0,0,0);
+        'DATE': function (y, m, d) {
+          return new Date(parseInt(y), parseInt(m) - 1, parseInt(d), 0, 0, 0, 0);
         },
         'NOT': function (a) {
           return !a;
         },
         'TODAY': function () {
           var t = new Date();
-          t.setHours(0,0,0,0);
+          t.setHours(0, 0, 0, 0);
           return t;
         }
-      }, {override: true});
-    },250);
+      }, { override: true });
+    }, 250);
   </script>
 </body>
+
 </html>
