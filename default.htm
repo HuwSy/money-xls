@@ -1497,9 +1497,13 @@
             if (!r || r.length == 0  || !r[0] || r[0].length == 0 || r[0].every(c => c == null || c.toString().trim() == ''))
               break;
             p++;
+            if (p == 64000)
+              break;
           }
         } catch (e) {
+          p = 64000;
         }
+        s["!ref"] = "A1:Z" + p;
         return p;
       }
 
