@@ -417,7 +417,6 @@
       DelRow(ths[0]);
     }
 
-    // here
     async function IncludeSpent() {
       document.getElementById('output').innerHTML += ('Including<br>');
       await timeout();
@@ -445,7 +444,7 @@
       var r = spending.length - 1;
       var m = 0;
 
-      if (r == 0 && !spending[r].children[2].children[0].value)
+      if (r == 0)
         return;
 
       document.getElementById('output').innerHTML += ('...inserting<br>');
@@ -453,6 +452,9 @@
 
       for (let n = r; n >= 0; n--) {
         let row = spending[n];
+        if (!row.children[3].children[0].value)
+          continue;
+        
         let v = (typeof row.children[1].children[0].value == "string" ? row.children[1].children[0].value : row.children[1].children[0].value.toISOString().substring(0, 10)).split('-')
 
         for (var p = 0; p < spent.length; p++)
@@ -1069,7 +1071,7 @@
       Spent.fixHeight(1, Spent.getMaxRows());
 
       Plan['!cols'] = [{ width: 25 / 7 }, { width: 25 / 7 }, { width: 25 / 7 }, { width: 45 / 7 }, { width: 25 / 7 }, { width: 25 / 7 }, { width: 45 / 7 }, { width: 25 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 175 / 7 }, { width: 25 / 7 }, { width: 125 / 7 }, { width: 125 / 7 }, { width: 100 / 7 }];
-      Plan['!autofilter'] = { ref: "A1:O" + Plan.getMaxRows() };
+      //Plan['!autofilter'] = { ref: "A1:O" + Plan.getMaxRows() };
       Plan.fixHeight(1, Plan.getMaxRows());
 
       for (var priority = 9; priority >= 0; priority--) {
