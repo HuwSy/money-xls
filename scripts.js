@@ -1342,6 +1342,5 @@
       }, { override: true });
     }
 
-    setTimeout(function () {
-      Init();
-    , 250);
+    
+document.addEventListener("DOMContentLoaded", Init);
