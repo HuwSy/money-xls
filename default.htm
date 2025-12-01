@@ -34,22 +34,22 @@
              type="date"
              onchange="StartChange(this.value)"
              id="start"
-             name=start
+             name="start"
              placeholder="Override start date">
       Today:
       <input style="width:80px"
              type="date"
              onchange="TodayChange(this.value)"
              id="today"
-             name=today
+             name="today"
              placeholder="Override todays date">
       <input type="file"
              style="display:none;"
              id="File"
-             name=file
+             name="file"
              onchange="FileChange(this)">
       <input id="Upload"
-             name=upload
+             name="upload"
              onclick="Upload()"
              type="button"
              value="Load"
@@ -61,12 +61,12 @@
       <div id="future"
            style="display:none">
         <input checked
-               type=radio
-               id=r1
-               style=display:none
-               name=sheet>
-        <label onclick="HideUnhide(this.previousSibling)"
-               for=r1>Spending</label>
+               type="radio"
+               id="r1"
+               style="display:none"
+               name="sheet">
+        <label onclick="HideUnhide(this.previousElementSibling)"
+               for="r1">Spending</label>
         <div>
           <table id="upcoming">
             <tr></tr>
@@ -75,97 +75,109 @@
           <table id="spending">
             <tr>
               <td>
-                <input name=cc
+                <input name="cc"
                        type="checkbox"
                        title="CC expense">
               </td>
               <td>
-                <input name=date
+                <input name="date"
                        type="date"
-                       style="width: 60px;">
+                       style="width: 60px;"
+                       required>
               </td>
               <td>
-                <input name=amount
+                <input name="amount"
                        type="number"
                        step="0.01"
                        size="10"
-                       style="width: 50px">
+                       style="width: 50px"
+                       required>
               </td>
               <td>
-                <input name=activity
+                <input name="activity"
                        type="text"
                        placeholder="Activity"
-                       style="width: 70px">
+                       autocomplete="on"
+                       style="width: 70px"
+                       required
+                       onkeyup="Search(this)">
+                <ul></ul>
               </td>
               <td>
-                <input name=add
+                <input name="add"
                        type="button"
                        value="+"
                        onclick="NewRow(this.parentNode.parentNode, true)">
               </td>
               <td>
-                <input name=remove
+                <input name="remove"
                        type="button"
                        value="-"
                        onclick="DelRow(this.parentNode.parentNode, true)">
               </td>
             </tr>
           </table>
-          <input name=include
-                 style=float:right
+          <input name="include"
+                 style="float:right"
                  type="button"
                  value="Inc."
                  onclick="IncludeSpent()">
-          <br style=clear:both;>
+          <br style="clear:both;">
 
           <hr>
           <textarea id="D3"
-                    name=d3
+                    name="d3"
                     style="width:95%"
-                    rows=3></textarea>
+                    rows="3"></textarea>
           <br>
+          
           <input id="E3"
-                 name=e3
+                 name="e3"
                  type="number"
                  step="0.01"
                  style="width: 75px">
-          <input id=Sum
-                 name=sum
-                 type=number
+          <input id="Sum"
+                 name="sum"
+                 type="number"
                  style="width: 75px"
                  disabled>
-          <input id=D1
-                 name=D1
-                 type=number
-                 step=0.01
-                 style=width:75px;>
-          <input name=update
-                 style=float:right
+          <input id="D1"
+                 name="D1"
+                 type="number"
+                 step="0.01"
+                 style="width:75px;">
+          <input name="update"
+                 style="float:right"
                  type="button"
                  value="Upd."
                  onclick="UpdateCC()">
-          <br style=clear:both;>
+          <br style="clear:both;">
+
+          <select id="range"
+                  onchange="Filter(true)"
+                  style="width: 30%;">
+          </select>
+          <select id="cols"
+                  onchange="Filter(true)"
+                  style="width: 30%;">
+          </select>
+          <input id="filter"
+                 onkeyup="Filter(true)"
+                 style="width: 30%;">
 
           <hr>
-          <div class=filters>
-            <select id=range onchange="Filter(true, true)">
-            </select>
-            <select id=cols onchange="this.nextElementSibling.value = this.value;Filter(true, true)">
-            </select>
-            <input id=filter onkeyup="Filter(true, true)">
-          </div>
           <table id="spent">
           </table>
         </div>
       </div>
       <div id="over"
            style="display:none">
-        <input type=radio
-               id=r6
-               style=display:none
-               name=sheet>
-        <label onclick="HideUnhide(this.previousSibling)"
-               for=r6>Futures</label>
+        <input type="radio"
+               id="r6"
+               style="display:none"
+               name="sheet">
+        <label onclick="HideUnhide(this.previousElementSibling)"
+               for="r6">Futures</label>
         <div>
           <table>
           </table>
@@ -173,72 +185,75 @@
       </div>
       <div id="options"
            style="display:none">
-        <input type=radio
-               id=r5
-               style=display:none
-               name=sheet>
-        <label onclick="HideUnhide(this.previousSibling)"
-               for=r5>Tasks</label>
+        <input type="radio"
+               id="r5"
+               style="display:none"
+               name="sheet">
+        <label onclick="HideUnhide(this.previousElementSibling)"
+               for="r5">Tasks</label>
         <div>
           <table id="plans"
                  style="display:none">
             <tr>
               <td>
-                <input name=year
-                       type=number
-                       style=width:34px
-                       placeholder=Years>
+                <input name="year"
+                       type="number"
+                       style="width:34px"
+                       placeholder="Years">
               </td>
               <td>
-                <input name=month
-                       type=number
-                       style=width:38px
-                       placeholder=Months>
+                <input name="month"
+                       type="number"
+                       style="width:38px"
+                       placeholder="Months">
               </td>
               <td>
-                <input name=day
-                       type=number
-                       style=width:38px
-                       placeholder=Days>
+                <input name="day"
+                       type="number"
+                       style="width:38px"
+                       placeholder="Days">
               </td>
               <td>
-                <input name=end
+                <input name="end"
                        type="date"
-                       style=width:96px
-                       placeholder=End>
+                       style="width:96px"
+                       placeholder="End">
               </td>
               <td>
-                <input name=start
+                <input name="start"
                        type="date"
-                       style=width:96px
-                       placeholder=Start>
+                       style="width:96px"
+                       placeholder="Start"
+                       required>
               </td>
               <td>
-                <input name=cost
-                       type=number
-                       style=width:56px><input type=button
-                       value=T
-                       onclick="this.previousSibling.type=this.previousSibling.type=='number'?'text':'number'">
+                <input name="cost"
+                       type="number"
+                       style="width:56px"><input type="button"
+                       value="T"
+                       onclick="ToggleType(this.previousElementSibling)"
+                       required>
               </td>
               <td>
-                <input name=title
-                       type=text
-                       style=width:120px>
+                <input name="title"
+                       type="text"
+                       style="width:120px"
+                       required>
               </td>
               <td>
-                <input name=f
-                       type=number
-                       style=width:34px
-                       placeholder=FNumber>
+                <input name="f"
+                       type="number"
+                       style="width:34px"
+                       placeholder="FNumber">
               </td>
               <td>
-                <input name=new
+                <input name="new"
                        type="button"
                        value="+"
                        onclick="NewRow(this.parentNode.parentNode)">
               </td>
               <td>
-                <input name=rem
+                <input name="rem"
                        type="button"
                        value="-"
                        onclick="DelRow(this.parentNode.parentNode)">
@@ -248,7 +263,7 @@
           <input type="button"
                  value="Plan"
                  onclick="PopulatePlan(this)"
-                 style="display: block;">
+                 style="display:initial;">
           <input type="button"
                  value="Save"
                  onclick="SavePlan(this)"
@@ -257,25 +272,15 @@
                  value="Cancel"
                  onclick="CancelPlan(this)"
                  style="display:none">
-          <br style=clear:both;>
 
           <input type="button"
-                 onclick=RunAll()
-                 value="Run All"><br><br>
-
+                 onclick="RunAll()"
+                 value="Run All"
+                 style="margin-left: 8px;">
           <input type="button"
-                 onclick=SetupOneYear()
-                 value="One Year">
-          <input type="button"
-                 onclick=SetupLimited()
-                 value="F1-9">
-          <input type="button"
-                 onclick=SetupAllYears()
-                 value="All Years"><br><br>
-
-          <input type="button"
-                 onclick=Saving()
-                 value="Save"><br>
+                 onclick="Saving()"
+                 value="Save"
+                 style="margin-left: 8px;">
         </div>
       </div>
     </div>

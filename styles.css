@@ -1,57 +1,70 @@
-    body>div {
-      width: calc(99vw - 20px);
-      margin: auto;
-      background: white;
-      padding: 0 10px;
-      border: 1px solid #bbb;
-      border-radius: 4px;
-      box-shadow: 1px 1px #ccc;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
+body>div {
+  width: calc(99vw - 20px);
+  margin: auto;
+  background: white;
+  padding: 0 10px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  box-shadow: 1px 1px #ccc;
+  overflow: hidden;
+  box-sizing: border-box;
+}
 
-    body>div>* {
-      margin-bottom: 10px
-    }
+body>div>* {
+  margin-bottom: 10px;
+}
 
-    td {
-      white-space: nowrap;
-    }
+td {
+  white-space: nowrap;
+}
 
-    .tabs>div {
-      margin-bottom: 6px
-    }
+.tabs>div {
+  margin-bottom: 6px;
+}
 
-    .tabs>div>label {
-      display: flex;
-      cursor: pointer;
-      justify-content: space-between;
-    }
+.tabs>div>label {
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+}
 
-    .tabs>div>label::after {
-      content: "\276F";
-      transform: rotate(90deg);
-      transition: all 0.35s;
-    }
+.tabs>div>label::after {
+  content: "\276F";
+  transform: rotate(90deg);
+  transition: all 0.35s;
+}
 
-    .tabs>div>input:checked+label::after {
-      transform: translateX(-2px) rotate(270deg);
-    }
+.tabs>div>input:checked+label::after {
+  transform: translateX(-2px) rotate(270deg);
+}
 
-    .tabs>div>div {
-      max-height: 0;
-      overflow: hidden;
-      transition: all 0.35s;
-    }
+.tabs>div>div {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.35s;
+}
 
-    .tabs>div>input:checked~div {
-      max-height: initial;
-      overflow: auto;
-      margin-bottom: 18px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
+.tabs>div>input:checked~div {
+  max-height: initial;
+  overflow: auto;
+  margin-bottom: 18px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 
-    .filters > * {
-      width: 30%;
-    }
+ul {
+  position: absolute;
+  background-color: white;
+  display: none;
+  box-shadow: 1px 1px #ccc;
+}
+
+ul li {
+  list-style: none;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+ul li:hover {
+  background-color: #eee;
+}
