@@ -490,6 +490,7 @@ function ToggleType (ths) {
 }
 
 function CancelPlan(ths) {
+  clearRows(Plans);
   ths.previousElementSibling.style.display = 'none';
   ths.previousElementSibling.previousElementSibling.style.display = "initial";
   ths.style.display = 'none';
