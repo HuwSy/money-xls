@@ -20,6 +20,11 @@
 
     // functions
 
+    async function log(text) {
+      document.getElementById('output').innerHTML += (text + '<br>');
+      await timeout();
+    }
+
     function HideUnhide(ths) {
       if (ths.parentNode.children[0].checked) {
         ths.parentNode.children[0].checked = false;
@@ -83,37 +88,74 @@
       DelRow(ths[0]);
     }
 
+    async function Edit(t) {
+      if (!confirm("Remove this to reedit?"))
+        return;
+
+      await log('Editing');
+
+      var row = t.innerText.trim();
+      var dt = new Date(t.parentNode.parentNode.children[1].innerText.trim());
+      var val = parseFloat(t.parentNode.parentNode.children[2].innerText.replace(pound, "").trim());
+      var desc = t.parentNode.parentNode.children[3].innerText.trim();
+      t.parentNode.parentNode.remove();
+
+      if (row > StartSpent)
+        StartSpent = row + 1;
+
+      await log('...reducing');
+
+      var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
+      spent.splice(row - 4, 1);
+      Spent.getRange("A4:Z" + Spent.getMaxRows()).clear();
+      Spent.getRange("A4:Z" + (3 + spent.length)).setValues(spent);
+
+      await log('...formulas');
+
+      var cc = Spent.getRange("D3:D3").getFormula().replace(/^=/, "");
+      var newCc = cc.split("-").filter(c => c != "D" + row).join("-");
+      Spent.getRange("D3:D3").setFormula(newCc);
+
+      Spent.getRange("D2:D2").setFormula("=SUM(D3:D" + (3 + spent.length) + ")-D1+E3");
+
+      var top = Spent.getRange("F2:Z2").getFormulasR1C1();
+      for (let i = 0; i < top[0].length; i++) {
+        try {
+          let m = top[0][i].match(/\:([A-Za-z])([0-9]+)/);
+          let f = parseInt(m[2]);
+          if (f >= row)
+            top[0][i] = top[0][i].replace(m[0], ":" + m[1] + (f - 1));
+        } catch (e) { }
+      }
+      Spent.getRange("F2:Z2").setFormulasR1C1(top);
+
+      await log('...editable');
+
+      NewRow(spending[0]);
+      spending[0].children[0].children[0].checked = cc != newCc;
+      spending[0].children[1].children[0].value = dt.toISOString().substring(0, 10);
+      spending[0].children[2].children[0].value = val.toFixed(2);
+      spending[0].children[3].children[0].value = desc;
+
+      await log('...calc');
+
+      calc();
+      populateSpent(false);
+
+      await log('...done');
+    }
+
     async function IncludeSpent() {
-      document.getElementById('output').innerHTML += ('Including<br>');
-      await timeout();
+      await log('Including');
 
       await setupSpentFields();
       await timeout();
 
-      document.getElementById('output').innerHTML += ('...cleaning<br>');
-      await timeout();
+      var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
+
+      await log('...inserting');
 
       for (let n = spending.length - 1; n >= 0; n--) {
-        let row = spending[n];
-        try {
-          if (!row.children[2].children[0].value)
-            DelRow(row);
-        } catch (e) {
-          DelRow(row);
-        }
-      }
-
-      document.getElementById('output').innerHTML += ('...reading<br>');
-      await timeout();
-
-      var spent = Spent.getRange("A4:Z" + Spent.getMaxRows()).getValues();
-      var r = spending.length - 1;
-      var m = 0;
-
-      document.getElementById('output').innerHTML += ('...inserting<br>');
-      await timeout();
-
-      for (let n = r; n >= 0; n--) {
         let row = spending[n];
         if (!row.children[3].children[0].value)
           continue;
@@ -137,9 +179,6 @@
           a += "-D" + (4 + p);
         Spent.getRange("D3:D3").setFormula(a);
 
-        if (4 + n + p > m)
-          m = 4 + n + p;
-
         spent.splice(p, 0, [
           parseInt(v[0]),
           parseInt(v[1]),
@@ -148,50 +187,50 @@
           row.children[3].children[0].value.trim()
         ]);
 
+        var top = Spent.getRange("F2:Z2").getFormulasR1C1();
+        for (let i = 0; i < top[0].length; i++) {
+          try {
+            let m = top[0][i].match(/\:([A-Za-z])([0-9]+)/);
+            let f = parseInt(m[2]);
+            if (f > row)
+              top[0][i] = top[0][i].replace(m[0], ":" + m[1] + (f + 1));
+          } catch (e) { }
+        }
+        Spent.getRange("F2:Z2").setFormulasR1C1(top);
+
         // move start along for populate spent to work
-        if (m > StartSpent)
-          StartSpent = m + 2;
+        if (4 + n + p > StartSpent)
+          StartSpent = 4 + n + p + 1;
 
         DelRow(row);
       }
 
-      document.getElementById('output').innerHTML += ('...setting formulas<br>');
-      await timeout();
+      await log('...setting formulas');
 
       // clear off for populate spent to work
-      for (; m >= 4; m--)
+      for (let m = StartSpent; m >= 4; m--)
         Spent.getRange("F" + m + ":F" + m).setFormula("");
 
       Spent.getRange("A4:Z" + (3 + spent.length)).setValues(spent);
 
       Spent.getRange("D2:D2").setFormula("=SUM(D3:D" + (3 + spent.length) + ")-D1+E3");
 
-      var top = Spent.getRange("F2:Z2").getFormulasR1C1();
-      for (let i = 0; i < top[0].length; i++) {
-        try {
-          let m = top[0][i].match(/\:([A-Za-z])([0-9]+)/);
-          top[0][i] = top[0][i].replace(m[0], ":" + m[1] + (parseInt(m[2]) + 1 + r));
-        } catch (e) { }
-      }
-      Spent.getRange("F2:Z2").setFormulasR1C1(top);
-
-      document.getElementById('output').innerHTML += ('...calc<br>');
-      await timeout()
+      await log('...calc');
 
       calc();
       await populateSpent(true);
 
-      document.getElementById('output').innerHTML += ('...done<br>');
+      await log('...done');
     }
 
     async function populateSpent(incFuture) {
-      clearRows(plans);
-
       await setupSpentFields();
       await timeout();
+      await Filter(incFuture);
+    }
 
-      document.getElementById('output').innerHTML += ('...setting current<br>');
-      await timeout();
+    async function Filter(incFuture) {
+      await log('Filtering');
 
       var template = `
         <tr>
@@ -225,21 +264,22 @@
         .replace('{4}', 'inherited');
       s.innerHTML += "<tr><td colspan=9><hr></td></tr>";
 
-      document.getElementById('output').innerHTML += ('...setting spents<br>');
-      await timeout();
+      await log('...setting spents');
 
-      var spent = Spent.getRange("A4:E99").getValues();
+      var range = (document.getElementById("range") ?? {})["value"] ?? "99";
+      var filter = ((document.getElementById("filter") ?? {})["value"] ?? "").toLowerCase();
+
+      var spent = Spent.getRange("A4:E"+range).getValues();
       for (let i in spent)
-        if (spent[i][3] !== null && spent[i][3] !== '')
+        if (spent[i][3] !== null && spent[i][3] !== '' && (!filter || !spent[i][4] || ~spent[i][4].toLowerCase().indexOf(filter)))
           s.innerHTML += template
-            .replace('{5}', parseInt(i) + 4)
+            .replace('{5}', "<input type='button' onclick='Edit(this)' value='" + (parseInt(i) + 4).toString() + "'/>")
             .replace('{0}', !spent[i][2] ? '' : !spent[i][0] ? spent[i][2] : `${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "") + spent[i][1]}-${(spent[i][2] < 10 ? "0" : "") + spent[i][2]}`)
             .replace('{1}', `${(spent[i][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" })}`)
             .replace('{2}', `${spent[i][4]}`)
             .replace('{4}', spent[i][3] < 0 ? 'red' : 'inherited');
 
-      document.getElementById('output').innerHTML += ('...setting over<br>');
-      await timeout();
+      await log('...setting over');
 
       var o = document.getElementById('over').getElementsByTagName('table')[0];
 
@@ -283,13 +323,22 @@
             break;
         }
 
-      document.getElementById('output').innerHTML += ('...setting future<br>');
-      await timeout();
+      await log('...setting formulas');
+
+      document.getElementById('D1').value = Spent.getRange("D1:D1").getValue();
+      document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
+      document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
+      document.getElementById('Sum').value = parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue());
+
+      if (!incFuture)
+        return;
+
+      await log('...setting future');
 
       clearRows(spending);
       clearRows(upcoming);
 
-      var future = !incFuture ? [] : Future.getRange("A2:E" + Future.getMaxRows()).getValues()
+      var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues()
       var next = new Date(today);
       //next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
       next.setHours(13);
@@ -338,7 +387,7 @@
       // cleanup additional added row
       DelRow(spending[0]);
 
-      future = !incFuture || !workbook.Sheets['F1'] ? [] : workbook.Sheets['F1'].getRange("A2:E" + workbook.Sheets['F1'].getMaxRows()).getValues();
+      future = !workbook.Sheets['F1'] ? [] : workbook.Sheets['F1'].getRange("A2:E" + workbook.Sheets['F1'].getMaxRows()).getValues();
       next.setMonth(next.getMonth() + 1);
 
       var foundBlank = false;
@@ -366,22 +415,14 @@
           }
         }
       }
-
-      document.getElementById('output').innerHTML += ('...setting formulas<br>');
-      await timeout();
-
-      document.getElementById('D1').value = Spent.getRange("D1:D1").getValue();
-      document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
-      document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
-      document.getElementById('Sum').value = parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue());
     }
 
     async function PopulatePlan(ths) {
-      document.getElementById('output').innerHTML += ('Getting plans<br>');
-      await timeout();
+      await log('Getting plans');
 
       document.getElementById("plans").style.display = 'block';
       ths.nextElementSibling.style.display = 'block';
+      ths.nextElementSibling.nextElementSibling.style.display = "block";
       ths.style.display = 'none';
 
       var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
@@ -413,18 +454,24 @@
           NewRow(plans[0]);
       }
 
-      document.getElementById('output').innerHTML += ('...done<br>');
-      await timeout();
+      await log('...done');
+    }
+
+    function CancelPlan(ths) {
+      ths.previousElementSibling.style.display = 'none';
+      ths.previousElementSibling.previousElementSibling.style.display = "block";
+      ths.style.display = 'none';
     }
 
     async function SavePlan(ths) {
       if (plans.length == 1 && !row.children[5].children[0].value)
         return;
 
-      document.getElementById('output').innerHTML += ('Planning<br>');
+      await log('Planning');
 
       document.getElementById("plans").style.display = 'none';
       ths.previousElementSibling.style.display = 'block';
+      ths.nextElementSibling.style.display = "none";
       ths.style.display = 'none';
 
       var plan = [];
@@ -455,8 +502,7 @@
       Plan.getRange("A2:L" + Plan.getMaxRows()).clear();
       Plan.getRange("A2:L" + (plan.length + 1)).setValues(plan);
 
-      document.getElementById('output').innerHTML += ('...formulas<br>');
-      await timeout();
+      await log('...formulas');
 
       var formulas = Plan.getRange("M2:O2").getFormulasR1C1()[0];
       for (let n = 0; n < plans.length; n++) {
@@ -474,30 +520,27 @@
           Plan.getRange("M" + (n + 2) + ":O" + (n + 2)).setFormulasR1C1([f]);
       }
 
-      document.getElementById('output').innerHTML += ('...calc<br>');
-      await timeout()
+      await log('...calc');
 
       calc();
       await populateSpent(true);
 
-      document.getElementById('output').innerHTML += ('...done<br>');
+      await log('...done');
     }
 
     async function UpdateCC() {
-      document.getElementById('output').innerHTML += ('Overwriting<br>');
-      await timeout();
+      await log('Overwriting');
 
       Spent.getRange("D1:D1").setValue(parseFloat(document.getElementById('D1').value));
       Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
       Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
 
-      document.getElementById('output').innerHTML += ('...calc<br>');
-      await timeout()
+      await log('...calc');
 
       calc();
       await populateSpent(true);
 
-      document.getElementById('output').innerHTML += ('...done<br>');
+      await log('...done');
     }
 
     function StartChange(ths) {
@@ -564,8 +607,19 @@
     }
 
     async function setupSpentFields() {
-      document.getElementById('output').innerHTML += ('...blanks<br>');
-      await timeout()
+      await log('...blanks');
+
+      var topRowFilters = Spent.getRange("F1:Z1").getValues()[0];
+      var z2formula = parseInt(Spent.getRange("Z2:Z2").getFormula().split("Z")[2]).toString()
+      document.getElementById("range").innerHTML = `
+  <option value="99" selected>Top 99</value>
+  <option value="${z2formula}">ZRange (${z2formula})</value>
+      `;
+      document.getElementById("cols").innerHTML = '<option value="" selected>All</value>'+topRowFilters.filter(f => f && f.length > 2).map(f => {
+        return `
+  <option value="${f}">${f}</value>
+      `
+      }).join('');
 
       // find blank year or calcs in spent to copy top row into
       var row = StartSpent;
@@ -622,37 +676,32 @@
     }
 
     async function SetupOneYear() {
-      document.getElementById('output').innerHTML += ('One year...<br>');
+      await log('One year...');
 
-      document.getElementById('output').innerHTML += ('...clearing<br>');
-      await timeout()
+      await log('...clearing');
 
       // blank over sheet and recalc
       var r = ((year - begining.getFullYear() - 1) * 12) + 2;
       Over.getRange("H" + r + ":L" + (r + 11)).setFormula("=0");
       Over.getRange("L" + r + ":L" + r).setFormula("=0");
 
-      document.getElementById('output').innerHTML += ('...calc<br>');
-      await timeout()
+      await log('...calc');
 
-      calc(1);
+      calc();
 
       await timeout()
       futureYear(0);
-      document.getElementById('output').innerHTML += ('...overspent<br>');
-      await timeout()
+      await log('...overspent');
       overSpent();
-      document.getElementById('output').innerHTML += ('...forecasting<br>');
-      await timeout()
+      await log('...forecasting');
       overYearly();
-      document.getElementById('output').innerHTML += ('...calc<br>');
-      await timeout()
-      calc(2);
-      document.getElementById('output').innerHTML += ('...done<br>');
+      await log('...calc');
+      calc();
+      await log('...done');
     }
 
     async function SetupLimited() {
-      document.getElementById('output').innerHTML += ('F');
+      await log('F');
 
       // calc any Fn sheets if they exist, ie F3 using plan items with values <= 3
       for (var priority = 1; priority <= 9; priority++) {
@@ -660,43 +709,36 @@
         if (typeof Future == "undefined" || Future == null)
           continue;
 
-        document.getElementById('output').innerHTML += (priority + "...");
+        log(priority + "...");
         await timeout()
         futureYear(1, priority);
         nowData(priority);
       }
-      document.getElementById('output').innerHTML += ('<br>');
+      await log('');
 
       Future = workbook.Sheets['Future'];
-      document.getElementById('output').innerHTML += ('...calc<br>');
-      await timeout()
-      calc(3);
-      document.getElementById('output').innerHTML += ('...done<br>');
+      await log('...calc');
+      calc();
+      await log('...done');
     }
 
     async function SetupAllYears() {
-      document.getElementById('output').innerHTML += ('All years...<br>');
-      await timeout()
+      await log('All years...');
       var len = Spent.getRange("G1:G1").getValue();
       futureYear(len);
-      document.getElementById('output').innerHTML += ('...overspent<br>');
-      await timeout()
+      await log('...overspent');
       overSpent();
-      document.getElementById('output').innerHTML += ('...forecasting<br>');
-      await timeout()
+      await log('...forecasting');
       overYearly();
-      document.getElementById('output').innerHTML += ('...breakdown<br>');
-      await timeout()
+      await log('...breakdown');
       nowData();
-      document.getElementById('output').innerHTML += ('...calc<br>');
-      await timeout()
-      calc(4);
-      document.getElementById('output').innerHTML += ('...done<br>');
+      await log('...calc');
+      calc();
+      await log('...done');
     }
 
     async function Saving() {
-      document.getElementById('output').innerHTML += ('Saving...<br>');
-      await timeout()
+      await log('Saving...');
 
       workbook.Props.Author = "HuwSy/Money-XLS";
       workbook.Props.CreatedDate = new Date(2021, 2, 7, 8, 35);
@@ -790,8 +832,7 @@
         } catch (e) { }
       }
 
-      document.getElementById('output').innerHTML += ('...outputting<br>');
-      await timeout()
+      await log('...outputting');
 
       // saving buffer
       function s2ab(s) {
@@ -815,10 +856,10 @@
       aElement.href = window.URL.createObjectURL(blob);
       aElement.target = "_blank";
 
-      document.getElementById('output').innerHTML += ('...done<br>');
+      await log('...done');
 
       document.getElementById('output').appendChild(aElement);
-      document.getElementById('output').innerHTML += ('<br>');
+      await log('');
       aElement.click();
     }
 
@@ -826,8 +867,7 @@
       // loading xlsx
       workbook = null, Spent = null, Future = null, Over = null, Plan = null;
       workbook = XLSX.read(e.target.result, { type: 'binary', cellStyles: false });
-      document.getElementById('output').innerHTML += ('...loaded ' + workbook.SheetNames.length + ' sheets<br>');
-      await timeout()
+      await log('...loaded ' + workbook.SheetNames.length + ' sheets');
 
       // sheet functions to mimic gs
       workbook.SheetNames.forEach(sheetConfig);
@@ -844,7 +884,7 @@
 
       await populateSpent(true);
 
-      document.getElementById('output').innerHTML += ('Ready...<br>');
+      await log('Ready...');
     }
 
     function futureYear(len, priority) {
