@@ -491,6 +491,7 @@ function ToggleType (ths) {
 
 function CancelPlan(ths) {
   clearRows(Plans);
+  document.getElementById("plans").style.display = 'none';
   ths.previousElementSibling.style.display = 'none';
   ths.previousElementSibling.previousElementSibling.style.display = "initial";
   ths.style.display = 'none';
