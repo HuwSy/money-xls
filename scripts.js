@@ -238,8 +238,17 @@ async function IncludeSpent() {
 }
 
 function Search(ths) {
-  if (!ths.value || ths.value.trim().length < 3)
+  if (!ths) {
+    var uls = document.getElementsByTagName("ul");
+    for (let u = 0; u < uls.length; u++)
+      uld[u].style.display = 'none';
     return;
+  }
+  
+  if (!ths.value || ths.value.trim().length < 3) {
+    ths.nextElementSibling.style.display = 'none';
+    return;
+  }
 
   var p = SST.filter(s => s.toLowerCase().includes(ths.value.toLowerCase())).slice(0, 10);
   ths.nextElementSibling.innerHTML = p.map(s => `<li onclick="Select(this, '${s}')">${s}</li>`).join('');
