@@ -144,7 +144,8 @@ async function Edit(t) {
 
   await log('...editable');
 
-  NewRow(Spending[0]);
+  if (Spending[0].children[3].children[0].value)
+    NewRow(Spending[0]);
   Spending[0].children[0].children[0].checked = hadCc;
   Spending[0].children[1].children[0].value = dt.toISOString().substring(0, 10);
   Spending[0].children[2].children[0].value = val.toFixed(2);
@@ -577,6 +578,7 @@ async function UpdateCC() {
   Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
   Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
 
+  await Filter(true);
   await log('...calc');
 
   calc();
