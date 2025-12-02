@@ -241,7 +241,7 @@ function Search(ths) {
   if (!ths) {
     var uls = document.getElementsByTagName("ul");
     for (let u = 0; u < uls.length; u++)
-      uld[u].style.display = 'none';
+      uls[u].style.display = 'none';
     return;
   }
   
