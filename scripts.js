@@ -662,8 +662,11 @@ async function setupSpentFields() {
   var topRowFilters = Spent.getRange("F1:Z2").getValues();
   for (let i = 0; i < topRowFilters[0].length; i++) {
     if (topRowFilters[0][i] && topRowFilters[0][i].length > 0) {
+      let total = topRowFilters[1][i] ?? "";
+      if (total.toFixed)
+        total = total.toFixed(2);
       document.getElementById("cols").innerHTML += `
-<option value="${i+5}">${topRowFilters[0][i]} (${topRowFilters[1][i]})</value>
+<option value="${i+5}">${topRowFilters[0][i]}${total ? ' ('+total+')' : ''}</value>
       `;
     }
   }
