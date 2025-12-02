@@ -578,10 +578,8 @@ async function UpdateCC() {
   Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
   Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
 
-  await Filter(true);
-  await log('...calc');
-
   calc();
+  await Filter(true);
 
   await log('...done');
 }
