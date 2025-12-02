@@ -579,6 +579,7 @@ async function UpdateCC() {
   Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
 
   calc();
+  await setupSpentFields();
   await Filter(true);
 
   await log('...done');
