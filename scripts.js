@@ -924,6 +924,7 @@ async function fileLoaded(e) {
   var removeSum = Spent.getRange("D3:D3").getFormula() ?? "";
   var expanded = expandSumFormula(removeSum);
   Spent.getRange("D3:D3").setFormula(expanded);
+  calc();
 
   document.getElementById('future').style.display = "block";
   document.getElementById('over').style.display = "block";
