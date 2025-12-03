@@ -274,7 +274,7 @@ async function Filter(incFuture) {
   await log('Filtering');
 
   var template = `
-    <tr>
+    <tr onclick='Highlight(this)'>
       <td style=width:22px>{5}</td>
       <td style=width:96px>{0}</td>
       <td style="color: {4}">{1}</td>
@@ -285,12 +285,6 @@ async function Filter(incFuture) {
   var s = document.getElementById('spent');
 
   var current = Spent.getRange("D1:E3").getValues();
-  s.innerHTML = template
-    .replace('{5}', '')
-    .replace('{0}', '')
-    .replace('{1}', current[0][0].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
-    .replace('{2}', current[0][1])
-    .replace('{4}', current[0][0] < 0 ? 'red' : 'inherited');
   s.innerHTML += template
     .replace('{5}', '')
     .replace('{0}', '')
@@ -301,7 +295,7 @@ async function Filter(incFuture) {
     .replace('{5}', '')
     .replace('{0}', '')
     .replace('{1}', current[2][0].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
-    .replace('{2}', current[2][1].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+    .replace('{2}', 'Current CC')
     .replace('{4}', 'inherited');
   s.innerHTML += "<tr><td colspan=9><hr></td></tr>";
 
