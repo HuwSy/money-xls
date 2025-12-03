@@ -37,6 +37,13 @@ function HideUnhide(ths) {
   }, 500);
 }
 
+Highlight (ths) {
+  if (ths.style.background.color)
+    ths.style.background.color = null;
+  else
+    ths.style.background.color = "#ddd";
+}
+
 function NewRow(ths, checked = null) {
   var m = ths.parentNode.getAttribute('max')?.toString();
   if (!m)
