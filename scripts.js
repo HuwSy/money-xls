@@ -98,7 +98,7 @@ function clearRows(ths) {
 }
 
 async function Edit(t) {
-  if (!confirm("Remove this to reedit?"))
+  if (!confirm("Remove "+t.value.trim()+" to reedit?"))
     return;
 
   await log('Editing');
