@@ -283,22 +283,8 @@ async function Filter(incFuture) {
       `;
 
   var s = document.getElementById('spent');
-
-  var current = Spent.getRange("D1:E3").getValues();
-  s.innerHTML += template
-    .replace('{5}', '')
-    .replace('{0}', '')
-    .replace('{1}', current[1][0].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
-    .replace('{2}', current[1][1])
-    .replace('{4}', current[1][0] < 0 ? 'red' : 'inherited');
-  s.innerHTML += template
-    .replace('{5}', '')
-    .replace('{0}', '')
-    .replace('{1}', current[2][0].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
-    .replace('{2}', 'Current CC')
-    .replace('{4}', 'inherited');
-  s.innerHTML += "<tr><td colspan=9><hr></td></tr>";
-
+  s.innerHTML = "";
+  
   await log('...setting spent');
 
   var range = (document.getElementById("range") ?? {})["value"] ?? "99";
@@ -321,7 +307,6 @@ async function Filter(incFuture) {
   await log('...setting over');
 
   var o = document.getElementById('over').getElementsByTagName('table')[0];
-
   o.innerHTML = template
     .replace('{5}', 'Y-M')
     .replace('{0}', 'Under')
@@ -365,6 +350,8 @@ async function Filter(incFuture) {
   await log('...setting formulas');
 
   document.getElementById('D1').value = Spent.getRange("D1:D1").getValue();
+  document.getElementById('D2').value = Spent.getRange("D2:D2").getValue();
+  document.getElementById('Cc').value = Spent.getRange("D3:D3").getValue();
   document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
   document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
   document.getElementById('Sum').value = (parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue())).toFixed(2);
