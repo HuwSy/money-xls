@@ -154,7 +154,7 @@ async function Edit(t) {
   await log('...calc');
 
   calc();
-  await setupSpentFields();
+  await setupSpentFields(true);
   await Filter(false);
 
   await log('...done');
@@ -232,7 +232,7 @@ async function IncludeSpent() {
   await log('...calc');
 
   calc();
-  await setupSpentFields();
+  await setupSpentFields(true);
   await Filter(true);
 
   await log('...done');
@@ -258,7 +258,8 @@ function Search(ths) {
 }
 
 function Select(ths, val) {
-  ths.parentNode.previousElementSibling.value = val;
+  if (val)
+    ths.parentNode.previousElementSibling.value = val;
   ths.parentNode.style.display = 'none';
 }
 
@@ -381,7 +382,7 @@ async function Filter(incFuture) {
   next.setHours(13);
   var week = new Date(next);
   week.setDate(week.getDate() + 7);
-  var len = Spent.getRange("G1:G1").getValue();
+  var len = Spent.getRange("G1:G1").getValue() ?? 3;
   var last = new Date(Year + len, 0, 0);
 
   var c = 10;
@@ -579,14 +580,14 @@ async function UpdateCC() {
   Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
 
   calc();
-  await setupSpentFields();
+  await setupSpentFields(false);
   await Filter(true);
 
   await log('...done');
 }
 
 function StartChange(ths) {
-  if (ths == null || ths == "")
+  if (!ths || ths == null || ths == "")
     Beginning = new Date(2011, 3, 1);
   else {
     var val = typeof ths == "string" ? ths : ths.toISOString();
@@ -596,7 +597,7 @@ function StartChange(ths) {
 }
 
 function TodayChange(ths) {
-  if (ths == null || ths == "")
+  if (!ths || ths == null || ths == "")
     Today = new Date();
   else {
     var val = typeof ths == "string" ? ths : ths.toISOString();
@@ -650,27 +651,8 @@ async function RunAll() {
   await Saving();
 }
 
-async function setupSpentFields() {
+async function setupSpentFields(excFilters) {
   await log('...blanks');
-
-  var z2formula = parseInt((Spent.getRange("Z2:Z2").getFormula() ?? "SUM(Z3:Z99)").split("Z")[2]).toString();
-  document.getElementById("range").innerHTML = `
-<option value="99" selected>Top 99</value>
-<option value="${z2formula}">ZRange (${z2formula})</value>
-  `;
-
-  document.getElementById("cols").innerHTML = '<option value="-1" selected>All</value>';
-  var topRowFilters = Spent.getRange("F1:Z2").getValues();
-  for (let i = 0; i < topRowFilters[0].length; i++) {
-    if (topRowFilters[0][i] && topRowFilters[0][i].length > 0) {
-      let total = topRowFilters[1][i] ?? "";
-      if (total.toFixed)
-        total = total.toFixed(2);
-      document.getElementById("cols").innerHTML += `
-<option value="${i+5}">${topRowFilters[0][i]}${total ? ' ('+total+')' : ''}</value>
-      `;
-    }
-  }
 
   // find blank year or calcs in spent to copy top row into
   var row = StartSpent;
@@ -724,6 +706,32 @@ async function setupSpentFields() {
 
     daterow--;
   }
+
+  calc();
+
+  if (excFilters)
+    return;
+
+  await log('...filters');
+
+  var z2formula = parseInt((Spent.getRange("Z2:Z2").getFormula() ?? "SUM(Z3:Z99)").split("Z")[2]).toString();
+  document.getElementById("range").innerHTML = `
+<option value="99" selected>Top 99</value>
+<option value="${z2formula}">ZRange (${z2formula})</value>
+  `;
+
+  document.getElementById("cols").innerHTML = '<option value="-1" selected>All</value>';
+  var topRowFilters = Spent.getRange("F1:Z2").getValues();
+  for (let i = 0; i < topRowFilters[0].length; i++) {
+    if (topRowFilters[0][i] && topRowFilters[0][i].length > 0) {
+      let total = topRowFilters[1][i] ?? "";
+      if (total.toFixed)
+        total = total.toFixed(2);
+      document.getElementById("cols").innerHTML += `
+<option value="${i+5}">${topRowFilters[0][i]}${total ? ' ('+Pound+total+')' : ''}</value>
+      `;
+    }
+  }
 }
 
 async function setupOneYear() {
@@ -763,7 +771,7 @@ async function setupLimited() {
     futureYear(1, priority);
     nowData(priority);
   }
-  await log('');
+  await timeout();
 
   Future = Workbook.Sheets['Future'];
   await log('...calc');
@@ -773,7 +781,7 @@ async function setupLimited() {
 
 async function setupAllYears() {
   await log('All years...');
-  var len = Spent.getRange("G1:G1").getValue();
+  var len = Spent.getRange("G1:G1").getValue() ?? 3;
   futureYear(len);
   await log('...overspent');
   overSpent();
@@ -837,7 +845,7 @@ async function Saving() {
   Over['!cols'] = [{ width: 45 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 60 / 7 }, { width: 60 / 7 }];
 
   Over['!merges'] = [];
-  var len = Spent.getRange("G1:G1").getValue() + 1;
+  var len = (Spent.getRange("G1:G1").getValue() ?? 3) + 1;
   for (var col = 6; col <= 11; col++) {
     for (var y = 1; y <= len; y++) {
       Over['!merges'].push({

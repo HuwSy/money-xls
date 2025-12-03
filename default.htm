@@ -155,15 +155,15 @@
           <br style="clear:both;">
 
           <select id="range"
-                  onchange="Filter(true)"
+                  onchange="Filter()"
                   style="width: 30%;">
           </select>
           <select id="cols"
-                  onchange="Filter(true)"
+                  onchange="Filter()"
                   style="width: 30%;">
           </select>
           <input id="filter"
-                 onkeyup="Filter(true)"
+                 onkeyup="Filter()"
                  style="width: 30%;">
 
           <hr>
@@ -284,9 +284,18 @@
                  style="margin-left: 8px;">
         </div>
       </div>
-    </div>
-
-    <div id="output">
+      <div id="log">
+        <input type="radio"
+               id="r9"
+               style="display:none"
+               name="sheet">
+        <label onclick="HideUnhide(this.previousElementSibling)"
+               for="r9">Log</label>
+        <div>
+          <div id="output">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </body>
