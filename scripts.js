@@ -37,7 +37,7 @@ function HideUnhide(ths) {
   }, 500);
 }
 
-Highlight (ths) {
+function Highlight (ths) {
   if (ths.style.background.color)
     ths.style.background.color = null;
   else
