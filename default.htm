@@ -74,18 +74,18 @@
 
           <table id="spending">
             <tr>
-              <td>
+              <td onclick="Search()">
                 <input name="cc"
                        type="checkbox"
                        title="CC expense">
               </td>
-              <td>
+              <td onclick="Search()">
                 <input name="date"
                        type="date"
                        style="width: 60px;"
                        required>
               </td>
-              <td>
+              <td onclick="Search()">
                 <input name="amount"
                        type="number"
                        step="0.01"
@@ -104,13 +104,13 @@
                        onclick="Search()">
                 <ul></ul>
               </td>
-              <td>
+              <td onclick="Search()">
                 <input name="add"
                        type="button"
                        value="+"
                        onclick="NewRow(this.parentNode.parentNode, true)">
               </td>
-              <td>
+              <td onclick="Search()">
                 <input name="remove"
                        type="button"
                        value="-"
@@ -122,7 +122,7 @@
                  style="float:right"
                  type="button"
                  value="Inc."
-                 onclick="IncludeSpent()">
+                 onclick="Search();IncludeSpent()">
           <br style="clear:both;">
 
           <textarea id="D3"
