@@ -721,7 +721,7 @@ async function setupSpentFields(excFilters) {
     }
   }
 
-  document.getElementById("filter").value = undefined;
+  document.getElementById("filter").value = "";
 }
 
 async function setupOneYear() {
