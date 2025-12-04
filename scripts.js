@@ -38,10 +38,10 @@ function HideUnhide(ths) {
 }
 
 function Highlight (ths) {
-  if (ths.style.background.color)
-    ths.style.background.color = null;
+  if (ths.style.backgroundColor)
+    ths.style.backgroundColor = null;
   else
-    ths.style.background.color = "#ddd";
+    ths.style.backgroundColor = "#ddd";
 }
 
 function NewRow(ths, checked = null) {
