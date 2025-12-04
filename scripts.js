@@ -720,6 +720,8 @@ async function setupSpentFields(excFilters) {
       `;
     }
   }
+
+  document.getElementById("filter").value = undefined;
 }
 
 async function setupOneYear() {
