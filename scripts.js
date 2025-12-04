@@ -707,7 +707,7 @@ async function setupSpentFields(excFilters) {
 <option value="99" selected>Top 99</value>
 <option value="${z2formula}">ZRange (${z2formula})</value>
   ` + (z2formula < 999 ? `
-<option value="999" selected>Top 999</value>
+<option value="999">Top 999</value>
   ` : '');
 
   document.getElementById("cols").innerHTML = '<option value="-1" selected>All</value>';
