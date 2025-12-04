@@ -706,7 +706,9 @@ async function setupSpentFields(excFilters) {
   document.getElementById("range").innerHTML = `
 <option value="99" selected>Top 99</value>
 <option value="${z2formula}">ZRange (${z2formula})</value>
-  `;
+  ` + (z2formula < 999 ? `
+<option value="999" selected>Top 999</value>
+  ` : '');
 
   document.getElementById("cols").innerHTML = '<option value="-1" selected>All</value>';
   var topRowFilters = Spent.getRange("F1:Z2").getValues();
