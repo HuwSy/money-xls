@@ -446,6 +446,9 @@ async function Filter(incFuture) {
 }
 
 async function PopulateFormulas(ths) {
+  clearRows(Plans);
+  clearRows(Formulas);
+  
   await log('Getting formulas');
 
   document.getElementById("formulas").style.display = 'block';
@@ -500,6 +503,9 @@ async function SaveFormulas(ths) {
 }
 
 async function PopulatePlan(ths) {
+  clearRows(Plans);
+  clearRows(Formulas);
+  
   await log('Getting plans');
 
   document.getElementById("plans").style.display = 'block';
@@ -544,8 +550,6 @@ function ToggleType (ths) {
 }
 
 function Cancel(ths) {
-  clearRows(Plans);
-  clearRows(Formulas);
   document.getElementById("plans").style.display = 'none';
   document.getElementById("formulas").style.display = 'none';
   ths.previousElementSibling.style.display = 'none';
