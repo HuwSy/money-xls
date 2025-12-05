@@ -52,34 +52,30 @@ function NewRow(ths, checked = null) {
   ths.parentNode.setAttribute('max', k);
 
   var row = ths.cloneNode(true);
-  rename(row.children[0].children[0], k);
-  rename(row.children[1].children[0], k);
-  rename(row.children[2].children[0], k);
-  rename(row.children[3].children[0], k);
-  rename(row.children[4].children[0], k);
-  rename(row.children[5].children[0], k);
-  if (row.children[0].children[0].type == "checkbox") {
-    row.children[0].children[0].checked = checked;
-  } else {
-    rename(row.children[5].children[1], k);
-    rename(row.children[6].children[0], k);
-    rename(row.children[7].children[0], k);
-    rename(row.children[8].children[0], k);
-    rename(row.children[9].children[0], k);
-    row.children[0].children[0].value = null;
-    row.children[4].children[0].value = null;
-    row.children[5].children[0].value = null;
-    row.children[6].children[0].value = null;
-    row.children[7].children[0].value = null;
-  }
-  row.children[1].children[0].value = null;
-  row.children[2].children[0].value = null;
-  row.children[3].children[0].value = null;
+  rename(row,0,0,k,checked);
+  rename(row,1,0,k);
+  rename(row,2,0,k);
+  rename(row,3,0,k);
+  rename(row,4,0,k);
+  rename(row,5,0,k);
+  rename(row,5,1,k);
+  rename(row,6,0,k);
+  rename(row,7,0,k);
+  rename(row,8,0,k);
+  rename(row,9,0,k);
   ths.before(row);
 }
 
-function rename(t, k) {
-  t.name = t.name.replace(/[0-9]*/g, '') + k;
+function rename(row, col, obj, k, value) {
+  if (!row.children[col])
+    return;
+  if (!row.children[col].children[obj])
+    return;
+  row.children[col].children[obj].name = row.children[col].children[obj].name.replace(/[0-9]*/g, '') + k;
+  if (row.children[col].children[obj].type == "checkbox")
+    row.children[col].children[obj].checked = !!value;
+  else if (row.children[col].children[obj].type != "button")
+    row.children[col].children[obj].value = value;
 }
 
 function DelRow(ths) {
