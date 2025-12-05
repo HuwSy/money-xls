@@ -290,9 +290,41 @@
                  style="display:none">
           <input type="button"
                  value="Cancel"
-                 onclick="CancelPlan(this)"
+                 onclick="Cancel(this)"
                  style="display:none">
+          <br>
 
+          <table id="formulas"
+                 style="display:none">
+            <tr>
+              <td>
+                <input name="heading"
+                       type="text"
+                       style="width:75px"
+                       placeholder="Col heading">
+              </td>
+              <td>
+                <input name="formula"
+                       type="text"
+                       style="width:175px"
+                       placeholder="Formula">
+              </td>
+            </tr>
+          </table>
+          <input type="button"
+                 value="F1:Z2"
+                 onclick="PopulateFormulas(this)"
+                 style="display:initial;">
+          <input type="button"
+                 value="Save"
+                 onclick="SavFormulas(this)"
+                 style="display:none">
+          <input type="button"
+                 value="Cancel"
+                 onclick="Cancel(this)"
+                 style="display:none">
+          <br>
+          
           <input type="button"
                  onclick="RunAll()"
                  value="Run All"
