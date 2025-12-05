@@ -73,7 +73,7 @@ function rename(row, col, obj, k, value) {
     return;
   row.children[col].children[obj].name = row.children[col].children[obj].name.replace(/[0-9]*/g, '') + k;
   if (row.children[col].children[obj].type == "checkbox")
-    row.children[col].children[obj].checked = !!value;
+    row.children[col].children[obj].checked = value ? true : null;
   else if (row.children[col].children[obj].type != "button")
     row.children[col].children[obj].value = value;
 }
