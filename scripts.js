@@ -44,23 +44,28 @@ function Highlight (ths) {
     ths.style.backgroundColor = "#ddd";
 }
 
-function NewRow(ths, checked = null) {
+function NewRow(ths, data = []) {
   var m = ths.parentNode.getAttribute('max')?.toString();
   if (!m)
     m = '0';
   var k = parseInt(m) + 1;
   ths.parentNode.setAttribute('max', k);
+  
+  if (!data)
+    data = [];
+  if (data === false || data === true)
+    data = [ data ];
 
   var row = ths.cloneNode(true);
-  rename(row,0,0,k,checked);
-  rename(row,1,0,k);
-  rename(row,2,0,k);
-  rename(row,3,0,k);
-  rename(row,4,0,k);
-  rename(row,5,0,k);
+  rename(row,0,0,k,data[0]);
+  rename(row,1,0,k,data[1]);
+  rename(row,2,0,k,data[2]);
+  rename(row,3,0,k,data[3]);
+  rename(row,4,0,k,data[4]);
+  rename(row,5,0,k,data[5]);
   rename(row,5,1,k);
-  rename(row,6,0,k);
-  rename(row,7,0,k);
+  rename(row,6,0,k,data[6]);
+  rename(row,7,0,k,data[7]);
   rename(row,8,0,k);
   rename(row,9,0,k);
   ths.before(row);
@@ -75,7 +80,7 @@ function rename(row, col, obj, k, value = null) {
   if (row.children[col].children[obj].type == "checkbox")
     row.children[col].children[obj].checked = value ? true : null;
   else if (row.children[col].children[obj].type != "button")
-    row.children[col].children[obj].value = value;
+    row.children[col].children[obj].value = value === undefined ? null : value;
 }
 
 function DelRow(ths) {
