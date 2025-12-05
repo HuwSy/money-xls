@@ -464,6 +464,41 @@ async function PopulateFormulas(ths) {
   DelRow(Formulas[Formulas.length - 1]);
 }
 
+async function SaveFormulas(ths) {
+  if (Formulas.length == 1 && !row.children[0].children[0].value)
+    return;
+
+  await log('Formulating');
+
+  document.getElementById("formulas").style.display = 'none';
+  ths.previousElementSibling.style.display = 'initial';
+  ths.nextElementSibling.style.display = "none";
+  ths.style.display = 'none';
+
+  var headings = [];
+  var formulas = [];
+  for (let n = 0; n < Formulas.length; n++) {
+    let row = Formulas[n];
+
+    let h = row.children[1].children[0].value;
+    let f = row.children[2].children[0].value;
+
+    headings.push(h);
+    formulas.push(f);
+  }
+
+  Spent.getRange("F1:Z1").setValues([headings]);
+  Spent.getRange("F2:Z2").setFormulasR1C1([formulas]);
+
+  await log('...calc');
+  calc();
+
+  setupSpentFields();
+  Filter(true);
+
+  await log('...done');
+}
+
 async function PopulatePlan(ths) {
   await log('Getting plans');
 
