@@ -455,9 +455,12 @@ async function PopulateFormulas(ths) {
 
   var headings = Spent.getRange("F1:Z1").getValues();
   var formulas = Spent.getRange("F2:Z2").getFormulasR1C1();
-  
-  for (let c = 0; c < headings[0].length; c++)
-    NewRow(Formulas[0], [headings[0][c], formulas[0][c]]);
+
+  var col = 'Z';
+  for (let c = headings[0].length - 1; c >= 0; c--) {
+    NewRow(Formulas[0], [col, headings[0][c], formulas[0][c]]);
+    col = XLSX.utils.encode_col(XLSX.utils.decode_col(col) - 1)
+  }
   DelRow(Formulas[Formulas.length - 1]);
 }
 
