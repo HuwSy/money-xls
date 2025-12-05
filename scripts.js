@@ -66,7 +66,7 @@ function NewRow(ths, checked = null) {
   ths.before(row);
 }
 
-function rename(row, col, obj, k, value) {
+function rename(row, col, obj, k, value = null) {
   if (!row.children[col])
     return;
   if (!row.children[col].children[obj])
