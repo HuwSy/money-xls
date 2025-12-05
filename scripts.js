@@ -2,7 +2,7 @@ var FileName = ".xlsx";
 // xlsx objects
 var Workbook, Spent, Future, Over, Plan, SST;
 // html objects
-var Spending, Upcoming, Plans;
+var Spending, Upcoming, Plans, Formulas;
 // default start spent row
 var StartSpent = 4;
 // encode due to xlsx issues
@@ -488,9 +488,11 @@ function ToggleType (ths) {
   ths.type = ths.type == 'number' ? 'text' : 'number';
 }
 
-function CancelPlan(ths) {
+function Cancel(ths) {
   clearRows(Plans);
+  clearRows(Formulas);
   document.getElementById("plans").style.display = 'none';
+  document.getElementById("formulas").style.display = 'none';
   ths.previousElementSibling.style.display = 'none';
   ths.previousElementSibling.previousElementSibling.style.display = "initial";
   ths.style.display = 'none';
@@ -1453,6 +1455,7 @@ function Init() {
   Spending = document.getElementById("spending").getElementsByTagName('tr');
   Upcoming = document.getElementById("upcoming").getElementsByTagName('tr');
   Plans = document.getElementById("plans").getElementsByTagName('tr');
+  Formulas = document.getElementById("formulas").getElementsByTagName('tr');
 
   XLSX_CALC.import_functions({
     'FIND': function (a, b, c) {
