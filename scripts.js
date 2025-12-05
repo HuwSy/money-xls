@@ -445,6 +445,22 @@ async function Filter(incFuture) {
   }
 }
 
+async function PopulateFormulas(ths) {
+  await log('Getting formulas');
+
+  document.getElementById("formulas").style.display = 'block';
+  ths.nextElementSibling.style.display = 'initial';
+  ths.nextElementSibling.nextElementSibling.style.display = "initial";
+  ths.style.display = 'none';
+
+  var headings = Spent.getRange("F1:Z1").getValues();
+  var formulas = Spent.getRange("F2:Z2").getFormulasR1C1();
+  
+  for (let c = 0; c < headings[0].length; c++)
+    NewRow(Formulas[0], [headings[0][c], formulas[0][c]]);
+  DelRow(Formulas[Formulas.length - 1]);
+}
+
 async function PopulatePlan(ths) {
   await log('Getting plans');
 
