@@ -294,30 +294,36 @@
                  style="display:none">
           <br><br>
 
-          <table id="formulas"
+          <div id="formulas"
                  style="display:none;width:100%">
-            <tr>
-              <td style="vertical-align: top">
+            <div>
+              <span>
                 <input name="col"
                        type="text"
                        style="width:25px"
                        placeholder="Col"
                        disabled>
-              </td>
-              <td style="vertical-align: top">
+              </span>
+              <span>
                 <input name="heading"
                        type="text"
-                       style="width:75px"
+                       style="width:175px"
                        placeholder="Col heading">
-              </td>
-              <td>
+              </span>
+              <span style="display: block;">
+                <textarea name="total"
+                          style="width:100%"
+                          rows="8"
+                          placeholder="Total"></textarea>
+              </span>
+              <span style="display: block;">
                 <textarea name="formula"
                           style="width:100%"
-                          rows="6"
+                          rows="8"
                           placeholder="Formula"></textarea>
-              </td>
-            </tr>
-          </table>
+              </span>
+            </div>
+          </div>
           <input type="button"
                  value="F1:Z2"
                  onclick="PopulateFormulas(this)"
