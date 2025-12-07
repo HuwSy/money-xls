@@ -371,7 +371,7 @@ async function Filter(incFuture) {
   next.setHours(13);
   var week = new Date(next);
   week.setDate(week.getDate() + 7);
-  var len = Spent.getRange("G1:G1").getValue() ?? 3;
+  var len = parseInt(Spent.getRange("G1:G1").getValue() ?? "3");
   var last = new Date(Year + len, 0, 0);
 
   var c = 10;
@@ -843,7 +843,7 @@ async function setupLimited() {
 
 async function setupAllYears() {
   await log('All years...');
-  var len = Spent.getRange("G1:G1").getValue() ?? 3;
+  var len = parseInt(Spent.getRange("G1:G1").getValue() ?? "3");
   futureYear(len);
   await log('...overspent');
   overSpent();
@@ -907,7 +907,7 @@ async function Saving() {
   Over['!cols'] = [{ width: 45 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 25 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 100 / 7 }, { width: 60 / 7 }, { width: 60 / 7 }];
 
   Over['!merges'] = [];
-  var len = (Spent.getRange("G1:G1").getValue() ?? 3) + 1;
+  var len = parseInt(Spent.getRange("G1:G1").getValue() ?? "3") + 1;
   for (var col = 6; col <= 11; col++) {
     for (var y = 1; y <= len; y++) {
       Over['!merges'].push({
