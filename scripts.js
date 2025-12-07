@@ -493,7 +493,8 @@ async function SaveFormulas(ths) {
     formulas.push(f);
 
     let m = t.match(/:[A-Za-z]+([0-9]+)\)/g);
-    if (m && m[1] && parseInt(m[0].replace(/[^0-9]/g,'')) > StartSpent)
+    // replace as match group not working
+    if (m && parseInt(m[0].replace(/[^0-9]/g,'')) > StartSpent)
       StartSpent = parseInt(m[0].replace(/[^0-9]/g,''));
   }
 
