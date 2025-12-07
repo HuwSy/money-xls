@@ -1523,9 +1523,7 @@ function Init() {
   Spending = document.getElementById("spending").getElementsByTagName('tr');
   Upcoming = document.getElementById("upcoming").getElementsByTagName('tr');
   Plans = document.getElementById("plans").getElementsByTagName('tr');
-  Formulas = document.getElementById("formulas").children;
-  if (Formulas[0].tagName == "TBODY")
-    Formulas = Formulas.children;
+  Formulas = document.getElementById("formulas").getElementsByTagName('tr');
 
   XLSX_CALC.import_functions({
     'FIND': function (a, b, c) {
