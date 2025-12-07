@@ -491,6 +491,10 @@ async function SaveFormulas(ths) {
     headings.push(h);
     totals.push(t);
     formulas.push(f);
+
+    let m = t.match(/:[A-Za-z]+([0-9]+)\)/g);
+    if (m && m[1] && m[1] > StartSpent)
+      StartSpent = m[1];
   }
 
   Spent.getRange("F1:Z1").setValues([headings]);
@@ -763,6 +767,7 @@ async function setupSpentFields(excFilters) {
         } catch (e) { }
 
       Spent.getRange("F" + daterow + ":Z" + daterow).setFormulasR1C1(sum);
+      StartSpent = daterow;
     }
 
     daterow--;
