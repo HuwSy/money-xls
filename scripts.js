@@ -493,6 +493,9 @@ async function SaveFormulas(ths) {
   Spent.getRange("F1:Z1").setValues([headings]);
   Spent.getRange("F2:Z2").setFormulasR1C1([formulas]);
 
+  clearRows(Plans);
+  clearRows(Formulas);
+  
   await log('...calc');
   calc();
 
@@ -550,6 +553,9 @@ function ToggleType (ths) {
 }
 
 function Cancel(ths) {
+  clearRows(Plans);
+  clearRows(Formulas);
+  
   document.getElementById("plans").style.display = 'none';
   document.getElementById("formulas").style.display = 'none';
   ths.previousElementSibling.style.display = 'none';
@@ -614,6 +620,9 @@ async function SavePlan(ths) {
       Plan.getRange("M" + (n + 2) + ":O" + (n + 2)).setFormulasR1C1([f]);
   }
 
+  clearRows(Plans);
+  clearRows(Formulas);
+  
   await log('...calc');
 
   calc();
