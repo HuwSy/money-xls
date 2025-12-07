@@ -729,6 +729,8 @@ async function setupSpentFields(excFilters) {
     row++;
   }
 
+  log('...start '+row);
+
   // get latest date below blanks
   var last = Spent.getRange("A" + row + ":C" + row).getValues();
   if (last[0][0] == "")
