@@ -493,8 +493,8 @@ async function SaveFormulas(ths) {
     formulas.push(f);
 
     let m = t.match(/:[A-Za-z]+([0-9]+)\)/g);
-    if (m && m[1] && parseInt(m[1]) > StartSpent)
-      StartSpent = parseInt(m[1]);
+    if (m && m[1] && parseInt(m[0].replace(/[^0-9]/g,'')) > StartSpent)
+      StartSpent = parseInt(m[0].replace(/[^0-9]/g,''));
   }
 
   Spent.getRange("F1:Z1").setValues([headings]);
