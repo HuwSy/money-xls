@@ -457,11 +457,11 @@ async function PopulateFormulas(ths) {
   ths.style.display = 'none';
 
   var headings = Spent.getRange("F1:Z1").getValues();
-  var formulas = Spent.getRange("F2:Z2").getFormulasR1C1();
+  var formulas = Spent.getRange("F2:Z3").getFormulasR1C1();
 
   var col = 'Z';
   for (let c = headings[0].length - 1; c >= 0; c--) {
-    NewRow(Formulas[0], [col, headings[0][c], formulas[0][c]]);
+    NewRow(Formulas[0], [col, headings[0][c], formulas[0][c], formulas[1][c]]);
     col = XLSX.utils.encode_col(XLSX.utils.decode_col(col) - 1)
   }
   DelRow(Formulas[Formulas.length - 1]);
@@ -479,19 +479,22 @@ async function SaveFormulas(ths) {
   ths.style.display = 'none';
 
   var headings = [];
+  var totals = [];
   var formulas = [];
   for (let n = 0; n < Formulas.length; n++) {
     let row = Formulas[n];
 
     let h = row.children[1].children[0].value;
-    let f = row.children[2].children[0].value;
+    let t = row.children[2].children[0].value;
+    let f = row.children[3].children[0].value;
 
     headings.push(h);
+    totals.push(t);
     formulas.push(f);
   }
 
   Spent.getRange("F1:Z1").setValues([headings]);
-  Spent.getRange("F2:Z2").setFormulasR1C1([formulas]);
+  Spent.getRange("F2:Z3").setFormulasR1C1([totals, formulas]);
 
   clearRows(Plans);
   clearRows(Formulas);
