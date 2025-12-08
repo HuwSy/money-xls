@@ -536,11 +536,13 @@ async function SortPlan(sort) {
     ]);
   }
 
+  let direction = sort == 3 ? -1 : 1;
+  //if (sort == -1)
   plan.sort((a,b) => {
     if (a[sort] < b[sort])
-      return -1;
+      return -1 * direction;
     if (a[sort] > b[sort])
-      return 1;
+      return 1 * direction;
     if (a[sort] = b[sort])
       return 0;
   });
