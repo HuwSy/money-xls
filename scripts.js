@@ -545,6 +545,12 @@ async function SortPlan(sort) {
       aS = 10_000*aS + 100*a[1] + a[2];
       bS = 10_000*bS + 100*b[1] + b[2];
     }
+    if (aS === null && bS === null)
+      return 0;
+    if (aS === null)
+      return 1;
+    if (bS === null)
+      return -1;
     if (aS < bS)
       return -1 * direction;
     if (aS > bS)
