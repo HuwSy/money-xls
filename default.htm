@@ -263,10 +263,15 @@
               <td>
                 <input name="cost"
                        type="number"
-                       style="width:56px"><input type="button"
+                       style="width:56px">
+                <input type="button"
                        value="T"
-                       onclick="ToggleType(this.previousElementSibling)"
+                       onclick="ToggleType(this.previousElementSibling, this.nextElementSibling)"
                        required>
+                <input name="form"
+                       type="text"
+                       style="display: none">
+                                
               </td>
               <td>
                 <input name="title"
