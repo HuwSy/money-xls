@@ -513,6 +513,58 @@ async function SaveFormulas(ths) {
   await log('...done');
 }
 
+async function SortPlan(sort) {
+  if (sort < 0)
+    return alert('Not yet implemented');
+  
+  await log('Sorting plans');
+  
+  var plan = [];
+  for (let n = 0; n < Plans.length; n++) {
+    let row = Plans[n];
+    plan.push([
+      !row.children[0].children[0].value ? null : parseInt(row.children[0].children[0].value),
+      !row.children[1].children[0].value ? null : parseInt(row.children[1].children[0].value),
+      !row.children[2].children[0].value ? null : parseInt(row.children[2].children[0].value),
+      !row.children[3].children[0].value ? null : typeof row.children[3].children[0].value == "string" ? row.children[3].children[0].value : row.children[3].children[0].value.toISOString(),
+      !row.children[4].children[0].value ? null : typeof row.children[4].children[0].value == "string" ? row.children[4].children[0].value : row.children[4].children[0].value.toISOString(),
+      row.children[5].children[0].type == "number"
+        ? parseFloat(row.children[5].children[0].value || '0')
+        : row.children[5].children[0].value,
+      row.children[6].children[0].value.trim(),
+      row.children[7].children[0].value === null || row.children[7].children[0].value === '' ? null : parseInt(row.children[7].children[0].value)
+    ]);
+  }
+
+  plan.sort((a,b) => {
+    if (a[sort] < b[sort])
+      return -1;
+    if (a[sort] > b[sort])
+      return 1;
+    if (a[sort] = b[sort])
+      return 0;
+  });
+
+  await log('...outputting');
+
+  clearRows(Plans);
+
+  for (let p = plan.length - 1; p >= 0; p--) {
+    NewRow(Plans[0], plan[p]);
+    // repush due to datatype
+    if (typeof plan[p][5] == "string") {
+      Plans[0].children[5].children[0].type = "text";
+      Plans[0].children[5].children[0].value = "=" + plan[p][5].replace(/^=/,'');
+    } else {
+      Plans[0].children[5].children[0].type = "number";
+      Plans[0].children[5].children[0].value = plan[p][5];
+    }
+  }
+  DelRow(Plans[Plans.length - 1]);
+
+  await log('...done');
+}
+
 async function PopulatePlan(ths) {
   clearRows(Plans);
   clearRows(Formulas);
