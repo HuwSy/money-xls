@@ -659,7 +659,10 @@ async function SavePlan(ths) {
 
     let s = !row.children[3].children[0].value ? [null, null, null] : (typeof row.children[3].children[0].value == "string" ? row.children[3].children[0].value : row.children[3].children[0].value.toISOString().substring(0, 10)).split('-')
     let e = !row.children[4].children[0].value ? [null, null, null] : (typeof row.children[4].children[0].value == "string" ? row.children[4].children[0].value : row.children[4].children[0].value.toISOString().substring(0, 10)).split('-')
-
+    let v = row.children[5].children[0].type == "number"
+        ? parseFloat(row.children[5].children[0].value || '0')
+        : parseFloat(row.children[5].children[2].value || '0');
+    
     plan.push([
       !row.children[0].children[0].value ? null : parseInt(row.children[0].children[0].value),
       !row.children[1].children[0].value ? null : parseInt(row.children[1].children[0].value),
@@ -670,9 +673,7 @@ async function SavePlan(ths) {
       e[2] ? parseInt(e[0]) : null,
       parseInt(e[1]),
       parseInt(e[2]),
-      row.children[5].children[0].type == "number"
-        ? parseFloat(row.children[5].children[0].value || '0')
-        : null,
+      v,
       row.children[6].children[0].value.trim(),
       row.children[7].children[0].value === null || row.children[7].children[0].value === '' ? null : parseInt(row.children[7].children[0].value)
     ]);
@@ -687,8 +688,12 @@ async function SavePlan(ths) {
   for (let n = 0; n < Plans.length; n++) {
     let row = Plans[n];
 
-    if (row.children[5].children[0].type == "text")
-      Plan.getRange("J" + (n + 2) + ":J" + (n + 2)).setFormulasR1C1([[row.children[5].children[0].value]]);
+    let v = row.children[5].children[0].type == "text" 
+      ? row.children[5].children[0].value
+      : row.children[5].children[2].value;
+    
+    if (v && v.trim() != '' && v.trim() != '=')
+      Plan.getRange("J" + (n + 2) + ":J" + (n + 2)).setFormulasR1C1([[v]]);
 
     let f = [];
     f[0] = formulas[0].replace(/([A-Za-z]+)2/g, '$1' + (n + 2));
