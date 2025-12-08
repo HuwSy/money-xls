@@ -214,6 +214,19 @@
         <div>
           <table id="plans"
                  style="display:none">
+            <caption>
+              <select onchange="SortPlan(this.value)"
+                      name="SortPlan">
+                <option selected></option>
+                <option value="-1">Repeat</option>
+                <option value="4">Start</option>
+                <option value="3">End</option>
+                <option value="5">Value</option>
+                <option value="6">Name</option>
+                <option value="7">FNo</option>
+                <option value="-2">Annualy</option>
+              </select>
+            </caption>
             <tr>
               <td>
                 <input name="year"
