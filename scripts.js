@@ -609,6 +609,7 @@ async function PopulatePlan(ths) {
     Plans[0].children[5].children[0].type = "number";
     Plans[0].children[5].children[0].value = plan[p][9];
     if ((planf[p][0] || "") != "") {
+      Plans[0].children[5].children[2].value = plan[p][9];
       Plans[0].children[5].children[0].type = "text";
       Plans[0].children[5].children[0].value = "=" + planf[p][0];
     }
@@ -622,8 +623,12 @@ async function PopulatePlan(ths) {
   await log('...done');
 }
 
-function ToggleType (ths) {
+function ToggleType (ths, nxt) {
+  let n = nxt.value;
+  let p = ths.value;
   ths.type = ths.type == 'number' ? 'text' : 'number';
+  ths.value = n;
+  nxt.value = p;
 }
 
 function Cancel(ths) {
