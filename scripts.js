@@ -519,6 +519,7 @@ async function SortPlan(sort) {
   calc();
   
   var plan = [];
+  var today = Today.toJSON().substring(0, 10);
   for (let n = 0; n < Plans.length; n++) {
     let row = Plans[n];
 
@@ -540,10 +541,11 @@ async function SortPlan(sort) {
       row.children[7].children[0].value === null || row.children[7].children[0].value === '' ? null : parseInt(row.children[7].children[0].value),
       f,
       (v || "").trim().replace(/^=+/g, ""),
-      0.0
+      null
     ];
 
-    p[10] = p[0] || p[1] || p[2] ? p[8]/(p[0]?p[0]:1)*12/(p[1]?p[1]:12)*365/(p[2]?p[2]:365) : null;
+    if ((p[0] || p[1] || p[2]) && (!p[3] || p[3] > today) && (p[4] < today))
+      p[10] = p[8]/(p[0]?p[0]:1)*12/(p[1]?p[1]:12)*365/(p[2]?p[2]:365);
 
     plan.push(p);
   }
