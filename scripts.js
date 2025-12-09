@@ -64,6 +64,7 @@ function NewRow(ths, data = []) {
   rename(row,4,0,k,data[4]);
   rename(row,5,0,k,data[5]);
   rename(row,5,1,k);
+  rename(row,5,2,k);
   rename(row,6,0,k,data[6]);
   rename(row,7,0,k,data[7]);
   rename(row,8,0,k);
@@ -518,26 +519,40 @@ async function SortPlan(sort) {
     return alert('Not yet implemented');
   
   await log('Sorting plans');
+  calc();
   
   var plan = [];
   for (let n = 0; n < Plans.length; n++) {
     let row = Plans[n];
-    plan.push([
+
+    let f = row.children[5].children[0].type == "number"
+        ? parseFloat(row.children[5].children[0].value || '0')
+        : parseFloat(row.children[5].children[2].value || '0');
+    let v = row.children[5].children[0].type == "text" 
+      ? row.children[5].children[0].value
+      : row.children[5].children[2].value;
+    
+    let p = [
       !row.children[0].children[0].value ? null : parseInt(row.children[0].children[0].value),
       !row.children[1].children[0].value ? null : parseInt(row.children[1].children[0].value),
       !row.children[2].children[0].value ? null : parseInt(row.children[2].children[0].value),
       !row.children[3].children[0].value ? null : typeof row.children[3].children[0].value == "string" ? row.children[3].children[0].value : row.children[3].children[0].value.toISOString(),
       !row.children[4].children[0].value ? null : typeof row.children[4].children[0].value == "string" ? row.children[4].children[0].value : row.children[4].children[0].value.toISOString(),
-      row.children[5].children[0].type == "number"
-        ? parseFloat(row.children[5].children[0].value || '0')
-        : row.children[5].children[0].value,
+      null,
       row.children[6].children[0].value.trim(),
-      row.children[7].children[0].value === null || row.children[7].children[0].value === '' ? null : parseInt(row.children[7].children[0].value)
-    ]);
+      row.children[7].children[0].value === null || row.children[7].children[0].value === '' ? null : parseInt(row.children[7].children[0].value),
+      f,
+      (v || "").trim().trim("="),
+      0.0
+    ];
+
+   // p[10] = p[8]*365/
+
+
+    plan.push(p);
   }
 
   let direction = sort == 3 ? -1 : 1;
-  //if (sort == -1)
   plan.sort((a,b) => {
     let aS = a[sort];
     let bS = b[sort];
@@ -592,6 +607,7 @@ async function PopulatePlan(ths) {
 
   var plan = Plan.getRange("A2:L" + Plan.getMaxRows()).getValues();
   var planf = Plan.getRange("J2:J" + (plan.length + 1)).getFormulasR1C1();
+  
   for (let p = plan.length - 1; p >= 0; p--) {
     Plans[0].children[0].children[0].value = plan[p][0];
     Plans[0].children[1].children[0].value = plan[p][1];
@@ -607,11 +623,11 @@ async function PopulatePlan(ths) {
       Plans[0].children[4].children[0].value = e.toISOString().substring(0, 10);
     }
     Plans[0].children[5].children[0].type = "number";
+    Plans[0].children[5].children[2].type = "text";
     Plans[0].children[5].children[0].value = plan[p][9];
-    if ((planf[p][0] || "") != "") {
-      Plans[0].children[5].children[2].value = plan[p][9];
-      Plans[0].children[5].children[0].type = "text";
-      Plans[0].children[5].children[0].value = "=" + planf[p][0];
+    if ((planf[p][0] || "").trim().trim('=') != "") {
+      Plans[0].children[5].children[2].value = "=" + planf[p][0];
+      ToggleType(Plans[0].children[5].children[0], Plans[0].children[5].children[2])
     }
     Plans[0].children[6].children[0].value = plan[p][10];
     Plans[0].children[7].children[0].value = plan[p][11];
@@ -626,6 +642,7 @@ async function PopulatePlan(ths) {
 function ToggleType (ths, nxt) {
   let n = nxt.value;
   let p = ths.value;
+  nxt.type = ths.type;
   ths.type = ths.type == 'number' ? 'text' : 'number';
   ths.value = n;
   nxt.value = p;
@@ -659,7 +676,7 @@ async function SavePlan(ths) {
 
     let s = !row.children[3].children[0].value ? [null, null, null] : (typeof row.children[3].children[0].value == "string" ? row.children[3].children[0].value : row.children[3].children[0].value.toISOString().substring(0, 10)).split('-')
     let e = !row.children[4].children[0].value ? [null, null, null] : (typeof row.children[4].children[0].value == "string" ? row.children[4].children[0].value : row.children[4].children[0].value.toISOString().substring(0, 10)).split('-')
-    let v = row.children[5].children[0].type == "number"
+    let f = row.children[5].children[0].type == "number"
         ? parseFloat(row.children[5].children[0].value || '0')
         : parseFloat(row.children[5].children[2].value || '0');
     
@@ -673,7 +690,7 @@ async function SavePlan(ths) {
       e[2] ? parseInt(e[0]) : null,
       parseInt(e[1]),
       parseInt(e[2]),
-      v,
+      f,
       row.children[6].children[0].value.trim(),
       row.children[7].children[0].value === null || row.children[7].children[0].value === '' ? null : parseInt(row.children[7].children[0].value)
     ]);
@@ -692,7 +709,7 @@ async function SavePlan(ths) {
       ? row.children[5].children[0].value
       : row.children[5].children[2].value;
     
-    if (v && v.trim() != '' && v.trim() != '=')
+    if ((v || "").trim().trim('=') != '')
       Plan.getRange("J" + (n + 2) + ":J" + (n + 2)).setFormulasR1C1([[v]]);
 
     let f = [];
