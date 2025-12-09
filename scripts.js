@@ -546,13 +546,14 @@ async function SortPlan(sort) {
       0.0
     ];
 
-   // p[10] = p[8]*365/
-
+    p[10] = p[8]/(p[0]>0?p[0]:1)/(p[1]>0?12:1)*(p[1]>0?p[1]:1)/(p[2]>0?365:1)*(p[2]>0?p[2]:1);
 
     plan.push(p);
   }
 
-  let direction = sort == 3 ? -1 : 1;
+  let direction = sort < 0 ? -1 : 1;
+  sort = sort * direction;
+  
   plan.sort((a,b) => {
     let aS = a[sort];
     let bS = b[sort];
@@ -581,13 +582,12 @@ async function SortPlan(sort) {
   for (let p = plan.length - 1; p >= 0; p--) {
     NewRow(Plans[0], plan[p]);
     // repush due to datatype
-    if (typeof plan[p][5] == "string") {
-      Plans[0].children[5].children[0].type = "text";
-      Plans[0].children[5].children[0].value = "=" + plan[p][5].replace(/^=/,'');
-    } else {
-      Plans[0].children[5].children[0].type = "number";
-      Plans[0].children[5].children[0].value = plan[p][5];
-    }
+    Plans[0].children[5].children[0].type = "number";
+    Plans[0].children[5].children[2].type = "text";
+    Plans[0].children[5].children[0].value = plan[p][8];
+    Plans[0].children[5].children[2].value = plan[p][9];
+    if (plan[p][9] != "")
+      ToggleType(Plans[0].children[5].children[0], Plans[0].children[5].children[1]);
   }
   DelRow(Plans[Plans.length - 1]);
 
