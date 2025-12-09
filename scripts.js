@@ -539,11 +539,11 @@ async function SortPlan(sort) {
       row.children[6].children[0].value.trim(),
       row.children[7].children[0].value === null || row.children[7].children[0].value === '' ? null : parseInt(row.children[7].children[0].value),
       f,
-      (v || "").trim().trim("="),
+      (v || "").trim().replace(/^=+/g, ""),
       0.0
     ];
 
-    p[10] = p[8]/(p[0]>0?p[0]:1)/(p[1]>0?12:1)*(p[1]>0?p[1]:1)/(p[2]>0?365:1)*(p[2]>0?p[2]:1);
+    p[10] = p[0] || p[1] || p[2] ? p[8]/(p[0]?p[0]:1)/12*(p[1]?p[1]:12)/365*(p[2]?p[2]:365) : null;
 
     plan.push(p);
   }
@@ -622,7 +622,7 @@ async function PopulatePlan(ths) {
     Plans[0].children[5].children[0].type = "number";
     Plans[0].children[5].children[2].type = "text";
     Plans[0].children[5].children[0].value = plan[p][9];
-    if ((planf[p][0] || "").trim().trim('=') != "") {
+    if ((planf[p][0] || "").trim().replace(/^=+/g, "") != "") {
       Plans[0].children[5].children[2].value = "=" + planf[p][0];
       ToggleType(Plans[0].children[5].children[0], Plans[0].children[5].children[2])
     }
@@ -706,7 +706,7 @@ async function SavePlan(ths) {
       ? row.children[5].children[0].value
       : row.children[5].children[2].value;
     
-    if ((v || "").trim().trim('=') != '')
+    if ((v || "").trim().replace(/^=+/g, "") != '')
       Plan.getRange("J" + (n + 2) + ":J" + (n + 2)).setFormulasR1C1([[v]]);
 
     let f = [];
