@@ -515,9 +515,6 @@ async function SaveFormulas(ths) {
 }
 
 async function SortPlan(sort) {
-  if (sort < 0)
-    return alert('Not yet implemented');
-  
   await log('Sorting plans');
   calc();
   
@@ -585,9 +582,9 @@ async function SortPlan(sort) {
     Plans[0].children[5].children[0].type = "number";
     Plans[0].children[5].children[2].type = "text";
     Plans[0].children[5].children[0].value = plan[p][8];
-    Plans[0].children[5].children[2].value = plan[p][9];
+    Plans[0].children[5].children[2].value = '='+plan[p][9];
     if (plan[p][9] != "")
-      ToggleType(Plans[0].children[5].children[0], Plans[0].children[5].children[1]);
+      ToggleType(Plans[0].children[5].children[0], Plans[0].children[5].children[2]);
   }
   DelRow(Plans[Plans.length - 1]);
 
