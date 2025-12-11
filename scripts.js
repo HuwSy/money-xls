@@ -299,8 +299,9 @@ async function Filter(incFuture) {
   var spent = Spent.getRange("A4:Z" + range).getValues();
   for (let i in spent)
     if (spent[i][3] !== null && spent[i][3] !== ''
+      && spent[i][4] !== null && spent[i][4] !== ''
       && (cols < 0 || spent[i][cols])
-      && (!filter || !spent[i][4] || ~spent[i][4].toLowerCase().indexOf(filter))
+      && (!filter || ~spent[i][4].toLowerCase().indexOf(filter))
     )
       s.innerHTML += template
         .replace('{5}', "<input type='button' onclick='Edit(this)' value='" + (parseInt(i) + 4).toString() + "'/>")
