@@ -876,11 +876,15 @@ async function setupSpentFields(excFilters) {
   await log('...filters');
 
   var z2formula = parseInt((Spent.getRange("Z2:Z2").getFormula() ?? "SUM(Z3:Z99)").split("Z")[2]).toString();
+  var maxRow = Spent.getMaxRows() - 1;
   document.getElementById("range").innerHTML = `
 <option value="99" selected>Top 99</value>
 <option value="${z2formula}">ZRange (${z2formula})</value>
   ` + (z2formula < 999 ? `
 <option value="999">Top 999</value>
+  ` : '')
+    + (maxRow > 999 ? `
+<option value="${maxRow}">End (${maxRow})</value>
   ` : '');
 
   document.getElementById("cols").innerHTML = '<option value="-1" selected>All</value>';
