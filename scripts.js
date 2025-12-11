@@ -900,6 +900,14 @@ async function setupSpentFields(excFilters) {
     }
   }
 
+  document.getElementById("prefixes").innerHTML = '<option value="" selected>All</value>';
+  var pref = Spent.getRange("E4:E" + maxRow).getValues();
+  pref.map(s => s[0]).filter(s => ~s.indexOf(':')).map(s => s.split(':')[0]).filter((a,i,c) => c.indexOf(a) == i).sort().forEach(s => {
+    document.getElementById("prefixes").innerHTML += `
+<option value="${s}:">${s}:</value>
+      `;
+  });
+
   document.getElementById("filter").value = "";
 }
 
