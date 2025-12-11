@@ -103,6 +103,7 @@ async function Edit(t) {
   if (!confirm("Remove "+t.value.trim()+" to reedit?"))
     return;
 
+  t.disabled = true;
   await log('Editing');
 
   var row = parseInt(t.value.trim());
@@ -166,10 +167,12 @@ async function Edit(t) {
   await setupSpentFields(true);
   await Filter(false);
 
+  ths.disabled = null;
   await log('...done');
 }
 
-async function IncludeSpent() {
+async function IncludeSpent(ths) {
+  ths.disabled = true;
   await log('Including');
 
   await setupSpentFields();
@@ -244,6 +247,7 @@ async function IncludeSpent() {
   await setupSpentFields(true);
   await Filter(true);
 
+  ths.disabled = null;
   await log('...done');
 }
 
@@ -769,13 +773,14 @@ function TodayChange(ths) {
 }
 
 function Upload() {
+  document.getElementById('Upload').disabled = true
   document.getElementById('File').value = null;
   document.getElementById('File').click();
 }
 
 async function FileChange(ths) {
   if (ths.files.length != 1)
-    return;
+    return document.getElementById('Upload').disabled = null;
 
   document.getElementById('output').innerHTML = ('Loading...<br>');
 
@@ -1135,6 +1140,7 @@ async function fileLoaded(e) {
   await setupSpentFields();
   await Filter(true);
 
+  document.getElementById('Upload').disabled = null;
   await log('Ready...');
 }
 
