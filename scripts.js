@@ -292,6 +292,9 @@ async function Filter(incFuture) {
   var range = (document.getElementById("range") ?? {})["value"] ?? "99";
   var cols = parseInt((document.getElementById("cols") ?? {})["value"] ?? "-1");
   var filter = ((document.getElementById("filter") ?? {})["value"] ?? "").toLowerCase();
+  var max = Spent.getMaxRows() - 1;
+  if (range > max)
+    range = max;
 
   var spent = Spent.getRange("A4:Z" + range).getValues();
   for (let i in spent)
