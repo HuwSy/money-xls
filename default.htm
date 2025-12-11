@@ -176,15 +176,19 @@
 
           <select id="range"
                   onchange="Filter()"
-                  style="width: 30%;">
+                  style="width: 25%;">
           </select>
           <select id="cols"
                   onchange="Filter()"
-                  style="width: 30%;">
+                  style="width: 25%;">
+          </select>
+          <select id="prefixes"
+                  onchange="this.nextElementSibling.value = this.value; Filter();"
+                  style="width: 25%;">
           </select>
           <input id="filter"
                  onkeyup="Filter()"
-                 style="width: 30%;">
+                 style="width: 25%;">
 
           <table id="spent">
           </table>
