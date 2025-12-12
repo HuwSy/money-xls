@@ -781,7 +781,6 @@ function TodayChange(ths) {
 }
 
 function Upload() {
-  document.getElementById('Upload').disabled = true
   document.getElementById('File').value = null;
   document.getElementById('File').click();
 }
@@ -1148,7 +1147,6 @@ async function fileLoaded(e) {
   await setupSpentFields();
   await Filter(true);
 
-  document.getElementById('Upload').disabled = null;
   await log('Ready...');
 }
 
