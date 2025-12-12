@@ -313,7 +313,15 @@ async function Filter(incFuture) {
         .replace('{1}', `${(spent[i][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" })}`)
         .replace('{2}', `${spent[i][4]}`)
         .replace('{4}', spent[i][3] < 0 ? 'red' : 'inherited');
-
+  
+  SST = [];
+  Spent.getRange("E4:E999").getValues().forEach(s => {
+    let sst = (s[0] || "").trim();
+    if (sst && !SST.indexOf(sst))
+      SST.push(sst);
+  });
+  SST = SST.sort((a, b) => a.length - b.length);
+  
   await log('...setting over');
 
   var o = document.getElementById('over').getElementsByTagName('table')[0];
