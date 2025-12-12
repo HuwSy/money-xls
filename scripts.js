@@ -317,7 +317,7 @@ async function Filter(incFuture) {
   SST = [];
   Spent.getRange("E4:E999").getValues().forEach(s => {
     let sst = (s[0] || "").trim();
-    if (sst && !SST.indexOf(sst))
+    if (sst && !SST.includes(sst))
       SST.push(sst);
   });
   SST = SST.sort((a, b) => a.length - b.length);
