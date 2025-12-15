@@ -218,7 +218,7 @@ async function IncludeSpent(ths) {
       try {
         let m = top[0][i].match(/\:([A-Za-z])([0-9]+)/);
         let f = parseInt(m[2]);
-        if (f > row)
+        if (f > p)
           top[0][i] = top[0][i].replace(m[0], ":" + m[1] + (f + 1));
       } catch (e) { }
     }
