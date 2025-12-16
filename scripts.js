@@ -108,7 +108,7 @@ async function Edit(t) {
 
   var row = parseInt(t.value.trim());
   var dt = new Date(t.parentNode.parentNode.children[1].innerText.trim());
-  var val = parseFloat(t.parentNode.parentNode.children[2].innerText.replace(Pound, "").trim());
+  var val = parseFloat(t.parentNode.parentNode.children[2].innerText.replace(Pound, "").replace(',', '').trim());
   var desc = t.parentNode.parentNode.children[3].innerText.trim();
   t.parentNode.parentNode.remove();
 
