@@ -886,15 +886,17 @@ async function setupSpentFields(excFilters) {
 
   calc();
 
-  if (excFilters)
-    return;
+  //if (excFilters)
+  //  return;
 
   await log('...filters');
 
   var z2formula = parseInt((Spent.getRange("Z2:Z2").getFormula() ?? "SUM(Z3:Z99)").split("Z")[2]).toString();
   var maxRow = Spent.getMaxRows() - 1;
-  document.getElementById("range").innerHTML = `
+  var rangeVal = document.getElementById("range").value;
+  document.getElementById("range").innerHTML = (z2formula > 99 ? `
 <option value="99" selected>Top 99</value>
+  ` : '') + `
 <option value="${z2formula}">ZRange (${z2formula})</value>
   ` + (z2formula < 999 ? `
 <option value="999">Top 999</value>
@@ -902,7 +904,9 @@ async function setupSpentFields(excFilters) {
     + (maxRow > 999 ? `
 <option value="${maxRow}">End (${maxRow})</value>
   ` : '');
+  document.getElementById("range").value = rangeVal;
 
+  var colVal = document.getElementById("cols").value;
   document.getElementById("cols").innerHTML = '<option value="-1" selected>All</value>';
   var topRowFilters = Spent.getRange("F1:Z2").getValues();
   for (let i = 0; i < topRowFilters[0].length; i++) {
@@ -915,7 +919,9 @@ async function setupSpentFields(excFilters) {
       `;
     }
   }
+  document.getElementById("cols").value = colValue;
 
+  var prefVal = document.getElementById("prefixes").value;
   document.getElementById("prefixes").innerHTML = '<option value="" selected>All</value>';
   var pref = Spent.getRange("E4:E" + maxRow).getValues();
   pref.map(s => s[0]).filter(s => ~s.indexOf(':')).map(s => s.split(':')[0]).filter((a,i,c) => c.indexOf(a) == i).sort().forEach(s => {
@@ -923,8 +929,9 @@ async function setupSpentFields(excFilters) {
 <option value="${s}:">${s}:</value>
       `;
   });
+  document.getElementById("prefixes").value = prefVal;
 
-  document.getElementById("filter").value = "";
+  //document.getElementById("filter").value = "";
 }
 
 async function setupOneYear() {
