@@ -904,7 +904,8 @@ async function setupSpentFields(excFilters) {
     + (maxRow > 999 ? `
 <option value="${maxRow}">End (${maxRow})</value>
   ` : '');
-  document.getElementById("range").value = rangeVal;
+  if (rangeVal)
+    document.getElementById("range").value = rangeVal;
 
   var colVal = document.getElementById("cols").value;
   document.getElementById("cols").innerHTML = '<option value="-1" selected>All</value>';
@@ -919,7 +920,8 @@ async function setupSpentFields(excFilters) {
       `;
     }
   }
-  document.getElementById("cols").value = colValue;
+  if (colValue)
+    document.getElementById("cols").value = colValue;
 
   var prefVal = document.getElementById("prefixes").value;
   document.getElementById("prefixes").innerHTML = '<option value="" selected>All</value>';
@@ -929,7 +931,8 @@ async function setupSpentFields(excFilters) {
 <option value="${s}:">${s}:</value>
       `;
   });
-  document.getElementById("prefixes").value = prefVal;
+  if (prefVal)
+    document.getElementById("prefixes").value = prefVal;
 
   //document.getElementById("filter").value = "";
 }
