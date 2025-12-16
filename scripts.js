@@ -920,8 +920,8 @@ async function setupSpentFields(excFilters) {
       `;
     }
   }
-  if (colValue)
-    document.getElementById("cols").value = colValue;
+  if (colVal)
+    document.getElementById("cols").value = colVal;
 
   var prefVal = document.getElementById("prefixes").value;
   document.getElementById("prefixes").innerHTML = '<option value="" selected>All</value>';
