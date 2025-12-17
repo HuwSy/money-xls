@@ -307,7 +307,7 @@ async function Filter(incFuture) {
   for (let i in spent)
     if (spent[i][3] !== null && spent[i][3] !== ''
       && spent[i][4] !== null && spent[i][4] !== ''
-      && (cols < 0 || spent[i][cols])
+      && (cols < 0 || spent[i][cols] || spent[i][cols] === '-')
       && (!filter || ~spent[i][4].toLowerCase().indexOf(filter))
     )
       s.innerHTML += template
@@ -324,7 +324,19 @@ async function Filter(incFuture) {
       SST.push(sst);
   });
   SST = SST.sort((a, b) => a.length - b.length);
-  
+
+  await log('...setting formulas');
+
+  document.getElementById('D1').value = Spent.getRange("D1:D1").getValue();
+  document.getElementById('D2').value = Spent.getRange("D2:D2").getValue().toFixed(2);
+  document.getElementById('Cc').value = Spent.getRange("D3:D3").getValue().toFixed(2);
+  document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
+  document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
+  document.getElementById('Sum').value = (parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue())).toFixed(2);
+
+  if (!incFuture)
+    return;
+
   await log('...setting over');
 
   var o = document.getElementById('over').getElementsByTagName('table')[0];
@@ -367,19 +379,7 @@ async function Filter(incFuture) {
       if (c > 100)
         break;
     }
-
-  await log('...setting formulas');
-
-  document.getElementById('D1').value = Spent.getRange("D1:D1").getValue();
-  document.getElementById('D2').value = Spent.getRange("D2:D2").getValue().toFixed(2);
-  document.getElementById('Cc').value = Spent.getRange("D3:D3").getValue().toFixed(2);
-  document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
-  document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
-  document.getElementById('Sum').value = (parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue())).toFixed(2);
-
-  if (!incFuture)
-    return;
-
+  
   await log('...setting future');
 
   clearRows(Spending);
