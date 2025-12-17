@@ -164,7 +164,7 @@ async function Edit(t) {
   await log('...calc');
 
   calc();
-  await setupSpentFields(true);
+  await setupSpentFields();
   await Filter(false);
 
   ths.disabled = null;
@@ -244,7 +244,7 @@ async function IncludeSpent(ths) {
   await log('...calc');
 
   calc();
-  await setupSpentFields(true);
+  await setupSpentFields();
   await Filter(true);
 
   ths.disabled = null;
@@ -754,7 +754,7 @@ async function UpdateCC() {
   Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
 
   calc();
-  await setupSpentFields(false);
+  await setupSpentFields();
   await Filter(true);
 
   await log('...done');
@@ -825,7 +825,7 @@ async function RunAll() {
   await Saving();
 }
 
-async function setupSpentFields(excFilters) {
+async function setupSpentFields() {
   await log('...blanks');
 
   // find blank year or calcs in spent to copy top row into
@@ -886,9 +886,6 @@ async function setupSpentFields(excFilters) {
 
   calc();
 
-  //if (excFilters)
-  //  return;
-
   await log('...filters');
 
   var z2formula = parseInt((Spent.getRange("Z2:Z2").getFormula() ?? "SUM(Z3:Z99)").split("Z")[2]).toString();
@@ -933,8 +930,6 @@ async function setupSpentFields(excFilters) {
   });
   if (prefVal)
     document.getElementById("prefixes").value = prefVal;
-
-  //document.getElementById("filter").value = "";
 }
 
 async function setupOneYear() {
