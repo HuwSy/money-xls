@@ -100,6 +100,7 @@ function clearRows(ths) {
 }
 
 async function Edit(t) {
+  t.parentNode.parentNode.style.backgroundColor = "#ccc";
   if (!confirm("Remove "+t.value.trim()+" to reedit?"))
     return;
 
