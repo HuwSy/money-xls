@@ -302,6 +302,8 @@ async function Filter(incFuture) {
   var max = Spent.getMaxRows() - 1;
   if (range > max)
     range = max;
+  var filtering = cols >= 0 || !!filter;
+  var subtotal = 0.0;
 
   var spent = Spent.getRange("A4:Z" + range).getValues();
   for (let i in spent)
@@ -309,13 +311,24 @@ async function Filter(incFuture) {
       && spent[i][4] !== null && spent[i][4] !== ''
       && (cols < 0 || spent[i][cols] || spent[i][cols] === '-')
       && (!filter || ~spent[i][4].toLowerCase().indexOf(filter))
-    )
+    ) {
       s.innerHTML += template
         .replace('{5}', "<input type='button' onclick='Edit(this)' value='" + (parseInt(i) + 4).toString() + "'/>")
         .replace('{0}', !spent[i][2] ? '' : !spent[i][0] ? spent[i][2] : `${spent[i][0]}-${(spent[i][1] < 10 ? "0" : "") + spent[i][1]}-${(spent[i][2] < 10 ? "0" : "") + spent[i][2]}`)
         .replace('{1}', `${(spent[i][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" })}`)
         .replace('{2}', `${spent[i][4]}`)
         .replace('{4}', spent[i][3] < 0 ? 'red' : 'inherited');
+      if (filtering)
+        subtotal += spent[i][3] || 0;
+    }
+
+  if (filtering)
+    s.innerHTML += template
+      .replace('{5}', "")
+      .replace('{0}', "")
+      .replace('{1}', `${subtotal.toLocaleString("en-GB", { style: "currency", currency: "GBP" })}`)
+      .replace('{2}', "Subtotal")
+      .replace('{4}', subtotal < 0 ? 'red' : 'inherited');
   
   SST = [];
   Spent.getRange("E4:E999").getValues().forEach(s => {
