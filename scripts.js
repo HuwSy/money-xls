@@ -254,33 +254,32 @@ async function IncludeSpent(ths) {
   await log('...done');
 }
 
-function debounce(func) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            func.apply(this, args);
-        }, 100);
-    };
-}
+var debounce;
 
 function Search(ths) {
-  if (!ths) {
+  if (!ths || !ths.value || ths.value.trim().length < 3) {
     var uls = document.getElementsByTagName("ul");
     for (let u = 0; u < uls.length; u++)
       uls[u].style.display = 'none';
     return;
   }
-  
-  if (!ths.value || ths.value.trim().length < 3) {
-    ths.nextElementSibling.style.display = 'none';
-    return;
-  }
 
-  var p = SST.filter(s => s.toLowerCase().includes(ths.value.toLowerCase())).slice(0, 10);
-  ths.nextElementSibling.innerHTML = p.map(s => `<li onclick="Select(this, '${s}')">${s}</li>`).join('');
-  ths.nextElementSibling.innerHTML += `<li style="text-align: center" onclick="Select(this, '')">Close</li>`;
-  ths.nextElementSibling.style.display = p.length == 0 ? 'none' : 'block';
+  if (debounce)
+    clearTimeout(debounce);
+  debounce = setTimeout(() => {
+    var p = SST.filter(s => s.toLowerCase().includes(ths.value.toLowerCase())).slice(0, 10);
+    ths.nextElementSibling.innerHTML = p.map(s => `<li onclick="Select(this, '${s}')">${s}</li>`).join('');
+    ths.nextElementSibling.innerHTML += `<li style="text-align: center" onclick="Select(this, '')">Close</li>`;
+    ths.nextElementSibling.style.display = p.length == 0 ? 'none' : 'block';
+  }, 100);
+}
+
+function FilterSearch() {
+  if (debounce)
+    clearTimeout(debounce);
+  debounce = setTimeout(() => {
+    Filter();
+  }, 100);
 }
 
 function Select(ths, val) {
