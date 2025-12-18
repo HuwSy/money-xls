@@ -254,7 +254,7 @@ async function IncludeSpent(ths) {
   await log('...done');
 }
 
-var debounce;
+var debounce = 0;
 
 function Search(ths) {
   if (!ths || !ths.value || ths.value.trim().length < 3) {
@@ -271,7 +271,7 @@ function Search(ths) {
     ths.nextElementSibling.innerHTML = p.map(s => `<li onclick="Select(this, '${s}')">${s}</li>`).join('');
     ths.nextElementSibling.innerHTML += `<li style="text-align: center" onclick="Select(this, '')">Close</li>`;
     ths.nextElementSibling.style.display = p.length == 0 ? 'none' : 'block';
-  }, 100);
+  }, 500);
 }
 
 function FilterSearch() {
@@ -279,7 +279,7 @@ function FilterSearch() {
     clearTimeout(debounce);
   debounce = setTimeout(() => {
     Filter();
-  }, 100);
+  }, 500);
 }
 
 function Select(ths, val) {
