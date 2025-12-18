@@ -254,6 +254,16 @@ async function IncludeSpent(ths) {
   await log('...done');
 }
 
+function debounce(func) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, 100);
+    };
+}
+
 function Search(ths) {
   if (!ths) {
     var uls = document.getElementsByTagName("ul");
