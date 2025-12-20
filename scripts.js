@@ -2,7 +2,7 @@ var FileName = ".xlsx";
 // xlsx objects
 var Workbook, Spent, Future, Over, Plan, SST;
 // html objects
-var Spending, Upcoming, Plans, Formulas;
+var Spending, Upcoming, Charts, Plans, Formulas;
 // default start spent row
 var StartSpent = 4;
 // encode due to xlsx issues
@@ -483,6 +483,20 @@ async function Filter(incFuture) {
       }
     }
   }
+
+  var c = Future.getRange("F2:G" + Future.getMaxRows()).getValues();
+  var l = c.map(r => r[0]);
+  var d = c.map(r => r[1]);
+  new Chart(Charts[0], {
+   type: 'line',
+   data: {
+    labels: l,
+    datasets: [{
+     label: 'Balance',
+     data: d,
+    }]
+   }
+  });
 }
 
 async function PopulateFormulas(ths) {
@@ -1170,6 +1184,7 @@ async function fileLoaded(e) {
 
   document.getElementById('future').style.display = "block";
   document.getElementById('over').style.display = "block";
+  document.getElementById('chart').style.display = "block";
   document.getElementById('options').style.display = "block";
 
   await setupSpentFields();
@@ -1681,6 +1696,7 @@ function Init() {
 
   Spending = document.getElementById("spending").getElementsByTagName('tr');
   Upcoming = document.getElementById("upcoming").getElementsByTagName('tr');
+  Charts = document.getElementById("chart").getElementsByTagName('canvas');
   Plans = document.getElementById("plans").getElementsByTagName('tr');
   Formulas = document.getElementById("formulas").getElementsByTagName('div');
 
