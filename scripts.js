@@ -486,7 +486,7 @@ async function Filter(incFuture) {
 
   var c = Future.getRange("F2:G" + Future.getMaxRows()).getValues();
   var l = c.filter(r => r[0] && (r[1] || r[1] === 0)).map(r => {
-    return typeof r[0] == 'number' ? new Date((r[0] - (25567 + 1))*86400*1000) : r[0]
+    return typeof r[0] == 'number' ? (new Date((r[0] - (25567 + 1))*86400*1000)).toJSON().substring(0,10) : r[0]
   });
   var d = c.filter(r => r[0] && (r[1] || r[1] === 0)).map(r => r[1]);
   new Chart(Charts[0], {
