@@ -497,6 +497,23 @@ async function Filter(incFuture) {
      label: 'Balance',
      data: d,
     }]
+   },
+   options: {
+    plugins: {
+     zoom: {
+      pan: {
+       enabled: true, mode: 'xy'
+      },
+      zoom: {
+       wheel: {
+        enabled: true,
+       },
+       pinch: {
+        enabled: true
+       }
+      }
+     }
+    }
    }
   });
 }
