@@ -494,7 +494,7 @@ async function Filter(incFuture) {
    data: {
     labels: l,
     datasets: [{
-     label: 'Balance',
+     label: 'Balance: ' + Charts.length,
      data: d,
     }]
    },
@@ -517,6 +517,7 @@ async function Filter(incFuture) {
     }
    }
   });
+  Charts[0].before("<canvas/>");
 }
 
 async function PopulateFormulas(ths) {
