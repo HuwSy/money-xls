@@ -517,7 +517,7 @@ async function Filter(incFuture) {
     }
    }
   });
-  Charts[0].before("<canvas/>");
+  Charts[0].before(document.createElement("canvas"));
 }
 
 async function PopulateFormulas(ths) {
