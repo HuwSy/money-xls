@@ -502,7 +502,8 @@ async function Filter(incFuture) {
     plugins: {
      zoom: {
       pan: {
-       enabled: true, mode: 'xy'
+       enabled: true,
+       mode: 'x'
       },
       zoom: {
        wheel: {
