@@ -489,6 +489,7 @@ async function Filter(incFuture) {
     return typeof r[0] == 'number' ? (new Date((r[0] - (25567 + 1))*86400*1000)).toJSON().substring(0,10) : r[0]
   });
   var d = c.filter(r => r[0] && (r[1] || r[1] === 0)).map(r => r[1]);
+  Charts[0].style.display = 'block';
   new Chart(Charts[0], {
    type: 'line',
    data: {
@@ -518,6 +519,7 @@ async function Filter(incFuture) {
    }
   });
   Charts[0].before(document.createElement("canvas"));
+  Charts[0].style.display = 'none';
 }
 
 async function PopulateFormulas(ths) {
