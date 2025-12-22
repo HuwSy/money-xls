@@ -49,6 +49,11 @@
              id="today"
              name="today"
              placeholder="Override todays date">
+
+      <input type="button"
+             onclick="RunAll()"
+             value="Save"
+             style="float: right; display: none;">
       <input type="file"
              style="display:none;"
              id="File"
@@ -367,7 +372,7 @@
             </div>
           </div>
           <input type="button"
-                 value="F1:Z2"
+                 value="F1:Z3"
                  onclick="PopulateFormulas(this)"
                  style="display:initial;">
           <input type="button"
@@ -378,15 +383,6 @@
                  value="Cancel"
                  onclick="Cancel(this)"
                  style="display:none">
-          <br><br>
-          
-          <input type="button"
-                 onclick="RunAll()"
-                 value="Run All">
-          <input type="button"
-                 onclick="Saving()"
-                 value="Save"
-                 style="margin-left: 8px;">
         </div>
       </div>
       <div id="log">
