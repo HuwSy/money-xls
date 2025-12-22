@@ -849,6 +849,8 @@ async function FileChange(ths) {
   if (ths.files.length != 1)
     return document.getElementById('Upload').disabled = null;
 
+  ths.previousElementSibling.style.display = 'initial';
+
   document.getElementById('output').innerHTML = ('Loading...<br>');
 
   document.getElementById('future').style.display = "none";
