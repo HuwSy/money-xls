@@ -425,10 +425,9 @@ async function Filter(incFuture) {
   var c = 10;
   var foundBlank = false;
   for (let f = 0; f < future.length; f++) {
-    if (!foundblank)
+    if (!foundBlank)
       foundBlank = (future[f][4] || "") == "";
     else {
-     try {
       let d = new Date(future[f][0], future[f][1] - 1, future[f][2]);
       d.setHours(12);
 
@@ -463,7 +462,6 @@ async function Filter(incFuture) {
             .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited');
       } else
         break;
-     } catch (e) {}
     }
   }
 
