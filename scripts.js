@@ -420,7 +420,8 @@ async function Filter(incFuture) {
   week.setDate(week.getDate() + 7);
   var len = parseInt(Spent.getRange("G1:G1").getValue() ?? "3");
   var last = new Date(Year + len, 0, 0);
-  var end = new Date(Year + 1, 0, 0);
+  var end = new Date(next);
+  end.setDate(end.getDate() + 90);
 
   var c = 10;
   var foundBlank = false;
