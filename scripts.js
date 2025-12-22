@@ -402,10 +402,13 @@ async function Filter(incFuture) {
   
   await log('...setting future');
 
+  var futs = document.getElementById('futures').getElementsByTagName('table')[0];
+  futs.innerHTML = '';
+  
   clearRows(Spending);
   clearRows(Upcoming);
 
-  var future = Future.getRange("A2:E" + Future.getMaxRows()).getValues()
+  var future = Future.getRange("A2:G" + Future.getMaxRows()).getValues()
   var next = new Date(Today);
   //next.setDate(next.getDate()+1+(next.getDay()==5?1:0));
   next.setHours(13);
@@ -413,18 +416,16 @@ async function Filter(incFuture) {
   week.setDate(week.getDate() + 7);
   var len = parseInt(Spent.getRange("G1:G1").getValue() ?? "3");
   var last = new Date(Year + len, 0, 0);
+  var end = new Date(Year + 1, 0, 0);
 
   var c = 10;
   var foundBlank = false;
   for (let f = 0; f < future.length; f++) {
-    if ((future[f][4] || "") == "")
-      foundBlank = true;
-    else if (foundBlank) {
+    if (!foundblank)
+      foundBlank = (future[f][4] || "") == "";
+    else {
       let d = new Date(future[f][0], future[f][1] - 1, future[f][2]);
       d.setHours(12);
-
-      if (d > last)
-        break;
 
       if (d <= next) {
         Spending[0].children[0].children[0].checked = null;
@@ -433,7 +434,7 @@ async function Filter(incFuture) {
         Spending[0].children[3].children[0].value = future[f][4];
 
         NewRow(Spending[0]);
-      } else {
+      } else if (d <= last) {
         let tr = document.createElement('tr');
         tr.innerHTML = template.replace('<tr>', '').replace('</tr>', '')
           .replace('{5}', '')
@@ -448,7 +449,15 @@ async function Filter(incFuture) {
         if (c <= 0 && d >= week) {
           last = d;
         }
-      }
+      } else if (d < end) {
+        futs.innerHTML += template
+          .replace('{5}', future[f][5])
+          .replace('{0}', d.toISOString().substring(0, 10))
+          .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
+          .replace('{2}', future[f][4])
+          .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited');
+      } else
+        break;
     }
   }
 
@@ -1208,6 +1217,7 @@ async function fileLoaded(e) {
   calc();
 
   document.getElementById('future').style.display = "block";
+  document.getElementById('futures').style.display = "block";
   document.getElementById('over').style.display = "block";
   document.getElementById('chart').style.display = "block";
   document.getElementById('options').style.display = "block";
