@@ -455,7 +455,7 @@ async function Filter(incFuture) {
         }
       } else if (d <= end) {
         futs.innerHTML += template
-            .replace('{5}', future[f][6])
+            .replace('{5}', (future[f][6] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
             .replace('{0}', d.toISOString().substring(0, 10))
             .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
             .replace('{2}', future[f][4])
