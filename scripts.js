@@ -428,6 +428,7 @@ async function Filter(incFuture) {
     if (!foundblank)
       foundBlank = (future[f][4] || "") == "";
     else {
+     try {
       let d = new Date(future[f][0], future[f][1] - 1, future[f][2]);
       d.setHours(12);
 
@@ -454,16 +455,15 @@ async function Filter(incFuture) {
           last = d;
         }
       } else if (d <= end) {
-        try {
-          futs.innerHTML += template
+        futs.innerHTML += template
             .replace('{5}', future[f][6])
             .replace('{0}', d.toISOString().substring(0, 10))
             .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
             .replace('{2}', future[f][4])
             .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited');
-        } catch (e) {}
       } else
         break;
+     } catch (e) {}
     }
   }
 
