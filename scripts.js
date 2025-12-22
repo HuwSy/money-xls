@@ -403,7 +403,11 @@ async function Filter(incFuture) {
   await log('...setting future');
 
   var futs = document.getElementById('futures').getElementsByTagName('table')[0];
-  futs.innerHTML = '';
+  futs.innerHTML = template
+          .replace('{5}', 'Balance')
+          .replace('{0}', 'Date')
+          .replace('{1}', 'Value')
+          .replace('{2}', 'Desc');
   
   clearRows(Spending);
   clearRows(Upcoming);
@@ -449,7 +453,7 @@ async function Filter(incFuture) {
         if (c <= 0 && d >= week) {
           last = d;
         }
-      } else if (d < end) {
+      } else if (d <= end) {
         futs.innerHTML += template
           .replace('{5}', future[f][5])
           .replace('{0}', d.toISOString().substring(0, 10))
