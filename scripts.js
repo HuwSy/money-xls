@@ -2,7 +2,7 @@ var FileName = ".xlsx";
 // xlsx objects
 var Workbook, Spent, Future, Over, Plan, SST;
 // html objects
-var Spending, Upcoming, Charts, Plans, Formulas;
+var Spending, Charts, Plans, Formulas;
 // default start spent row
 var StartSpent = 4;
 // encode due to xlsx issues
@@ -359,8 +359,7 @@ async function Filter(incFuture) {
 
   await log('...setting over');
 
-  var o = document.getElementById('over').getElementsByTagName('table')[0];
-  o.innerHTML = template
+  var o = template
     .replace('{5}', 'Y-M')
     .replace('{0}', 'Under')
     .replace('{1}', 'Annual')
@@ -370,14 +369,14 @@ async function Filter(incFuture) {
   var over = Over.getRange("A2:J99").getValues();
   for (let i in over)
     if (over[i][0])
-      o.innerHTML += template
+      o += template
         .replace('{5}', over[i][0] + "-" + over[i][1])
         .replace('{0}', !over[i][5] ? '' : over[i][5].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
         .replace('{1}', !over[i][8] ? '' : over[i][8].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
         .replace('{4}', over[i][8] < 0 ? 'red' : 'inherited')
         .replace('{2}', !over[i][9] ? '' : over[i][9].toLocaleString("en-GB", { style: "currency", currency: "GBP" }));
 
-  o.innerHTML += '<tr><td colspan=4><hr></td></tr>' + template
+  o += '<tr><td colspan=4><hr></td></tr>' + template
     .replace('{5}', 'Y-M-D')
     .replace('{0}', 'Value')
     .replace('{1}', 'Balance')
@@ -389,7 +388,7 @@ async function Filter(incFuture) {
   var f1 = F1.getRange("A2:G" + F1.getMaxRows()).getValues();
   for (let i in f1)
     if (f1[i][6]) {
-      o.innerHTML += template
+      o += template
         .replace('{5}', f1[i][0] + "-" + (f1[i][1] < 10 ? '0' : '') + f1[i][1] + "-" + (f1[i][2] < 10 ? '0' : '') + f1[i][2])
         .replace('{0}', !f1[i][3] ? '' : f1[i][3].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
         .replace('{1}', !f1[i][6] ? '' : f1[i][6].toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
@@ -399,18 +398,20 @@ async function Filter(incFuture) {
       if (c > 100)
         break;
     }
+
+  document.getElementById('over').getElementsByTagName('table')[0].innerHTML = o;
   
   await log('...setting future');
 
-  var futs = document.getElementById('futures').getElementsByTagName('table')[0];
-  futs.innerHTML = template
+  var futs = template
           .replace('{5}', 'Balance')
           .replace('{0}', 'Date')
           .replace('{1}', 'Value')
           .replace('{2}', 'Desc');
   
   clearRows(Spending);
-  clearRows(Upcoming);
+
+  var up = "";
 
   var future = Future.getRange("A2:G" + Future.getMaxRows()).getValues()
   var next = new Date(Today);
@@ -421,7 +422,7 @@ async function Filter(incFuture) {
   var len = parseInt(Spent.getRange("G1:G1").getValue() ?? "3");
   var last = new Date(Year + len, 0, 0);
   var end = new Date(next);
-  end.setDate(end.getDate() + 90);
+  end.setDate(end.getDate() + 180);
 
   var c = 10;
   var foundBlank = false;
@@ -440,22 +441,20 @@ async function Filter(incFuture) {
 
         NewRow(Spending[0]);
       } else if (d <= last) {
-        let tr = document.createElement('tr');
-        tr.innerHTML = template.replace('<tr>', '').replace('</tr>', '')
+        up = template
           .replace('{5}', '')
           .replace('{0}', d.toISOString().substring(0, 10))
           .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
           .replace('{2}', future[f][4])
           .replace('{6}', 'colspan=3')
-          .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited')
-        Upcoming[0].before(tr);
+          .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited') + up;
 
         c--;
         if (c <= 0 && d >= week) {
           last = d;
         }
       } else if (d <= end) {
-        futs.innerHTML += template
+        futs += template
             .replace('{5}', (future[f][6] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
             .replace('{0}', d.toISOString().substring(0, 10))
             .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
@@ -465,6 +464,8 @@ async function Filter(incFuture) {
         break;
     }
   }
+
+  document.getElementById('futures').getElementsByTagName('table')[0].innerHTML = futs;
 
   // cleanup additional added row
   DelRow(Spending[0]);
@@ -485,18 +486,18 @@ async function Filter(incFuture) {
       }
 
       if (d > last) {
-        let tr = document.createElement('tr');
-        tr.innerHTML = template.replace('<tr>', '').replace('</tr>', '')
+        up = template
           .replace('{5}', '')
           .replace('{0}', d.toISOString().substring(0, 10))
           .replace('{1}', (future[f][3] || 0).toLocaleString("en-GB", { style: "currency", currency: "GBP" }))
           .replace('{2}', future[f][4])
           .replace('{6}', 'colspan=3')
-          .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited')
-        Upcoming[0].before(tr);
+          .replace('{4}', future[f][3] < 0 ? 'red' : 'inherited') + up;
       }
     }
   }
+
+  document.getElementById("upcoming").innerHTML = up;
 
   var c = Future.getRange("F2:G" + Future.getMaxRows()).getValues();
   var l = c.filter(r => r[0] && (r[1] || r[1] === 0)).map(r => {
@@ -1735,7 +1736,6 @@ function Init() {
   document.getElementById('today').value = Today.toJSON().substring(0, 10);
 
   Spending = document.getElementById("spending").getElementsByTagName('tr');
-  Upcoming = document.getElementById("upcoming").getElementsByTagName('tr');
   Charts = document.getElementById("chart").getElementsByTagName('canvas');
   Plans = document.getElementById("plans").getElementsByTagName('tr');
   Formulas = document.getElementById("formulas").getElementsByTagName('div');
