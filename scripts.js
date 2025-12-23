@@ -2,7 +2,7 @@ var FileName = ".xlsx";
 // xlsx objects
 var Workbook, Spent, Future, Over, Plan, SST;
 // html objects
-var Spending, Charts, Plans, Formulas;
+var Spending, Plans, Formulas;
 // default start spent row
 var StartSpent = 4;
 // encode due to xlsx issues
@@ -504,13 +504,15 @@ async function Filter(incFuture) {
     return (typeof r[0] == 'number' ? new Date((r[0] - (25567 + 1))*86400*1000) : r[0]).toJSON().substring(0,10)
   });
   var d = c.filter(r => r[0] && (r[1] || r[1] === 0)).map(r => r[1]);
-  Charts[0].style.display = 'block';
-  new Chart(Charts[0], {
+
+  var charts = document.getElementById("chart").getElementsByTagName('canvas');
+  charts[0].style.display = 'block';
+  new Chart(charts[0], {
    type: 'line',
    data: {
     labels: l,
     datasets: [{
-     label: 'Balance: ' + Charts.length,
+     label: 'Balance: ' + charts.length,
      data: d,
     }]
    },
@@ -533,8 +535,8 @@ async function Filter(incFuture) {
     }
    }
   });
-  Charts[0].before(document.createElement("canvas"));
-  Charts[0].style.display = 'none';
+  charts[0].before(document.createElement("canvas"));
+  charts[0].style.display = 'none';
 }
 
 async function PopulateFormulas(ths) {
@@ -1736,7 +1738,6 @@ function Init() {
   document.getElementById('today').value = Today.toJSON().substring(0, 10);
 
   Spending = document.getElementById("spending").getElementsByTagName('tr');
-  Charts = document.getElementById("chart").getElementsByTagName('canvas');
   Plans = document.getElementById("plans").getElementsByTagName('tr');
   Formulas = document.getElementById("formulas").getElementsByTagName('div');
 
