@@ -541,7 +541,7 @@ async function Filter(incFuture) {
 }
 
 async function PopulateFormulas(ths) {
-  clearRows(Plans);
+  //clearRows(Plans);
   clearRows(Formulas);
   
   await log('Getting formulas');
@@ -596,7 +596,7 @@ async function SaveFormulas(ths) {
   Spent.getRange("F1:Z1").setValues([headings]);
   Spent.getRange("F2:Z3").setFormulasR1C1([totals, formulas]);
 
-  clearRows(Plans);
+  //clearRows(Plans);
   clearRows(Formulas);
   
   await log('...calc');
@@ -689,7 +689,7 @@ async function SortPlan(sort) {
 
 async function PopulatePlan(ths) {
   clearRows(Plans);
-  clearRows(Formulas);
+  //clearRows(Formulas);
   
   await log('Getting plans');
 
@@ -742,11 +742,10 @@ function ToggleType (ths, nxt) {
 }
 
 function Cancel(ths) {
-  clearRows(Plans);
-  clearRows(Formulas);
+  //clearRows(Plans);
+  //clearRows(Formulas);
   
-  document.getElementById("plans").style.display = 'none';
-  document.getElementById("formulas").style.display = 'none';
+  ths.previousElementSibling.previousElementSibling.previousElementSibling.style.display = 'none';
   ths.previousElementSibling.style.display = 'none';
   ths.previousElementSibling.previousElementSibling.style.display = "initial";
   ths.style.display = 'none';
@@ -815,7 +814,7 @@ async function SavePlan(ths) {
   }
 
   clearRows(Plans);
-  clearRows(Formulas);
+  //clearRows(Formulas);
   
   await log('...calc');
 
@@ -870,10 +869,6 @@ async function FileChange(ths) {
   ths.previousElementSibling.style.display = 'initial';
 
   document.getElementById('output').innerHTML = ('Loading...<br>');
-
-  document.getElementById('future').style.display = "none";
-  document.getElementById('over').style.display = "none";
-  document.getElementById('options').style.display = "none";
 
   var f = ths.files[0];
   FileName = f.name;
@@ -1229,7 +1224,8 @@ async function fileLoaded(e) {
   document.getElementById('futures').style.display = "block";
   document.getElementById('over').style.display = "block";
   document.getElementById('chart').style.display = "block";
-  document.getElementById('options').style.display = "block";
+  document.getElementById('options1').style.display = "block";
+  document.getElementById('options2').style.display = "block";
 
   await setupSpentFields();
   await Filter(true);
