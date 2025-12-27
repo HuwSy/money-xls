@@ -243,14 +243,14 @@
           </canvas>
         </div>
       </div>
-      <div id="options"
+      <div id="options1"
            style="display:none">
         <input type="radio"
                id="r5"
                style="display:none"
                name="sheet">
         <label onclick="HideUnhide(this.previousElementSibling)"
-               for="r5">Tasks</label>
+               for="r5">Plans</label>
         <div>
           <table id="plans"
                  style="display:none">
@@ -351,10 +351,19 @@
                  value="Cancel"
                  onclick="Cancel(this)"
                  style="display:none">
-          <br><br>
-
+        </div>
+      </div>
+      <div id="options2"
+           style="display:none">
+        <input type="radio"
+               id="r6"
+               style="display:none"
+               name="sheet">
+        <label onclick="HideUnhide(this.previousElementSibling)"
+               for="r6">Formulas</label>
+        <div>
           <div id="formulas"
-                 style="display:none;width:100%">
+               style="display:none;width:100%">
             <div>
               <span>
                 <input name="col"
