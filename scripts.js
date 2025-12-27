@@ -347,13 +347,13 @@ async function Filter(incFuture) {
 
   await log('...setting formulas');
 
-  document.getElementById('D1').value = Spent.getRange("D1:D1").getValue();
-  document.getElementById('D2').value = Spent.getRange("D2:D2").getValue().toFixed(2);
-  document.getElementById('Cc').value = Spent.getRange("D3:D3").getValue().toFixed(2);
+  document.getElementById('D1').value = Spent.getRange("D1:D1").getValue() ?? 0;
+  document.getElementById('D2').value = (Spent.getRange("D2:D2").getValue() ?? 0).toFixed(2);
+  document.getElementById('Cc').value = (Spent.getRange("D3:D3").getValue() ?? 0).toFixed(2);
   document.getElementById('D3').value = Spent.getRange("D3:D3").getFormula();
-  document.getElementById('E3').value = Spent.getRange("E3:E3").getValue();
-  document.getElementById('Sum').value = (parseFloat(Spent.getRange("E3:E3").getValue()) + parseFloat(Spent.getRange("D3:D3").getValue())).toFixed(2);
-  document.getElementById('Tot').value = (parseFloat(Spent.getRange("D1:D1").getValue()) + parseFloat(Spent.getRange("D2:D2").getValue()) - parseFloat(Spent.getRange("E3:E3").getValue()) - parseFloat(Spent.getRange("D3:D3").getValue())).toFixed(2);
+  document.getElementById('E3').value = Spent.getRange("E3:E3").getValue() ?? 0;
+  document.getElementById('Sum').value = (parseFloat(Spent.getRange("E3:E3").getValue() ?? 0) + parseFloat(Spent.getRange("D3:D3").getValue() ?? 0)).toFixed(2);
+  document.getElementById('Tot').value = (parseFloat(Spent.getRange("D1:D1").getValue() ?? 0) + parseFloat(Spent.getRange("D2:D2").getValue() ?? 0) - parseFloat(Spent.getRange("E3:E3").getValue() ?? 0) - parseFloat(Spent.getRange("D3:D3").getValue() ?? 0)).toFixed(2);
 
   if (!incFuture)
     return;
@@ -827,9 +827,9 @@ async function SavePlan(ths) {
 async function UpdateCC() {
   await log('Overwriting');
 
-  Spent.getRange("D1:D1").setValue(parseFloat(document.getElementById('D1').value));
+  Spent.getRange("D1:D1").setValue(parseFloat(document.getElementById('D1').value ?? 0));
   Spent.getRange("D3:D3").setFormula(document.getElementById('D3').value);
-  Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value));
+  Spent.getRange("E3:E3").setValue(parseFloat(document.getElementById('E3').value ?? 0));
 
   calc();
   await setupSpentFields();
