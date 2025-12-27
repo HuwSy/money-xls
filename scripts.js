@@ -1650,7 +1650,7 @@ function sheetConfig(sheetName) {
                 s[o].w = (s[o].v < 0 ? "-" : "") + Pound + parseFloat(s[o].v || 0).toFixed(2);
               else
                 s[o].w = XLSX.SSF.format(v, s[o].v)
-            } else if (field == null || !v[a] || !v[a][b]) {
+            } else if (field == null || !v[a] || v[a][b] === undefined || v[a][b] === null || v[a][b] === '' || typeof v[a][b] == 'undefined') {
               delete s[o].v;
               delete s[o].f;
               delete s[o].w;
