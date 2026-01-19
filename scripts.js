@@ -1758,6 +1758,9 @@ function Init() {
       var t = new Date();
       t.setHours(0, 0, 0, 0);
       return t;
+    },
+    'ISNUMBER': function(a) {
+      return isNaN(a) ? -1 : 1;
     }
   }, { override: true });
 }
