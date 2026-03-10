@@ -867,6 +867,7 @@ async function FileChange(ths) {
     return document.getElementById('Upload').disabled = null;
 
   ths.previousElementSibling.style.display = 'initial';
+  ths.nextElementSibling.style.display = 'none';
 
   document.getElementById('output').innerHTML = ('Loading...<br>');
 
