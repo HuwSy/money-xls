@@ -962,6 +962,8 @@ async function setupSpentFields() {
 
       Spent.getRange("F" + daterow + ":Z" + daterow).setFormulasR1C1(sum);
       StartSpent = daterow;
+    } else {
+      Spent.getRange("F" + daterow + ":Z" + daterow).clear();
     }
 
     daterow--;
