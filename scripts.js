@@ -861,6 +861,7 @@ function TodayChange(ths) {
     return;
 
   Spent.getRange("A1:C1").setValues([[Today.getFullYear(),Today.getMonth() + 1,Today.getDate()]]);
+  await setupSpentFields();
   calc();
 }
 
