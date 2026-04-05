@@ -664,7 +664,7 @@ async function SortPlan(sort) {
       return -1 * direction;
     if (aS > bS)
       return 1 * direction;
-    if (aS = bS)
+    if (aS == bS)
       return 0;
   });
 
