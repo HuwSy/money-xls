@@ -855,6 +855,13 @@ function TodayChange(ths) {
     Today = new Date(val.substring(0, 4), parseInt(val.substring(5, 7)) - 1, val.substring(8, 10), 12, 0, 0);
   }
   Year = Today.getFullYear() + (Today.getMonth() + 1 >= Beginning.getMonth() + 1 ? 1 : 0);
+  
+  // only if sheet loaded
+  if (!Spent)
+    return;
+
+  Spent.getRange("A1:C1").setValues([[Today.getFullYear(),Today.getMonth() + 1,Today.getDate()]]);
+  calc();
 }
 
 function Upload() {
@@ -1208,6 +1215,9 @@ async function fileLoaded(e) {
   Future = Workbook.Sheets['Future'];
   Over = Workbook.Sheets['Over'];
   Plan = Workbook.Sheets['Plan'];
+
+  Spent.getRange("A1:C1").setValues([[Today.getFullYear(),Today.getMonth() + 1,Today.getDate()]]);
+  calc();
 
   SST = [];
   for (var s in Workbook.Strings) {
