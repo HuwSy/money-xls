@@ -847,7 +847,7 @@ function StartChange(ths) {
   Year = Today.getFullYear() + (Today.getMonth() + 1 >= Beginning.getMonth() + 1 ? 1 : 0);
 }
 
-function TodayChange(ths) {
+async function TodayChange(ths) {
   if (!ths || ths == null || ths == "")
     Today = new Date();
   else {
