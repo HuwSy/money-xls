@@ -1662,9 +1662,10 @@ function sheetConfig(sheetName) {
                 s[o].w = XLSX.SSF.format(v, s[o].v)
             } else if (field == null || !v[a] || v[a][b] === undefined || v[a][b] === null || v[a][b] === '' || typeof v[a][b] == 'undefined') {
               s[o].t = 't';
-              delete s[o].v;
-              delete s[o].f;
-              delete s[o].w;
+              s[o].v = '';
+              s[o].f = null;
+              s[o].w = '';
+              s[o].z = null;
             } else if (field == 'v') {
               s[o].t = typeof v[a][b] == 'number' ? 'n' : typeof v[a][b] == 'object' ? 'd' : 't';
               s[o].v = v[a][b];
