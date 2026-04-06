@@ -935,6 +935,7 @@ async function setupSpentFields() {
 
   // set dates correctly and formulas for before today only to allow while above to continue operating
   var daterow = row - 1;
+  var hitDate = false;
   while (daterow >= 4) {
     if (Spent.getRange("A" + daterow + ":A" + daterow).getValue() == "") {
       var c = Spent.getRange("C" + daterow + ":C" + daterow).getValue();
@@ -955,7 +956,7 @@ async function setupSpentFields() {
     }
 
     var dates = Spent.getRange("A" + daterow + ":C" + daterow).getValues();
-    if (new Date(dates[0][0], dates[0][1] - 1, dates[0][2]) <= Today) {
+    if (!hitDate && new Date(dates[0][0], dates[0][1] - 1, dates[0][2]) <= Today) {
       for (var s = 0; s < sum[0].length; s++)
         try {
           sum[0][s] = sum[0][s].replace(/([A-Za-z]+)([0-9]+)/g, '$1' + daterow);
@@ -964,6 +965,9 @@ async function setupSpentFields() {
       Spent.getRange("F" + daterow + ":Z" + daterow).setFormulasR1C1(sum);
       StartSpent = daterow;
     } else {
+      if (!hitDate)
+        await log('...tomorrow ' + daterow);
+      hitDate = true;
       Spent.getRange("F" + daterow + ":Z" + daterow).clear();
     }
 
