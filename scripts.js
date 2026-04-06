@@ -924,7 +924,7 @@ async function setupSpentFields() {
 
   while (row < Spent.getMaxRows()) {
     var dates = Spent.getRange("A" + row + ":C" + row).getValues();
-    if (new Date(dates[0][0], dates[0][1] - 1, dates[0][2]) > Today)
+    if (new Date(dates[0][0], dates[0][1] - 1, dates[0][2]) <= Today)
       break;
   }
 
