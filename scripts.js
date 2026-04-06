@@ -1661,6 +1661,7 @@ function sheetConfig(sheetName) {
               else
                 s[o].w = XLSX.SSF.format(v, s[o].v)
             } else if (field == null || !v[a] || v[a][b] === undefined || v[a][b] === null || v[a][b] === '' || typeof v[a][b] == 'undefined') {
+              s[o].t = 't';
               delete s[o].v;
               delete s[o].f;
               delete s[o].w;
