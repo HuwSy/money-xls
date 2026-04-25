@@ -563,7 +563,7 @@ async function PopulateFormulas(ths) {
 }
 
 async function SaveFormulas(ths) {
-  if (Formulas.length == 1 && !row.children[0].children[0].value)
+  if (Formulas.length == 1 && !Formulas[0].children[0].children[0].value)
     return;
 
   await log('Formulating');
@@ -752,7 +752,7 @@ function Cancel(ths) {
 }
 
 async function SavePlan(ths) {
-  if (Plans.length == 1 && !row.children[5].children[0].value)
+  if (Plans.length == 1 && !Plans[0].children[5].children[0].value)
     return;
 
   await log('Planning');
