@@ -1783,7 +1783,7 @@ function Init() {
       return t;
     },
     'ISNUMBER': function(a) {
-      return !isNaN(a);
+      return a != null && !isNaN(a);
     }
   }, { override: true });
 }
