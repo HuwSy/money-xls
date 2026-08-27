@@ -1786,6 +1786,10 @@ function Init() {
       return a != null && !isNaN(a);
     }
   }, { override: true });
+
+  setTimeout(function() {
+    document.getElementById("Upload").click();
+  }, 250);
 }
 
 document.addEventListener("DOMContentLoaded", Init);
