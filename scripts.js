@@ -893,6 +893,7 @@ async function FileChange(ths) {
 }
 
 async function RunAll() {
+  this.disabled = "disabled";
   await setupOneYear();
   await timeout();
 
@@ -907,6 +908,8 @@ async function RunAll() {
   await timeout();
 
   await Saving();
+  this.disabled = null;
+  this.nextElementSibling.nextElementSibling.style.display = 'initial';
 }
 
 async function setupSpentFields() {
