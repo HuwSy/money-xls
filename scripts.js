@@ -874,7 +874,9 @@ async function FileChange(ths) {
   if (ths.files.length != 1)
     return document.getElementById('Upload').disabled = null;
 
-  ths.previousElementSibling.style.display = 'initial';
+  let s = ths.previousElementSibling;
+  s.style.display = 'initial';
+  s.value = 'Save';
   ths.nextElementSibling.style.display = 'none';
 
   document.getElementById('output').innerHTML = ('Loading...<br>');
@@ -894,6 +896,8 @@ async function FileChange(ths) {
 
 async function RunAll(ths) {
   ths.disabled = true;
+  ths.value = 'Save';
+  ths.nextElementSibling.nextElementSibling.style.display = 'none';
   await timeout();
   
   await setupOneYear();
@@ -913,7 +917,10 @@ async function RunAll(ths) {
   await timeout();
   
   ths.disabled = null;
-  ths.nextElementSibling.nextElementSibling.style.display = 'initial';
+  ths.value = 'S';
+  let l = ths.nextElementSibling.nextElementSibling;
+  l.value = 'L';
+  l.style.display = 'initial';
   await timeout();
 }
 
