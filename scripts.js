@@ -892,8 +892,8 @@ async function FileChange(ths) {
   reader.readAsArrayBuffer(f);
 }
 
-async function RunAll() {
-  this.disabled = "disabled";
+async function RunAll(ths) {
+  ths.disabled = "disabled";
   await timeout();
   
   await setupOneYear();
@@ -912,8 +912,8 @@ async function RunAll() {
   await Saving();
   await timeout();
   
-  this.disabled = null;
-  this.nextElementSibling.nextElementSibling.style.display = 'initial';
+  ths.disabled = null;
+  ths.nextElementSibling.nextElementSibling.style.display = 'initial';
   await timeout();
 }
 
