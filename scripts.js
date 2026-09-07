@@ -893,7 +893,7 @@ async function FileChange(ths) {
 }
 
 async function RunAll(ths) {
-  ths.disabled = "disabled";
+  ths.disabled = true;
   await timeout();
   
   await setupOneYear();
