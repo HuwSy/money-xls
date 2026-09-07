@@ -50,21 +50,22 @@
              name="today"
              placeholder="Override todays date">
 
-      <input type="button"
-             onclick="RunAll(this)"
-             value="Save"
-             style="float: right; display: none;">
-      <input type="file"
-             style="display:none;"
-             id="File"
-             name="file"
-             onchange="FileChange(this)">
-      <input id="Upload"
-             name="upload"
-             onclick="Upload()"
-             type="button"
-             value="Load"
-             style="float: right">
+      <div style="float: right;">
+        <input type="button"
+               onclick="RunAll(this)"
+               value="Save"
+               style="display: none;">
+        <input type="file"
+               style="display:none;"
+               id="File"
+               name="file"
+               onchange="FileChange(this)">
+        <input id="Upload"
+               name="upload"
+               onclick="Upload()"
+               type="button"
+               value="Load">
+      </div>
       <br style="clear:both;">
     </div>
 
